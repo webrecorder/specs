@@ -37,6 +37,8 @@ The spec is to designate a mostly flat directory structure which can contain dif
 - archive/
 - indexes/
 - webarchive.yaml
+- pages.csv
+- derivatives/
 ```
 
 The directory can further be bundled into a ZIP file.
@@ -134,13 +136,19 @@ Each row should match the 'Page' object and contain at least the following colum
 The `url` and `date` are required. The date should be in ISO 8601 format.
 
 
-#### 5) `/derivatives/` / other directories
+#### 5) `derivatives/` and other directories
 
-*TODO*: Add additional ideas for standardization. Other directory formats:
+Other derived data, such as screenshots, full text indices, could be placed into a general-purpose
+`derivatives/` directory.
+
+Additional ideas for standardization and possible directory formats:
 - derivatives
 - search indexes
 - WAT / WET files
 - specific metadata formats?
+
+Perhaps extension need not be specified explicitly, as others can add directories as needed.
+*Feedback wanted on this section, see https://github.com/webrecorder/web-archive-collection-format/issues/1*
 
 Other possible ideas were suggsted in this issue: https://github.com/webrecorder/pywb/issues/319
 
