@@ -4,7 +4,7 @@ This document is working draft/proposal for a directory structure + ZIP format s
 
 Feedback on this proposal is *strongly encouraged!*.
 
-Please open github issues with any thoughts/suggestions/comments.
+Please open GitHub issues with any thoughts/suggestions/comments.
 
 
 ## Motivation
@@ -16,7 +16,7 @@ To make sense and use a web archive, it is necessary to have more than just the 
 yet no standardized format exists to include all the data that is needed.
 
 In particular, a web archive collection should have:
-- A random-access index of all raw data (preferrably accessible with minimal seek)
+- A random-access index of all raw data (preferably accessible with minimal seek)
 - A set of pages, entry point URLs from which users should browse the web archive. 
 - Other user-defined, editable metadata about the web archive collection (title, description, etc...)
 
@@ -108,7 +108,7 @@ pages:
 ```
 
 
-##### `pageLists` key (optiona
+##### `pageLists` key (optional)
 
 The `pageLists` key provides further grouping of pages into specific curatorial groups, or page lists.
 
@@ -150,7 +150,7 @@ Additional ideas for standardization and possible directory formats:
 Perhaps extension need not be specified explicitly, as others can add directories as needed.
 *Feedback wanted on this section, see https://github.com/webrecorder/web-archive-collection-format/issues/1*
 
-Other possible ideas were suggsted in this issue: https://github.com/webrecorder/pywb/issues/319
+Other possible ideas were suggested in this issue: https://github.com/webrecorder/pywb/issues/319
 
 ### Precedence
 
@@ -180,7 +180,7 @@ Already compressed files should not be compressed again to allow for random acce
 
 ### Zip Format File Extension - `.wacz`
 
-A ZIP file that follows this Web Archive Collecion format spec should use the extension `.wacz`.
+A ZIP file that follows this Web Archive Collection format spec should use the extension `.wacz`.
 
 Such a file can be referred to as a WACZ file or a WACZ.
 
@@ -190,7 +190,7 @@ Such a file can be referred to as a WACZ file or a WACZ.
 
 The web archive collection format stored in a ZIP file allows for efficient random access to even very large web archives (10GB+, 100GB+, etc...). This allows for loading web archive from static storage on-demand.
 
-The approah works as follows. Given a ZIP file, a client can quickly:
+The approach works as follows. Given a ZIP file, a client can quickly:
 ```
 1) Read all entries to determine the contents of the ZIP file via random access
 2) Load manifest from `webarchive.yaml`
@@ -239,7 +239,7 @@ More Info: https://pywb.readthedocs.io/en/latest/manual/indexing.html#index-form
 
 The Compressed CDX format uses gzip compression on top of the plain-text CDX, and a secondary
 index to search the compressed index. This allows the CDX index to scale to considerably larger datasets.
-This index format is in use by Internet Archcive's Wayback Machine and CommonCrawl
+This index format is in use by Internet Archive's Wayback Machine and CommonCrawl.
 
 More Info: https://pywb.readthedocs.io/en/latest/manual/indexing.html#zipnum-sharded-index)
 
@@ -255,7 +255,7 @@ More info: http://www.softwareishard.com/blog/har-12-spec/
 
 ### Web Pack/Web Bundle
 
-The web bundle/web packaing spec attempts to solve some similar issues. Web Bundles use CBOR for serialization of HTTP request/responses, and also include an index. However, it can not be used to store existing web archive (WARC) data.
+The web bundle/web packaging spec attempts to solve some similar issues. Web Bundles use CBOR for serialization of HTTP request/responses, and also include an index. However, it can not be used to store existing web archive (WARC) data.
 
 More Info: https://wicg.github.io/webpackage/draft-yasskin-wpack-bundled-exchanges.html
 
