@@ -6,12 +6,21 @@ Feedback on this proposal is *strongly encouraged!*.
 
 Please open GitHub issues with any thoughts/suggestions/comments.
 
+## Tools for creating WACZ
 
-## Motivation
+The [wacz](./wacz) subdirectory contains a proof-of-concept Python tool for creating a WACZ file from existing WARCs.
 
-The goal of this spec is to provide an interoperable way to share web archive *collections*,
-additional data necessary to make web archives useful to humans.
 
+# Motivation
+
+The goal of this spec is to provide a portable format for web archives, to address key social and technical issues:
+
+- Social: to provide an interoperable way to share web archive *collections*, including any data necessary to make web archives useful to humans.
+- Technical: to provide an efficient way to load *small amounts of data* from a remotely hosted web archive on static storage, without downloading the entire collection.
+
+Parts of the spec are currently implemented and in use by [wabac.js](https://github.com/webrecorder/wabac.js] and [ReplayWeb.page](https://replayweb.page)
+
+## Social: Making web archives more human friendly
 To make sense and use a web archive, it is necessary to have more than just the raw HTTP request/response data,
 yet no standardized format exists to include all the data that is needed.
 
@@ -20,28 +29,46 @@ In particular, a web archive collection should have:
 - A set of pages, entry point URLs from which users should browse the web archive. 
 - Other user-defined, editable metadata about the web archive collection (title, description, etc...)
 
-The spec is not designed to replace any other format, but to set up a convention-based format to bundle this data together
-via directory layout.
+All of this data can be bundled together into a single file, using the standard ZIP format.
 
-The spec consists of:
+## Technical: Lowering the barrier to hosting large web archives
 
-1) A extensible directory layout for web archive data
+Hosting web archives currently requires complex server infrastructure, a 'wayback machine' to serve data in a way that can be viewed in the browser.
+
+Tools like `wabac.js` provide a way to render the data directly in the browser, if it can be accessed efficiently.
+
+The WACZ format presents a storage approach optimized for efficient random-access to large amounts of web archive data, allowing the client to load only
+what is needed by seeking into a larger file (via HTTP range requests or other random access) and loading only what is needed for each page.
+This is done by leveraging the ZIP format's built-in index, inclusion of an efficient web archive index (CDX or compressed CDX) along with the raw WARC data.
+
+The spec is not designed to replace any other format, but to set up a convention-based format to bundle all necessary data together,
+following a certain directory and naming convention, into a standard ZIP (or ZIP64) file.
+
+
+# WACZ 1.0
+
+The spec currently consists of the following:
+
+1) A extensible directory and naming convention for web archive data
 2) A specification for bundling the directory layout in a ZIP file.
 
+The documentation is split into what is currently supported in [wabac.js] as stable,
+experimental ideas, and possiblee future extensions.
 
-## The Directory Layout
+## Currently Supported
 
-The spec is to designate a mostly flat directory structure which can contain different types of web archive collection data:
+
+#### Directory Layout
+
+The spec is to designate a mostly flat directory structure which can contain different types of web archive collection data.
+Currently supported:
 
 ```
 - archive/
 - indexes/
 - webarchive.yaml
-- pages.csv
-- derivatives/
+- text/
 ```
-
-The directory can further be bundled into a ZIP file.
 
 ### Directories and Files
 
@@ -49,18 +76,10 @@ The directory can further be bundled into a ZIP file.
 #### 1) `archive/` (required)
  
 The archives directory can contain raw web archive data.
-This can be in a variety of formats, including WARC, ARC, as well as other formats that support
-random access, (eg. ZIM)
 
-Possible formats:
+Currently supported formats:
 - WARC (.warc, .warc.gz)
-- ARC (.arc, .arc.gz)
-- ZIM (.zim)
-- HAR? (.har)
-- Web Bundle? (.wbn)
 
-
- 
 #### 2) `indexes/` (required)
  
  The indexes directory should include various indexes into the raw data stored in `archives/`
@@ -105,6 +124,8 @@ pages:
   - url: https://another.example.com/
     date: 2020-06-26T01:02:03Z
     id: '456'
+    
+textIndex: <path/to/textIndex>
 ```
 
 
@@ -128,6 +149,10 @@ pageLists:
        - '10'
 ```
 
+##### `textIndex` key (optional, NEW/experimental)
+
+A path to a text index file in the ZIP which contains a seperate full text search index,
+ideally in the `text/` directory.
 
 #### 4) `pages.csv` (optional)
 
@@ -135,10 +160,33 @@ The list of pages, specified in a CSV format.
 Each row should match the 'Page' object and contain at least the following columns: `url`, `date`, `title`, `id`
 The `url` and `date` are required. The date should be in ISO 8601 format.
 
+#### 5) `text/` directory (experimental)
 
-#### 5) `derivatives/` and other directories
+Contains a text index as a newline-deliminted JSON format, eg.
+Currently the text index is only used if it is enabled by setting the `textIndex` entry in `webarchive.yaml`
 
-Other derived data, such as screenshots, full text indices, could be placed into a general-purpose
+```
+{"url": "https://example.com/", "title": "Example Domain": "text": "Example Domain\nThis domain is for..."}
+{"url": "https://example.com/another", "title": "Another Example", "text": "Some other text for this page..."}
+```
+
+This format is still experimental and may change.
+
+## Possible Support in the future
+
+#### Comibing the page and text search indices
+
+Currently, these are two separate entries, a likely future change will combine them into a single
+JSON-delimited list, removing the `pages.csv`
+
+#### Archive formats besides WARC
+
+It is possible that other formats, such as HAR, Web Bundle, ZIM be supported
+in the `archive/` directory. (See Appendix for this formats).
+
+#### Custom Derivatives and a general-purposes `derivatives/` directory.
+
+Other derived data, such as screenshots, could be placed into a general-purpose
 `derivatives/` directory.
 
 Additional ideas for standardization and possible directory formats:
@@ -152,7 +200,7 @@ Perhaps extension need not be specified explicitly, as others can add directorie
 
 Other possible ideas were suggested in this issue: https://github.com/webrecorder/pywb/issues/319
 
-### Precedence
+#### Precedence (to be removed)
 
 Generally, keys specified in `webarchive.yaml` take precedence over data loaded by convention.
 
@@ -177,6 +225,7 @@ Already compressed files should not be compressed again to allow for random acce
 - All `/archive/` files should be stored in ZIP with 'STORE' mode.
 - All `/index/*.cdx.gz` files should be stored in ZIP with 'STORE' mode.
 - Text files (`*.csv`, `*.yaml`, `*.cdx`, `*.cdxj`) can be stored in the ZIP with either 'DEFLATE' or 'STORE' mode.
+- The text index is `text/*` should be stored in the ZIP with 'STORE' mode.
 
 ### Zip Format File Extension - `.wacz`
 
