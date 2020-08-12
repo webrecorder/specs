@@ -1,4 +1,4 @@
-# Web Archive Collection Format
+# Web Archive Collection Zip (WACZ) Format
 
 This document is working draft/proposal for a directory structure + ZIP format specification for sharing and distributing web archives. ZIP files using this format can be referred to as WACZ (Web Archive Collection Zipped).
 
