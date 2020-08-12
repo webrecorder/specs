@@ -1,0 +1,3 @@
+cdxj-indexer>=1.1.0
+pyyaml
+boilerpy3

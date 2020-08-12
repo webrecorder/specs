@@ -8,7 +8,7 @@ Please open GitHub issues with any thoughts/suggestions/comments.
 
 ## Tools for creating WACZ
 
-The [wacz](./wacz) subdirectory contains a proof-of-concept Python tool for creating a WACZ file from existing WARCs.
+The [py-wacz](./py-wacz) subdirectory contains a proof-of-concept Python tool for creating a WACZ file from existing WARCs.
 
 
 # Motivation
