@@ -174,7 +174,7 @@ This format is still experimental and may change.
 
 ## Possible Support in the future
 
-#### Comibing the page and text search indices
+#### Combining the page and text search indices
 
 Currently, these are two separate entries, a likely future change will combine them into a single
 JSON-delimited list, removing the `pages.csv`
