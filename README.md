@@ -18,7 +18,7 @@ The goal of this spec is to provide a portable format for web archives, to addre
 - Social: to provide an interoperable way to share web archive *collections*, including any data necessary to make web archives useful to humans.
 - Technical: to provide an efficient way to load *small amounts of data* from a remotely hosted web archive on static storage, without downloading the entire collection.
 
-Parts of the spec are currently implemented and in use by [wabac.js](https://github.com/webrecorder/wabac.js] and [ReplayWeb.page](https://replayweb.page)
+Parts of the spec are currently implemented and in use by [wabac.js](https://github.com/webrecorder/wabac.js) and [ReplayWeb.page](https://replayweb.page)
 
 ## Social: Making web archives more human friendly
 To make sense and use a web archive, it is necessary to have more than just the raw HTTP request/response data,
