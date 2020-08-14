@@ -95,7 +95,7 @@ class WACZIndexer(CDXJIndexer):
 
             if doc.title:
                 self.pages[id_]["title"] = doc.title
-        except
+        except:
             # skip text extraction in case of errors
             pass
 
