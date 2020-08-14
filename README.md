@@ -52,7 +52,7 @@ The spec currently consists of the following:
 1) A extensible directory and naming convention for web archive data
 2) A specification for bundling the directory layout in a ZIP file.
 
-The documentation is split into what is currently supported in [wabac.js] as stable,
+The documentation is split into what is currently supported in [wabac.js](https://github.com/webrecorder/wabac.js) as stable,
 experimental ideas, and possiblee future extensions.
 
 ## Currently Supported
