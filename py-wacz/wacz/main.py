@@ -6,7 +6,7 @@ import tempfile
 import os
 import datetime
 
-from waczindexer import WACZIndexer, PAGE_INDEX
+from wacz.waczindexer import WACZIndexer, PAGE_INDEX
 
 """
 WACZ Generator 0.1.0
