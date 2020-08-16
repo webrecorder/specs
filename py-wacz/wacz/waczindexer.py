@@ -19,6 +19,7 @@ class WACZIndexer(CDXJIndexer):
         self.lists = {}
         self.title = ''
         self.desc = ''
+        self.main_url = kwargs.pop('main_url', '')
 
     def process_index_entry(self, it, record, *args):
         type_ = record.rec_headers.get('WARC-Type')
@@ -68,9 +69,14 @@ class WACZIndexer(CDXJIndexer):
     def extract_text(self, record):
         url = record.rec_headers.get('WARC-Target-URI')
         date = record.rec_headers.get('WARC-Date')
+        ts = iso_date_to_timestamp(date)
+        id_ = ts + '/' + url
 
-        id_ = iso_date_to_timestamp(date) + '/' + url
-        if id_ not in self.pages:
+        if self.main_url and url == self.main_url:
+            print('Found Main Url: {0}'.format(url))
+            self.pages[id_] = {'timestamp': ts, 'url': url, 'title': url}
+
+        elif id_ not in self.pages:
             return
 
         mime = self.get_record_mime_type(record)
