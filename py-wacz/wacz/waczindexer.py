@@ -21,6 +21,9 @@ class WACZIndexer(CDXJIndexer):
         self.desc = ''
         self.main_url = kwargs.pop('main_url', '')
 
+        self.detect_pages = True
+        self.referrers = set()
+
     def process_index_entry(self, it, record, *args):
         type_ = record.rec_headers.get('WARC-Type')
         if type_ == 'warcinfo':
@@ -31,6 +34,28 @@ class WACZIndexer(CDXJIndexer):
                 self.extract_text(record)
 
             super().process_index_entry(it, record, *args)
+
+
+    def process_all(self):
+        super().process_all()
+
+        if self.detect_pages:
+            to_delete = [id_ for id_, value in self.pages.items() if value['url'] not in self.referrers]
+            for delete in to_delete:
+                del self.pages[delete]
+
+            print('Num Pages Detected: {0}'.format(len(self.pages)))
+
+    def _do_write(self, urlkey, ts, index, out):
+        if self.detect_pages:
+            self.detect_page(ts, index)
+
+        super()._do_write(urlkey, ts, index, out)
+
+    def detect_page(self, ts, index):
+        referrer = index.get('referrer')
+        if referrer:
+            self.referrers.add(referrer)
 
     def parse_warcinfo(self, record):
         """Parse WARC information.
@@ -65,6 +90,7 @@ class WACZIndexer(CDXJIndexer):
                 id_ = page['timestamp'] + '/' + page['url']
                 self.pages[id_] = page
 
+        self.detect_pages = False
 
     def extract_text(self, record):
         url = record.rec_headers.get('WARC-Target-URI')
@@ -76,22 +102,32 @@ class WACZIndexer(CDXJIndexer):
             print('Found Main Url: {0}'.format(url))
             self.pages[id_] = {'timestamp': ts, 'url': url, 'title': url}
 
-        elif id_ not in self.pages:
-            return
-
         mime = self.get_record_mime_type(record)
 
         if mime not in HTML_MIME_TYPES:
             return
 
-        if record.http_headers and record.http_headers.get_statuscode().startswith('3'):
+        status = record.http_headers.get_statuscode()
+        if record.http_headers and status.startswith('3'):
             return
 
-        extractor = extractors.ArticleExtractor()
+        if id_ not in self.pages:
+            if self.detect_pages:
+                self.pages[id_] = {'timestamp': ts, 'url': url, 'title': url}
+            else:
+                return
 
-        content = record.content_stream().read()
+        if hasattr(record, 'buffered_stream'):
+            content = record.buffered_stream.read()
+        else:
+            content = record.content_stream().read()
+
+        if not content:
+            return
 
         try:
+            extractor = extractors.ArticleExtractor()
+
             content = content.decode("utf-8")
 
             doc = extractor.get_doc(content)
@@ -101,7 +137,9 @@ class WACZIndexer(CDXJIndexer):
 
             if doc.title:
                 self.pages[id_]["title"] = doc.title
-        except:
+
+        except Exception as e:
+            print(e)
             # skip text extraction in case of errors
             pass
 
@@ -161,8 +199,8 @@ class WACZIndexer(CDXJIndexer):
             data['textIndex'] = textIndex
 
         data['pages'] = [
-            {'title': page['title'],
-             'date': page['timestamp'],
+            {'title': page.get('title') or page.get('url'),
+             'date': timestamp_to_iso_date(page['timestamp']),
              'url': page['url']} for page in self.pages.values()]
 
         return yaml.dump(data)

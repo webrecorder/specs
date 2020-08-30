@@ -55,6 +55,7 @@ def create_wacz(res):
     wacz_indexer = None
     with wacz.open(data_file, 'w') as data:
         wacz_indexer = WACZIndexer(text_wrap, res.inputs, sort=True, compress=data,
+                                   fields='referrer',
                                    data_out_name='index.cdx.gz', records='all',
                                    main_url=res.url)
 
