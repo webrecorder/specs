@@ -20,6 +20,8 @@ def main(args=None):
 
     parser.add_argument('-t', '--text', help='Generate experimental full-text index', action='store_true')
 
+    parser.add_argument('--detect-pages')
+
     parser.add_argument('--url')
     parser.add_argument('--date')
     parser.add_argument('--title')
@@ -57,7 +59,8 @@ def create_wacz(res):
         wacz_indexer = WACZIndexer(text_wrap, res.inputs, sort=True, compress=data,
                                    fields='referrer',
                                    data_out_name='index.cdx.gz', records='all',
-                                   main_url=res.url)
+                                   main_url=res.url,
+                                   detect_pages=res.detect_pages)
 
         wacz_indexer.process_all()
 
