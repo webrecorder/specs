@@ -21,7 +21,7 @@ class WACZIndexer(CDXJIndexer):
         self.desc = ''
         self.main_url = kwargs.pop('main_url', '')
 
-        self.detect_pages = kwargs.get('detect-pages')
+        self.detect_pages = kwargs.get('detect_pages')
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):

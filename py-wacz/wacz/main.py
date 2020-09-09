@@ -20,7 +20,7 @@ def main(args=None):
 
     parser.add_argument('-t', '--text', help='Generate experimental full-text index', action='store_true')
 
-    parser.add_argument('--detect-pages')
+    parser.add_argument('--detect-pages', action='store_true')
 
     parser.add_argument('--url')
     parser.add_argument('--date')
