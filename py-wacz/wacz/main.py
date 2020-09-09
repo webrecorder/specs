@@ -72,7 +72,7 @@ def create_wacz(res):
     # write archives
     print('Writing archives...')
     for _input in res.inputs:
-        archive_file = zipfile.ZipInfo("archive/" + os.path.basename(_input), now())
+        archive_file = zipfile.ZipInfo.from_file(_input, "archive/" + os.path.basename(_input))
         with wacz.open(archive_file, 'w') as out_fh:
             with open(_input, 'rb') as in_fh:
                 shutil.copyfileobj(in_fh, out_fh)
