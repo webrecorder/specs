@@ -1,5 +1,5 @@
 import json
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit
 
 import yaml
 from cdxj_indexer.main import CDXJIndexer
@@ -12,6 +12,7 @@ HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 PAGE_INDEX = "text/pages.pdx"
 
 
+# ============================================================================
 class WACZIndexer(CDXJIndexer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -20,6 +21,15 @@ class WACZIndexer(CDXJIndexer):
         self.title = ''
         self.desc = ''
         self.main_url = kwargs.pop('main_url', '')
+
+        # if url is missinng path segment, ensure it is set to '/'
+        try:
+            parts = list(urlsplit(self.main_url))
+            if not parts[2]:
+                parts[2] = '/'
+                self.main_url = urlunsplit(parts)
+        except:
+            pass
 
         self.detect_pages = kwargs.get('detect_pages')
         self.referrers = set()
@@ -57,6 +67,14 @@ class WACZIndexer(CDXJIndexer):
         if referrer:
             self.referrers.add(referrer)
 
+    def _read_record(self, record):
+        if hasattr(record, 'buffered_stream'):
+            content = record.buffered_stream.read()
+        else:
+            content = record.content_stream().read()
+
+        return content
+
     def parse_warcinfo(self, record):
         """Parse WARC information.
 
@@ -66,12 +84,11 @@ class WACZIndexer(CDXJIndexer):
         :rtype: dict or None
         """
         warcinfo = {}
-        warcinfo_buff = record.raw_stream.read(record.length)
+        warcinfo_buff = self._read_record(record)
         warcinfo_buff = warcinfo_buff.decode('utf-8')
         metadata = None
         for line in warcinfo_buff.rstrip().split('\n'):
             parts = line.split(':', 1)
-
             if parts[0] == 'json-metadata':
                 metadata = json.loads(parts[1])
             elif len(parts) == 2:
@@ -117,11 +134,7 @@ class WACZIndexer(CDXJIndexer):
             else:
                 return
 
-        if hasattr(record, 'buffered_stream'):
-            content = record.buffered_stream.read()
-        else:
-            content = record.content_stream().read()
-
+        content = self._read_record(record)
         if not content:
             return
 
