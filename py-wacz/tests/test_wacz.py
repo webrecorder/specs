@@ -1,5 +1,6 @@
-import unittest, os, zipfile, sys, hashlib
-from wacz.main import main
+import unittest, os, zipfile, sys, hashlib, yaml, gzip
+from wacz.main import main, now
+from unittest.mock import patch
 
 TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
@@ -16,13 +17,12 @@ class TestWaczFormat(unittest.TestCase):
                     break
                 md5.update(data)
         f.close()
-        print(f)
         return md5.hexdigest()
     
     @classmethod
-    def setUpClass(self):
-        sys.stdout = open(os.devnull, 'w') # Suppress print statements in the setup for testing clarity 
-        
+    @patch('wacz.main.now')
+    def setUpClass(self, mock_now):   
+        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         main(['-o', os.path.join(TEST_DIR, 'example.wacz'), os.path.join(TEST_DIR, 'example-collection.warc')])
         with zipfile.ZipFile(os.path.join(TEST_DIR, 'example.wacz'), "r") as zip_ref:
             zip_ref.extractall("tests/fixtures/unizpped_wacz")
@@ -47,7 +47,41 @@ class TestWaczFormat(unittest.TestCase):
         original_warc = self.support_hash_file(self.warc_file)
         unizpped_wacz = self.support_hash_file(self.wacz_archive)
         self.assertEqual(original_warc, unizpped_wacz)
+    
+    def test_yaml_structure(self):
+        '''Check that the wacz yaml file has the expected values'''
+        with open(self.wacz_yaml, 'rb') as f:
+            yaml_dict = (yaml.load(f, Loader=yaml.FullLoader))
+            pages_dict = yaml_dict['pages'][0]
+        f.close()
 
+        self.assertEqual('pages' in yaml_dict.keys(), True)
+        self.assertEqual('title' in yaml_dict.keys(), True)
+        self.assertEqual(yaml_dict['title'], 'Example Collection')
+
+        self.assertEqual('date' in pages_dict.keys(), True)
+        self.assertEqual('title' in pages_dict.keys(), True)
+        self.assertEqual('url' in pages_dict.keys(), True)
+        self.assertEqual(pages_dict['title'], 'Example Domain')
+        self.assertEqual(pages_dict['url'], 'http://www.example.com/')
+        self.assertEqual(pages_dict['date'], '2020-10-07T21:22:36Z')
+
+    def test_idx_structure(self):
+        '''Check that the idx file has the expected content'''
+        with open(self.wacz_index_idx, 'rb') as f:
+            content = f.read()
+        f.close()
+        self.assertEqual(content, b'!meta 0 {"format": "cdxj-gzip-1.0", "filename": "index.cdx.gz"}\ncom,example)/ 20201007212236 {"offset": 0, "length": 194}\n')
+
+    def test_cdx_structure(self):
+        '''Check that the cdx file has the expected content'''
+        content = ''
+        with gzip.open(self.wacz_index_cdx, 'rb') as f:
+            for line in f:
+                content = content + line.decode()
+        f.close()
+        self.assertEqual(content, 'com,example)/ 20201007212236 {"url": "http://www.example.com/", "mime": "text/html", "status": "200", "digest": "WJM2KPM4GF3QK2BISVUH2ASX64NOUY7L", "length": "1293", "offset": "845", "filename": "example-collection.warc"}\n')
+        
 
 if __name__ == '__main__':
     unittest.main()
