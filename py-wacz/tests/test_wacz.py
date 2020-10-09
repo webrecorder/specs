@@ -25,15 +25,15 @@ class TestWaczFormat(unittest.TestCase):
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         main(['-o', os.path.join(TEST_DIR, 'example.wacz'), os.path.join(TEST_DIR, 'example-collection.warc')])
         with zipfile.ZipFile(os.path.join(TEST_DIR, 'example.wacz'), "r") as zip_ref:
-            zip_ref.extractall("tests/fixtures/unizpped_wacz")
+            zip_ref.extractall("tests/fixtures/unzipped_wacz")
             zip_ref.close()
         
         self.wacz_file = os.path.join(TEST_DIR, 'example.wacz')
         self.warc_file = os.path.join(TEST_DIR, 'example-collection.warc')
-        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unizpped_wacz/archive/example-collection.warc")
-        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unizpped_wacz/indexes/index.cdx.gz")
-        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unizpped_wacz/indexes/index.idx")
-        self.wacz_yaml = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unizpped_wacz/webarchive.yaml")
+        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/archive/example-collection.warc")
+        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.cdx.gz")
+        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.idx")
+        self.wacz_yaml = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/webarchive.yaml")
             
     def test_components(self):
         '''Check that the basic components of a wacz file exist'''
@@ -45,8 +45,8 @@ class TestWaczFormat(unittest.TestCase):
     def test_archive_structure(self):
         '''Check that the hash of the original warc file matches that of the warc file in the archive folder'''
         original_warc = self.support_hash_file(self.warc_file)
-        unizpped_wacz = self.support_hash_file(self.wacz_archive)
-        self.assertEqual(original_warc, unizpped_wacz)
+        unzipped_wacz = self.support_hash_file(self.wacz_archive)
+        self.assertEqual(original_warc, unzipped_wacz)
     
     def test_yaml_structure(self):
         '''Check that the wacz yaml file has the expected values'''
