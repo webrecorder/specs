@@ -2,4 +2,4 @@
 set -e
 
 cd py-wacz
-pytest --cov coverage
+pytest -v --cov wacz
