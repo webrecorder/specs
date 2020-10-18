@@ -1,24 +1,13 @@
-import unittest, os, zipfile, sys, hashlib, yaml, gzip
+import unittest, os, zipfile, sys, gzip, json
 from wacz.main import main, now
 from unittest.mock import patch
+from wacz.util import support_hash_file
+from frictionless import validate, Report
 
 TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
 class TestWaczFormat(unittest.TestCase):
 
-    def support_hash_file(self, file):
-        '''Hashes the passed file using md5'''
-        BUF_SIZE = 65536
-        md5 = hashlib.md5()
-        with open(file, 'rb') as f:
-            while True:
-                data = f.read(BUF_SIZE)
-                if not data:
-                    break
-                md5.update(data)
-        f.close()
-        return md5.hexdigest()
-    
     @classmethod
     @patch('wacz.main.now')
     def setUpClass(self, mock_now):   
@@ -27,44 +16,32 @@ class TestWaczFormat(unittest.TestCase):
         with zipfile.ZipFile(os.path.join(TEST_DIR, 'example.wacz'), "r") as zip_ref:
             zip_ref.extractall("tests/fixtures/unzipped_wacz")
             zip_ref.close()
-        
+
         self.wacz_file = os.path.join(TEST_DIR, 'example.wacz')
         self.warc_file = os.path.join(TEST_DIR, 'example-collection.warc')
-        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/archive/example-collection.warc")
-        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.cdx.gz")
-        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.idx")
-        self.wacz_yaml = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/webarchive.yaml")
+        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/archive/example-collection.warc")
+        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/indexes/index.cdx.gz")
+        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/indexes/index.idx")
+        self.wacz_json = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/datapackage.json")
             
     def test_components(self):
         '''Check that the basic components of a wacz file exist'''
         self.assertEqual(os.path.exists(self.wacz_archive), True)
         self.assertEqual(os.path.exists(self.wacz_index_cdx), True)
         self.assertEqual(os.path.exists(self.wacz_index_idx), True)
-        self.assertEqual(os.path.exists(self.wacz_yaml), True)
+        self.assertEqual(os.path.exists(self.wacz_json), True)
 
     def test_archive_structure(self):
         '''Check that the hash of the original warc file matches that of the warc file in the archive folder'''
-        original_warc = self.support_hash_file(self.warc_file)
-        unzipped_wacz = self.support_hash_file(self.wacz_archive)
-        self.assertEqual(original_warc, unzipped_wacz)
-    
-    def test_yaml_structure(self):
-        '''Check that the wacz yaml file has the expected values'''
-        with open(self.wacz_yaml, 'rb') as f:
-            yaml_dict = (yaml.load(f, Loader=yaml.FullLoader))
-            pages_dict = yaml_dict['pages'][0]
+        f = open(self.warc_file, "rb")
+        original_warc = support_hash_file(f.read())
         f.close()
-
-        self.assertEqual('pages' in yaml_dict.keys(), True)
-        self.assertEqual('title' in yaml_dict.keys(), True)
-        self.assertEqual(yaml_dict['title'], 'Example Collection')
-
-        self.assertEqual('date' in pages_dict.keys(), True)
-        self.assertEqual('title' in pages_dict.keys(), True)
-        self.assertEqual('url' in pages_dict.keys(), True)
-        self.assertEqual(pages_dict['title'], 'Example Domain')
-        self.assertEqual(pages_dict['url'], 'http://www.example.com/')
-        self.assertEqual(pages_dict['date'], '2020-10-07T21:22:36Z')
+        
+        f = open(self.wacz_archive, "rb")
+        archive_warc = support_hash_file(f.read())
+        f.close()
+        
+        self.assertEqual(original_warc, archive_warc)
 
     def test_idx_structure(self):
         '''Check that the idx file has the expected content'''
@@ -82,6 +59,34 @@ class TestWaczFormat(unittest.TestCase):
         f.close()
         self.assertEqual(content, 'com,example)/ 20201007212236 {"url": "http://www.example.com/", "mime": "text/html", "status": "200", "digest": "WJM2KPM4GF3QK2BISVUH2ASX64NOUY7L", "length": "1293", "offset": "845", "filename": "example-collection.warc"}\n')
         
+    def test_data_package_structure(self):
+        '''Check that the package_descriptor is valid'''
+        f = open(self.wacz_json, "rb")
+        json_parse = json.loads(f.read())
+        # Make sure it's recording the correct number of resources
+        self.assertEqual(len(json_parse['resources']), 3)
+        
+        # Check that the correct hash was recorded for a warc
+        f = open(self.warc_file, "rb")
+        original_warc = support_hash_file(f.read())
+        f.close()
+        self.assertEqual(original_warc, json_parse['resources'][0]['stats']['hash'])
+        
+        # Check that the correct hash was recorded for the index.idx
+        f = open(self.wacz_index_idx, "rb")
+        original_wacz_index_idx = support_hash_file(f.read())
+        f.close()
+        self.assertEqual(original_wacz_index_idx, json_parse['resources'][2]['stats']['hash'])
+        
+        # Check that the correct hash was recorded for the index.cdx.gz
+        f = open(self.wacz_index_cdx, "rb")
+        original_wacz_index_cdx = support_hash_file(f.read())
+        f.close()
+        self.assertEqual(original_wacz_index_cdx, json_parse['resources'][1]['stats']['hash'])
+        
+        #Use frictionless validation 
+        valid = validate(self.wacz_json)
+        self.assertTrue(valid.valid)
 
 if __name__ == '__main__':
     unittest.main()

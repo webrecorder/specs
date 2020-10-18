@@ -1,11 +1,10 @@
 import json
 from urllib.parse import quote, urlsplit, urlunsplit
-
-import yaml
+import os, gzip, glob
 from cdxj_indexer.main import CDXJIndexer
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
-
+from frictionless import describe_package
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
@@ -22,7 +21,7 @@ class WACZIndexer(CDXJIndexer):
         self.desc = ''
         self.main_url = kwargs.pop('main_url', '')
 
-        # if url is missinng path segment, ensure it is set to '/'
+        # if url is missing path segment, ensure it is set to '/'
         try:
             parts = list(urlsplit(self.main_url))
             if not parts[2]:
@@ -196,25 +195,42 @@ class WACZIndexer(CDXJIndexer):
 
             yield json.dumps(data) + "\n"
 
-    def generate_metadata(self, res):
+    def generate_metadata(self, res, tmpdir, index_cdx_hash, index_cdx_bytes):
+        path = os.path.join(tmpdir, 'datapackage.json')
+
+        with open(path, "w") as tmp:
+            package = describe_package('%s/*' % tmpdir)
+            package.to_json(path)
+
+        package = open(path, 'r')
+        package_dict = json.loads(package.read())
+        
+        resource_len = len(package_dict['resources'])
+        for i in range(0, resource_len):
+            corrected_path = package_dict['resources'][i]['path'].split("/")[len(package_dict['resources'][i]['path'].split("/"))-1].replace("_", "/")
+            package_dict['resources'][i]['path'] = corrected_path
+            if corrected_path == 'data/indexes/index.cdx.gz':
+                package_dict['resources'][i]['stats']['hash'] = index_cdx_hash
+                package_dict['resources'][i]['stats']['bytes'] = index_cdx_bytes
+
         desc = res.desc or self.desc
         title = res.title or self.title
         textIndex = PAGE_INDEX if res.text else ''
-
         data = {}
         if title:
-            data['title'] = title
+            package_dict['title'] = title
 
         if desc:
-            data['desc'] = desc
+            package_dict['desc'] = desc
 
         if textIndex:
-            data['textIndex'] = textIndex
+            package.descriptor['textIndex'] = textIndex
 
-        data['pages'] = [
+        package_dict['pages'] = [
             {'title': page.get('title') or page.get('url'),
              'date': timestamp_to_iso_date(page['timestamp']),
              'url': page['url']} for page in self.pages.values()]
+        
+        return json.dumps(package_dict)
 
-        return yaml.dump(data)
 
