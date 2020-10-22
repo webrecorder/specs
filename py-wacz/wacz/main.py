@@ -2,8 +2,6 @@ from argparse import ArgumentParser
 from io import BytesIO, StringIO, TextIOWrapper
 import os, datetime, tempfile, shutil, zipfile, sys, gzip
 from wacz.waczindexer import WACZIndexer, PAGE_INDEX
-from frictionless import File, describe_package, helpers
-from wacz.util import support_hash_file
 
 """
 WACZ Generator 0.1.0
@@ -40,8 +38,6 @@ def is_safe_path(path):
 
 def create_wacz(res):
     wacz = zipfile.ZipFile(res.output, 'w')
-    helpers.is_safe_path = is_safe_path
-    tmpdir = tempfile.mkdtemp()
 
     print('Generating indexes...')
 
@@ -90,27 +86,11 @@ def create_wacz(res):
     
    # generate metadata
     print('Generating metadata...')
-    tmpdir = tempfile.mkdtemp()
-    for file in wacz.infolist():
-        content = wacz.read(file.filename)
-        path = os.path.join(tmpdir, file.filename.replace("/", "_"))
-        
-        if ".gz" not in path:
-            with open(path, "wb") as tmp:
-                tmp.write(content)
-        if ".gz" in path:
-            with open(path, "wb") as tmp:
-                 gzip_file = gzip.GzipFile(mode='wb', fileobj=tmp)
-                 gzip_file.write(content)
-                 index_cdx_hash = support_hash_file(content)
-                 index_cdx_bytes = len(content)
-                 gzip_file.close()
 
-    metadata = wacz_indexer.generate_metadata(res, tmpdir, index_cdx_hash, index_cdx_bytes)
+    metadata = wacz_indexer.generate_metadata(res, wacz)
     metadata_file = zipfile.ZipInfo("datapackage.json", now())
     metadata_file.compress_type = zipfile.ZIP_DEFLATED
     wacz.writestr(metadata_file, metadata.encode("utf-8"))
-    shutil.rmtree(tmpdir)
     return wacz
 
 if __name__ == "__main__":
