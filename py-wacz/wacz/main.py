@@ -33,9 +33,6 @@ def main(args=None):
 def now():
     return tuple(datetime.datetime.utcnow().timetuple()[:6])
 
-def is_safe_path(path):
-    return True
-
 def create_wacz(res):
     wacz = zipfile.ZipFile(res.output, 'w')
 

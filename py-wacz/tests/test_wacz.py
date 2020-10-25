@@ -23,7 +23,12 @@ class TestWaczFormat(unittest.TestCase):
         self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/indexes/index.cdx.gz")
         self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/indexes/index.idx")
         self.wacz_json = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/datapackage.json")
-            
+    
+    def find_resource(self, resource_list, filename):
+        for file in resource_list:
+            if filename in file['path']:
+                return file
+
     def test_components(self):
         '''Check that the basic components of a wacz file exist'''
         self.assertEqual(os.path.exists(self.wacz_archive), True)
@@ -70,20 +75,24 @@ class TestWaczFormat(unittest.TestCase):
         f = open(self.warc_file, "rb")
         original_warc = support_hash_file(f.read())
         f.close()
-        self.assertEqual(original_warc, json_parse['resources'][0]['stats']['hash'])
+        
+        warc_resource = self.find_resource(json_parse['resources'], 'example-collection.warc')
+        self.assertEqual(original_warc, warc_resource['stats']['hash'])
         
         # Check that the correct hash was recorded for the index.idx
         f = open(self.wacz_index_idx, "rb")
         original_wacz_index_idx = support_hash_file(f.read())
         f.close()
-        self.assertEqual(original_wacz_index_idx, json_parse['resources'][2]['stats']['hash'])
+        idx_resource = self.find_resource(json_parse['resources'], 'idx')
+        self.assertEqual(original_wacz_index_idx, idx_resource['stats']['hash'])
         
         # Check that the correct hash was recorded for the index.cdx.gz
         f = open(self.wacz_index_cdx, "rb")
         original_wacz_index_cdx = support_hash_file(f.read())
         f.close()
-        self.assertEqual(original_wacz_index_cdx, json_parse['resources'][1]['stats']['hash'])
-        
+        cdx_resource = self.find_resource(json_parse['resources'], 'cdx')
+        self.assertEqual(original_wacz_index_cdx, cdx_resource['stats']['hash'])
+
         #Use frictionless validation 
         valid = validate(self.wacz_json)
         self.assertTrue(valid.valid)
