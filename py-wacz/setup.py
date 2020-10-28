@@ -11,8 +11,8 @@ def load_requirements(filename):
 setup(
     name='wacz',
     version=__version__,
-    author='Ilya Kreymer',
-    author_email='ikreymer@gmail.com',
+    author='Ilya Kreymer, Emma Dickson',
+    author_email='info@webrecorder.net',
     license='Apache 2.0',
     packages=find_packages(exclude=['test']),
     url='https://github.com/webrecorder/wacz-format',
