@@ -49,60 +49,59 @@ following a certain directory and naming convention, into a standard ZIP (or ZIP
 
 The spec currently consists of the following:
 
-1) A extensible directory and naming convention for web archive data
-2) A specification for bundling the directory layout in a ZIP file.
+1) A (frictionless data)[https://frictionlessdata.io/] based directory and datapackage.json file for recording metadata.
+2) A extensible directory and naming convention for web archive data
+3) A specification for bundling the directory layout in a ZIP file.
 
 The documentation is split into what is currently supported in [wabac.js](https://github.com/webrecorder/wabac.js) as stable,
-experimental ideas, and possiblee future extensions.
+experimental ideas, and possible future extensions.
 
 ## Currently Supported
 
 
 #### Directory Layout
 
-The spec is to designate a mostly flat directory structure which can contain different types of web archive collection data.
+The spec is to designate a mostly flat directory structure which can contain different types of web archive collection data while conforming to the frictionless data standards.
 Currently supported:
 
 ```
-- archive/
-- indexes/
-- webarchive.yaml
-- text/
+- data
+  - archive/
+  - indexes/
+- datapackage.json
 ```
 
 ### Directories and Files
 
  
-#### 1) `archive/` (required)
+#### 1) `data/archive/` (required)
  
 The archives directory can contain raw web archive data.
 
 Currently supported formats:
 - WARC (.warc, .warc.gz)
 
-#### 2) `indexes/` (required)
+#### 2) `data/indexes/` (required)
  
- The indexes directory should include various indexes into the raw data stored in `archives/`
+ The indexes directory should include various indexes into the raw data stored in `data/archives/`
  
  Currently possible index formats include:
  - CDX (.cdx, .cdxj) for raw text-based binary sorted indices
  - Compressed CDX (.cdx.gz and .idx) indices
  
-#### 3) `webarchive.yaml` (optional)
+#### 3) `datapackage.json` (required)
 
-This file serves as the manifest for the web archive and can contain at least the following fields.
+This file serves as the manifest for the web archive and is compliant with the frictionless (data standard)[https://frictionlessdata.io/data-package/#the-data-package-suite-of-specifications]
 
-All keys are optional. 
+The file 
 
 Keys specified in this file take precedent over other files, and provide a way to override the configuration
 of the web archive.
 
-```yaml
-title: 'Title of Collection'
-desc: 'Description of Collection'
-pages: <list of pages>
-pageLists: <list of page lists>
-```
+`resources` is a list containing objects with this structure as a default 
+```{"path": "example_path", "stats": {"hash": "example_hash", "bytes": 0}```
+
+
 
 ##### `pages` key
 
@@ -114,18 +113,9 @@ pages is a list of 'Page' objects, each containing at least the following fields
 - `id` - any string or omitted.
 
 Ex:
-```yaml
-pages:
-  - url: https://example.com/
-    date: 2020-06-11T04:56:41Z
-    title: 'Example Domain'
-    id: '123'
-    
-  - url: https://another.example.com/
-    date: 2020-06-26T01:02:03Z
-    id: '456'
-    
-textIndex: <path/to/textIndex>
+```json
+pages: [{'url': 'https://example.com/', 'date': '2020-06-11T04:56:41Z', 'title': 'Example Domain', 'id': '123'}, {'url': 'https://another.example.com/', 'date': '2020-06-26T01:02:03Z', 'id': '456'}]
+
 ```
 
 
@@ -138,16 +128,7 @@ All fields are optional. `title, `desc`, and `id` are strings.
 
 `pageIds` is a list of page ids, and each id should match a page specified in the `pages` key / file.
 
-```yaml
-pageLists:
-  - title: 'Import Pages'
-    desc: 'These are pages that you should definitely view in this web archive'
-    id: 1
-    pageIds:
-       - '123'
-       - 'abc'
-       - '10'
-```
+```pageLists: [{'title':'Import Pages', 'desc': 'These are pages that you should definitely view in this web archive', 'id': '1', 'pageIds': ['123', 'abc', '10']}]```
 
 ##### `textIndex` key (optional, NEW/experimental)
 
@@ -163,7 +144,7 @@ The `url` and `date` are required. The date should be in ISO 8601 format.
 #### 5) `text/` directory (experimental)
 
 Contains a text index as a newline-deliminted JSON format, eg.
-Currently the text index is only used if it is enabled by setting the `textIndex` entry in `webarchive.yaml`
+Currently the text index is only used if it is enabled by setting the `textIndex` entry in `datapackage.json`
 
 ```
 {"url": "https://example.com/", "title": "Example Domain": "text": "Example Domain\nThis domain is for..."}
@@ -202,11 +183,11 @@ Other possible ideas were suggested in this issue: https://github.com/webrecorde
 
 #### Precedence (to be removed)
 
-Generally, keys specified in `webarchive.yaml` take precedence over data loaded by convention.
+Generally, keys specified in `datapackage.json` take precedence over data loaded by convention.
 
 For pages, the following precedence should be used:
 
-1) if `webarchive.yaml` `pages` key exists, pages loaded from there.
+1) if `datapackage.json` `pages` key exists, pages loaded from there.
 2) otherwise, if `pages.yaml` exists, pages are loaded from there.
 3) otherwise, if `pages.csv` exists page are loaded from there.
 
@@ -222,8 +203,8 @@ The ZIP format is useful as a primary packaging of all the different formats.
 
 Already compressed files should not be compressed again to allow for random access.
 
-- All `/archive/` files should be stored in ZIP with 'STORE' mode.
-- All `/index/*.cdx.gz` files should be stored in ZIP with 'STORE' mode.
+- All `data/archive/` files should be stored in ZIP with 'STORE' mode.
+- All `data/index/*.cdx.gz` files should be stored in ZIP with 'STORE' mode.
 - Text files (`*.csv`, `*.yaml`, `*.cdx`, `*.cdxj`) can be stored in the ZIP with either 'DEFLATE' or 'STORE' mode.
 - The text index is `text/*` should be stored in the ZIP with 'STORE' mode.
 
@@ -242,7 +223,7 @@ The web archive collection format stored in a ZIP file allows for efficient rand
 The approach works as follows. Given a ZIP file, a client can quickly:
 ```
 1) Read all entries to determine the contents of the ZIP file via random access
-2) Load manifest from `webarchive.yaml`
+2) Load manifest from `datapackage.json`
 3) Load other metadata from `pages.csv`, if any
 ```
 
