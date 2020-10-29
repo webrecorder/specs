@@ -208,7 +208,7 @@ class WACZIndexer(CDXJIndexer):
                 package_dict['resources'][i]['stats'] = {}
                 package_dict['resources'][i]['stats']['hash'] = support_hash_file(myfile.read())
                 package_dict['resources'][i]['stats']['bytes'] = len(myfile.read())
-                package_dict['resources'][i]['hashing'] = 'sha224'
+                package_dict['resources'][i]['hashing'] = 'sha256'
 
         desc = res.desc or self.desc
         title = res.title or self.title
@@ -221,7 +221,7 @@ class WACZIndexer(CDXJIndexer):
             package_dict['desc'] = desc
 
         if textIndex:
-            package.descriptor['textIndex'] = textIndex
+            package_dict['textIndex'] = textIndex
 
         package_dict['pages'] = [
             {'title': page.get('title') or page.get('url'),
