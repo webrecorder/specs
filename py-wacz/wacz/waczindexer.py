@@ -207,6 +207,7 @@ class WACZIndexer(CDXJIndexer):
             with wacz.open(file, 'r') as myfile:
                 package_dict['resources'][i]['stats'] = {}
                 package_dict['resources'][i]['stats']['hash'] = support_hash_file(myfile.read())
+                myfile.seek(0)
                 package_dict['resources'][i]['stats']['bytes'] = len(myfile.read())
                 package_dict['resources'][i]['hashing'] = 'sha256'
 
