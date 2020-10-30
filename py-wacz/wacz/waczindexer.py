@@ -229,6 +229,6 @@ class WACZIndexer(CDXJIndexer):
              'date': timestamp_to_iso_date(page['timestamp']),
              'url': page['url']} for page in self.pages.values()]
         
-        return json.dumps(package_dict)
+        return json.dumps(package_dict, indent=2)
 
 
