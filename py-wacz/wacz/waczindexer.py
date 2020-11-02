@@ -1,11 +1,10 @@
 import json
 from urllib.parse import quote, urlsplit, urlunsplit
-
-import yaml
+import os, gzip, glob
 from cdxj_indexer.main import CDXJIndexer
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
-
+from wacz.util import support_hash_file
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
@@ -22,7 +21,7 @@ class WACZIndexer(CDXJIndexer):
         self.desc = ''
         self.main_url = kwargs.pop('main_url', '')
 
-        # if url is missinng path segment, ensure it is set to '/'
+        # if url is missing path segment, ensure it is set to '/'
         try:
             parts = list(urlsplit(self.main_url))
             if not parts[2]:
@@ -196,25 +195,40 @@ class WACZIndexer(CDXJIndexer):
 
             yield json.dumps(data) + "\n"
 
-    def generate_metadata(self, res):
+    def generate_metadata(self, res, wacz):
+    
+        package_dict = {}
+        package_dict["profile"] = "data-package"
+        package_dict['resources'] = []
+        for i in range(0, len(wacz.infolist())):
+            file = wacz.infolist()[i]
+            package_dict['resources'].append({})
+            package_dict['resources'][i]['path'] = file.filename
+            with wacz.open(file, 'r') as myfile:
+                content = myfile.read()
+                package_dict['resources'][i]['stats'] = {}
+                package_dict['resources'][i]['stats']['hash'] = support_hash_file(content)
+                package_dict['resources'][i]['stats']['bytes'] = len(content)
+                package_dict['resources'][i]['hashing'] = 'sha256'
+
         desc = res.desc or self.desc
         title = res.title or self.title
         textIndex = PAGE_INDEX if res.text else ''
-
         data = {}
         if title:
-            data['title'] = title
+            package_dict['title'] = title
 
         if desc:
-            data['desc'] = desc
+            package_dict['desc'] = desc
 
         if textIndex:
-            data['textIndex'] = textIndex
+            package_dict['textIndex'] = textIndex
 
-        data['pages'] = [
+        package_dict['pages'] = [
             {'title': page.get('title') or page.get('url'),
              'date': timestamp_to_iso_date(page['timestamp']),
              'url': page['url']} for page in self.pages.values()]
+        
+        return json.dumps(package_dict, indent=2)
 
-        return yaml.dump(data)
 

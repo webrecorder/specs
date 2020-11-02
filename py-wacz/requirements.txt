@@ -1,3 +1,5 @@
+frictionless>=3.23.4
 cdxj-indexer>=1.1.1
-pyyaml
-boilerpy3
+boilerpy3>=1.0.2
+pytest-cov>=2.10.1
+PyYAML>=5.3.1

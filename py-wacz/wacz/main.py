@@ -1,11 +1,6 @@
 from argparse import ArgumentParser
 from io import BytesIO, StringIO, TextIOWrapper
-import zipfile
-import shutil
-import tempfile
-import os
-import datetime
-
+import os, datetime, tempfile, shutil, zipfile, sys, gzip
 from wacz.waczindexer import WACZIndexer, PAGE_INDEX
 
 """
@@ -49,7 +44,6 @@ def create_wacz(res):
     index_file = zipfile.ZipInfo("indexes/index.idx", now())
     index_file.compress_type = zipfile.ZIP_DEFLATED
 
-    #with tempfile.SpooledTemporaryFile(8192*64, mode='wb') as index_buff:
     index_buff = BytesIO()
 
     text_wrap = TextIOWrapper(index_buff, "utf-8", write_through=True)
@@ -63,7 +57,6 @@ def create_wacz(res):
                                    detect_pages=res.detect_pages)
 
         wacz_indexer.process_all()
-
     index_buff.seek(0)
 
     with wacz.open(index_file, 'w') as index:
@@ -76,14 +69,7 @@ def create_wacz(res):
         with wacz.open(archive_file, 'w') as out_fh:
             with open(_input, 'rb') as in_fh:
                 shutil.copyfileobj(in_fh, out_fh)
-
-    # generate metadata
-    print('Generating metadata...')
-    metadata = wacz_indexer.generate_metadata(res)
-
-    metadata_file = zipfile.ZipInfo("webarchive.yaml", now())
-    metadata_file.compress_type = zipfile.ZIP_DEFLATED
-    wacz.writestr(metadata_file, metadata.encode("utf-8"))
+                path = "archive/" + os.path.basename(_input)
 
     if res.text:
         print('Generating text index...')
@@ -94,7 +80,14 @@ def create_wacz(res):
         with wacz.open(pages_file, 'w') as pg_fh:
             for line in wacz_indexer.serialize_json_pages(wacz_indexer.pages):
                 pg_fh.write(line.encode("utf-8"))
+    
+   # generate metadata
+    print('Generating metadata...')
 
+    metadata = wacz_indexer.generate_metadata(res, wacz)
+    metadata_file = zipfile.ZipInfo("datapackage.json", now())
+    metadata_file.compress_type = zipfile.ZIP_DEFLATED
+    wacz.writestr(metadata_file, metadata.encode("utf-8"))
     return wacz
 
 if __name__ == "__main__":
