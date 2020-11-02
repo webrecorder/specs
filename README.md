@@ -74,16 +74,16 @@ Currently supported:
 ### Directories and Files
 
  
-#### 1) `data/archive/` (required)
+#### 1) `archive/` (required)
  
 The archives directory can contain raw web archive data.
 
 Currently supported formats:
 - WARC (.warc, .warc.gz)
 
-#### 2) `data/indexes/` (required)
+#### 2) `indexes/` (required)
  
- The indexes directory should include various indexes into the raw data stored in `data/archives/`
+ The indexes directory should include various indexes into the raw data stored in `archives/`
  
  Currently possible index formats include:
  - CDX (.cdx, .cdxj) for raw text-based binary sorted indices
@@ -203,8 +203,8 @@ The ZIP format is useful as a primary packaging of all the different formats.
 
 Already compressed files should not be compressed again to allow for random access.
 
-- All `data/archive/` files should be stored in ZIP with 'STORE' mode.
-- All `data/index/*.cdx.gz` files should be stored in ZIP with 'STORE' mode.
+- All `archive/` files should be stored in ZIP with 'STORE' mode.
+- All `index/*.cdx.gz` files should be stored in ZIP with 'STORE' mode.
 - Text files (`*.csv`, `*.yaml`, `*.cdx`, `*.cdxj`) can be stored in the ZIP with either 'DEFLATE' or 'STORE' mode.
 - The text index is `text/*` should be stored in the ZIP with 'STORE' mode.
 

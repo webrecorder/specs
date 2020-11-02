@@ -19,9 +19,9 @@ class TestWaczFormat(unittest.TestCase):
 
         self.wacz_file = os.path.join(TEST_DIR, 'example.wacz')
         self.warc_file = os.path.join(TEST_DIR, 'example-collection.warc')
-        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/archive/example-collection.warc")
-        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/indexes/index.cdx.gz")
-        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/data/indexes/index.idx")
+        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/archive/example-collection.warc")
+        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.cdx.gz")
+        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.idx")
         self.wacz_json = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/datapackage.json")
     
     def find_resource(self, resource_list, filename):
