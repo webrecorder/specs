@@ -49,7 +49,7 @@ following a certain directory and naming convention, into a standard ZIP (or ZIP
 
 The spec currently consists of the following:
 
-1) A (frictionless data)[https://frictionlessdata.io/] based directory and datapackage.json file for recording metadata.
+1) A (frictionless data)[https://frictionlessdata.io/] datapackage.json file for recording metadata.
 2) A extensible directory and naming convention for web archive data
 3) A specification for bundling the directory layout in a ZIP file.
 
@@ -65,9 +65,8 @@ The spec is to designate a mostly flat directory structure which can contain dif
 Currently supported:
 
 ```
-- data
-  - archive/
-  - indexes/
+- archive/
+- indexes/
 - datapackage.json
 ```
 
