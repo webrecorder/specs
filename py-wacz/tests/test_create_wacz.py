@@ -7,27 +7,27 @@ from frictionless import validate, Report
 TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
 class TestWaczFormat(unittest.TestCase):
-
-    @classmethod
-    @patch('wacz.main.now')
-    def setUpClass(self, mock_now):   
-        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
-        main(['-o', os.path.join(TEST_DIR, 'example.wacz'), os.path.join(TEST_DIR, 'example-collection.warc')])
-        with zipfile.ZipFile(os.path.join(TEST_DIR, 'example.wacz'), "r") as zip_ref:
-            zip_ref.extractall("tests/fixtures/unzipped_wacz")
-            zip_ref.close()
-
-        self.wacz_file = os.path.join(TEST_DIR, 'example.wacz')
-        self.warc_file = os.path.join(TEST_DIR, 'example-collection.warc')
-        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/archive/example-collection.warc")
-        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.cdx.gz")
-        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/indexes/index.idx")
-        self.wacz_json = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz/datapackage.json")
-    
+        
     def find_resource(self, resource_list, filename):
         for file in resource_list:
             if filename in file['path']:
                 return file
+        
+    @classmethod
+    @patch('wacz.main.now')
+    def setUpClass(self, mock_now):   
+        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
+        main(['create', '-o', os.path.join(TEST_DIR, 'valid_example_1.wacz'), os.path.join(TEST_DIR, 'example-collection.warc')])
+        with zipfile.ZipFile(os.path.join(TEST_DIR, 'valid_example_1.wacz'), "r") as zip_ref:
+            zip_ref.extractall("tests/fixtures/unzipped_wacz_1")
+            zip_ref.close()
+
+        self.wacz_file = os.path.join(TEST_DIR, 'valid_example_1.wacz')
+        self.warc_file = os.path.join(TEST_DIR, 'example-collection.warc')
+        self.wacz_archive = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz_1/archive/example-collection.warc")
+        self.wacz_index_cdx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz_1/indexes/index.cdx.gz")
+        self.wacz_index_idx = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz_1/indexes/index.idx")
+        self.wacz_json = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures/unzipped_wacz_1/datapackage.json")
 
     def test_components(self):
         '''Check that the basic components of a wacz file exist'''

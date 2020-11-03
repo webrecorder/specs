@@ -1,37 +1,77 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser, RawTextHelpFormatter
 from io import BytesIO, StringIO, TextIOWrapper
-import os, datetime, tempfile, shutil, zipfile, sys, gzip
+import os, datetime, shutil, zipfile, sys, gzip, tempfile, pkg_resources
 from wacz.waczindexer import WACZIndexer, PAGE_INDEX
+from frictionless import validate
+from wacz.validate import Validation
 
 """
 WACZ Generator 0.1.0
 """
 
 def main(args=None):
-    parser = ArgumentParser(description='WACZ creator')
+    parser = ArgumentParser(description='WACZ creator',
+                            formatter_class=RawTextHelpFormatter)
+    
+    parser.add_argument('-V', '--version', action='version', version=get_version())
+    
+    subparsers = parser.add_subparsers(dest='cmd')
+    subparsers.required = True
 
-    parser.add_argument('inputs', nargs='+')
-    parser.add_argument('-o', '--output', default="archive.wacz")
+    create = subparsers.add_parser('create', help='create wacz file')
+    
+    create.add_argument('inputs', nargs='+')
+    create.add_argument('-o', '--output', default="archive.wacz")
 
-    parser.add_argument('-t', '--text', help='Generate experimental full-text index', action='store_true')
+    create.add_argument('-t', '--text', help='Generate experimental full-text index', action='store_true')
 
-    parser.add_argument('--detect-pages', action='store_true')
+    create.add_argument('--detect-pages', action='store_true')
 
-    parser.add_argument('--url')
-    parser.add_argument('--date')
-    parser.add_argument('--title')
-    parser.add_argument('--desc')
+    create.add_argument('--url')
+    create.add_argument('--date')
+    create.add_argument('--title')
+    create.add_argument('--desc')
+    create.set_defaults(func=create_wacz)
 
-    res = parser.parse_args(args)
-    wacz = None
-    try:
-        wacz = create_wacz(res)
-    finally:
-        if wacz:
-            wacz.close()
+    validate = subparsers.add_parser('validate', help='validate a wacz file')
+    validate.add_argument('-f', '--file', required=True)
+    validate.set_defaults(func=validate_wacz)
+
+    cmd = parser.parse_args(args=args)
+    value = cmd.func(cmd)
+    return value
+
+def get_version():
+    return '%(prog)s ' + pkg_resources.get_distribution('wacz').version
 
 def now():
     return tuple(datetime.datetime.utcnow().timetuple()[:6])
+
+def validate_wacz(res):
+    validate = Validation(res.file)    
+    version = validate.detect_version()
+    validation_tests = []
+
+    if version == '0.0':
+        return True
+    elif version != '0.0':
+        validation_tests += [
+            validate.frictionless_validate,
+            validate.check_file_paths, 
+            validate.check_file_hashes
+            ]
+    else:
+        print("Validation Failed the passed Wacz is invalid")
+        return False
+
+    for func in validation_tests:
+        success = func()
+        if success is False:
+            print("Validation Failed the passed Wacz is invalid")
+            return False
+    
+    print("Validation Succeeded the passed Wacz is valid")
+    return True
 
 def create_wacz(res):
     wacz = zipfile.ZipFile(res.output, 'w')
