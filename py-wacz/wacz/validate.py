@@ -1,10 +1,11 @@
-import tempfile, os, zipfile, json, pathlib, pkg_resources
+import tempfile, os, zipfile, json, pathlib, pkg_resources, gzip
 from frictionless import validate
 from wacz.util import support_hash_file
 
 class Validation(object):
     def __init__(self, file):
         self.dir = tempfile.TemporaryDirectory()
+        self.wacz = file
         with zipfile.ZipFile(file, "r") as zip_ref:
             zip_ref.extractall(self.dir.name)
             zip_ref.close()
@@ -49,12 +50,19 @@ class Validation(object):
     
     def check_compression(self):
         '''WARCs and compressed cdx.gz should be in ZIP with 'store' compression (not deflate) Indexes and page list can be compressed'''        
-        for filepath in pathlib.Path(self.dir.name).glob('**/*.*'):
-            if os.path.basename(filepath).endswith('cdx.gz'):
-                print(filepath)
-                #zf = zipfile.ZipFile(filepath, 'r')
-                #print(zf.compress_type)  
-                print("END")
+        cdx = zipfile.ZipInfo(os.path.join(self.dir.name, 'indexes/index.cdx.gz'))
+        if cdx.compress_type != 0:
+                return False 
+        
+        wacz =  zipfile.ZipInfo(self.wacz)
+        if wacz.compress_type != 0:
+                return False 
+                
+        archive_folder = os.listdir(os.path.join(self.dir.name, 'archive'))
+        for item in archive_folder:
+            if '.warc' not in item and zf.getinfo(item).compress_type != 0:
+                    return False 
+        return True
         
     def check_file_hashes(self):
         '''Uses the datapackage to check that all the hashes of file in the data folder match those in the datapackage'''

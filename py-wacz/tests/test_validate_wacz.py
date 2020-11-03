@@ -29,8 +29,9 @@ class TestWaczFormat(unittest.TestCase):
         self.assertTrue((['validate', '-f', os.path.join(TEST_DIR, 'valid_example_1.wacz')]))
         self.assertTrue((['validate', '-f', os.path.join(TEST_DIR, 'valid_example_2.wacz')]))
 
-    def test_check_compression(self):
-        self.validation_class_valid_1.check_compression()
+    def test_check_compression_valid(self):
+        self.assertTrue(self.validation_class_valid_1.check_compression())
+        self.assertTrue(self.validation_class_valid_2.check_compression())
 
     def test_frictionless_validate_valid_wacz(self):
         '''Check that the frictionless validation feature identifies a valid wacz data package as valid'''
