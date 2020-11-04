@@ -1,6 +1,8 @@
 import tempfile, os, zipfile, json, pathlib, pkg_resources, gzip
 from frictionless import validate
-from wacz.util import support_hash_file
+from wacz.util import support_hash_file, now
+from wacz.waczindexer import WACZIndexer
+from io import BytesIO, StringIO, TextIOWrapper
 
 class Validation(object):
     def __init__(self, file):
@@ -50,20 +52,60 @@ class Validation(object):
     
     def check_compression(self):
         '''WARCs and compressed cdx.gz should be in ZIP with 'store' compression (not deflate) Indexes and page list can be compressed'''        
-        cdx = zipfile.ZipInfo(os.path.join(self.dir.name, 'indexes/index.cdx.gz'))
-        if cdx.compress_type != 0:
-                return False 
-        
         wacz =  zipfile.ZipInfo(self.wacz)
         if wacz.compress_type != 0:
                 return False 
+                
+        if os.path.exists(os.path.join(self.dir.name, 'indexes/index.cdx.gz')):
+            cdx = zipfile.ZipInfo(os.path.join(self.dir.name, 'indexes/index.cdx.gz'))
+            if cdx.compress_type != 0:
+                    return False 
                 
         archive_folder = os.listdir(os.path.join(self.dir.name, 'archive'))
         for item in archive_folder:
             if '.warc' not in item and zf.getinfo(item).compress_type != 0:
                     return False 
         return True
-        
+    
+    def check_indexes(self):
+        '''Indexing existing WARC which should match the index in the wacz'''      
+        if os.path.exists(os.path.join(self.dir.name, 'indexes/index.cdx.gz')):
+            for resource in self.datapackage['resources']:
+                if resource['path'] == "indexes/index.cdx.gz":
+                    cdx = resource['stats']['hash']
+        else:
+            return False
+            
+        archive_folder = os.listdir(os.path.join(self.dir.name, 'archive'))
+        for item in archive_folder:
+            if '.warc' in item:
+                warc = item
+        wacz_file = tempfile.NamedTemporaryFile(delete=False)
+        wacz = zipfile.ZipFile(wacz_file.name, 'w')
+        data_file = zipfile.ZipInfo("indexes/index.cdx.gz", now())
+        index_buff = BytesIO()
+        text_wrap = TextIOWrapper(index_buff, "utf-8", write_through=True)
+        wacz_indexer = None
+        with wacz.open(data_file, 'w') as data:
+            wacz_indexer = WACZIndexer(text_wrap, {}, sort=True, compress=data,
+                                       fields='referrer',
+                                       data_out_name='index.cdx.gz', records='all',
+                                       main_url='',
+                                       detect_pages='')
+
+            wacz_indexer.process_all()
+        wacz.close()
+        dir = tempfile.TemporaryDirectory()
+        with zipfile.ZipFile(self.wacz, "r") as zip_ref:
+            zip_ref.extractall(dir.name)
+            zip_ref.close()
+            
+        with open(os.path.join(dir.name, 'indexes/index.cdx.gz'), 'rb') as fd:
+            hash = support_hash_file(fd.read())
+            gzip_fd = gzip.GzipFile(fileobj=fd)
+            
+        return cdx == hash
+
     def check_file_hashes(self):
         '''Uses the datapackage to check that all the hashes of file in the data folder match those in the datapackage'''
         for filepath in pathlib.Path(self.dir.name).glob('**/*.*'):

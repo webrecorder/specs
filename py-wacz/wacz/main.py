@@ -1,7 +1,8 @@
 from argparse import ArgumentParser, RawTextHelpFormatter
 from io import BytesIO, StringIO, TextIOWrapper
-import os, datetime, shutil, zipfile, sys, gzip, tempfile, pkg_resources
+import os, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer, PAGE_INDEX
+from wacz.util import now
 from frictionless import validate
 from wacz.validate import Validation
 
@@ -43,9 +44,6 @@ def main(args=None):
 
 def get_version():
     return '%(prog)s ' + pkg_resources.get_distribution('wacz').version
-
-def now():
-    return tuple(datetime.datetime.utcnow().timetuple()[:6])
 
 def validate_wacz(res):
     validate = Validation(res.file)    

@@ -28,7 +28,10 @@ class TestWaczFormat(unittest.TestCase):
         self.assertTrue(main(['validate', '-f', os.path.join(TEST_DIR, 'valid_example_0.wacz')]))
         self.assertTrue((['validate', '-f', os.path.join(TEST_DIR, 'valid_example_1.wacz')]))
         self.assertTrue((['validate', '-f', os.path.join(TEST_DIR, 'valid_example_2.wacz')]))
-
+    
+    def test_check_indexes_valid(self):
+        self.assertTrue(self.validation_class_valid_1.check_indexes())
+        
     def test_check_compression_valid(self):
         self.assertTrue(self.validation_class_valid_1.check_compression())
         self.assertTrue(self.validation_class_valid_2.check_compression())
