@@ -4,6 +4,7 @@ from wacz.util import support_hash_file, now
 from wacz.waczindexer import WACZIndexer
 from io import BytesIO, StringIO, TextIOWrapper
 
+OUTDATED_WACZ = '0.1.0'
 class Validation(object):
     def __init__(self, file):
         self.dir = tempfile.TemporaryDirectory()
@@ -22,9 +23,9 @@ class Validation(object):
             self.datapackage_path = os.path.join(self.dir.name, 'datapackage.json')
             self.datapackage = json.loads(open(self.datapackage_path, 'rb').read())
         elif os.path.exists(os.path.join(self.dir.name, 'webarchive.yaml')):
-            self.version = '0.0'
+            self.version = OUTDATED_WACZ
             self.webarchive_yaml = os.path.join(self.dir.name, 'webarchive.yaml')
-            print("\nVersion detected as 0.0")
+            print("\nWACZ version detected as 0.1.0. This is an outdated version of WACZ.")
         else:
             print("\nVersion not able to be detected, invalid wacz file")
         return self.version
@@ -39,7 +40,7 @@ class Validation(object):
 
     def check_file_paths(self):
         '''Uses the datapackage to check that all the files listed exist in the data folder or that the wacz contains a webarchive.yml file'''        
-        if self.version != '0.0':
+        if self.version != OUTDATED_WACZ:
             package_files = ([ item['path'] for item in self.datapackage['resources']])
             for filepath in pathlib.Path(self.dir.name).glob('**/*.*'):
                 if not os.path.basename(filepath).endswith('datapackage.json'):
