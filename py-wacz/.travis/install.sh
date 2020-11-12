@@ -7,3 +7,5 @@ pip install --upgrade -r py-wacz/requirements.txt
 git clone https://github.com/webrecorder/wacz-format.git
 cd wacz-format/py-wacz
 python setup.py -q install
+#black --check tests/*
+#black --check wacz/*
