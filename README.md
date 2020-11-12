@@ -131,14 +131,8 @@ All fields are optional. `title, `desc`, and `id` are strings.
 
 ##### `textIndex` key (optional, NEW/experimental)
 
-A path to a text index file in the ZIP which contains a seperate full text search index,
+A path to a text index file in the ZIP which contains a full text search index and metadata information about the pages,
 ideally in the `text/` directory.
-
-#### 4) `pages.csv` (optional)
-
-The list of pages, specified in a CSV format.
-Each row should match the 'Page' object and contain at least the following columns: `url`, `date`, `title`, `id`
-The `url` and `date` are required. The date should be in ISO 8601 format.
 
 #### 5) `text/` directory (experimental)
 
@@ -146,18 +140,13 @@ Contains a text index as a newline-deliminted JSON format, eg.
 Currently the text index is only used if it is enabled by setting the `textIndex` entry in `datapackage.json`
 
 ```
-{"url": "https://example.com/", "title": "Example Domain": "text": "Example Domain\nThis domain is for..."}
-{"url": "https://example.com/another", "title": "Another Example", "text": "Some other text for this page..."}
+{"id": 0, "url": "https://example.com/", "title": "Example Domain": "text": "Example Domain\nThis domain is for..."}
+{"id": 1, "url": "https://example.com/another", "title": "Another Example", "text": "Some other text for this page..."}
 ```
 
 This format is still experimental and may change.
 
 ## Possible Support in the future
-
-#### Combining the page and text search indices
-
-Currently, these are two separate entries, a likely future change will combine them into a single
-JSON-delimited list, removing the `pages.csv`
 
 #### Archive formats besides WARC
 

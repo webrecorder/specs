@@ -1,4 +1,4 @@
-import json
+import json, shortuuid
 from urllib.parse import quote, urlsplit, urlunsplit
 import os, gzip, glob
 from cdxj_indexer.main import CDXJIndexer
@@ -8,7 +8,7 @@ from wacz.util import support_hash_file
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
-PAGE_INDEX = "text/pages.pdx"
+PAGE_INDEX = "text/pages.jsonl"
 
 
 # ============================================================================
@@ -79,9 +79,7 @@ class WACZIndexer(CDXJIndexer):
 
     def parse_warcinfo(self, record):
         """Parse WARC information.
-
         :param record: WARC information
-
         :returns: WARC information or None
         :rtype: dict or None
         """
@@ -186,12 +184,12 @@ class WACZIndexer(CDXJIndexer):
 
     def serialize_json_pages(self, pages):
         yield json.dumps({"format": "json-pages-1.0", "title": "All Pages"}) + "\n"
-
+        id = shortuuid.uuid()
         for line in pages.values():
             ts = timestamp_to_iso_date(line["timestamp"])
             title = line.get("title")
 
-            data = {"url": line["url"], "ts": ts}
+            data = {"id": id, "url": line["url"], "ts": ts}
             if title:
                 data["title"] = title
 
@@ -199,6 +197,7 @@ class WACZIndexer(CDXJIndexer):
                 data["text"] = line["text"]
 
             yield json.dumps(data) + "\n"
+            id += 1
 
     def generate_metadata(self, res, wacz):
 
@@ -220,7 +219,6 @@ class WACZIndexer(CDXJIndexer):
 
         desc = res.desc or self.desc
         title = res.title or self.title
-        textIndex = PAGE_INDEX if res.text else ""
         data = {}
         if title:
             package_dict["title"] = title
@@ -228,16 +226,9 @@ class WACZIndexer(CDXJIndexer):
         if desc:
             package_dict["desc"] = desc
 
-        if textIndex:
-            package_dict["textIndex"] = textIndex
+        if res.url:
+            package_dict["mainPageURL"] = res.url
 
-        package_dict["pages"] = [
-            {
-                "title": page.get("title") or page.get("url"),
-                "date": timestamp_to_iso_date(page["timestamp"]),
-                "url": page["url"],
-            }
-            for page in self.pages.values()
-        ]
-
+        if res.date:
+            package_dict["mainPageTS"] = res.date
         return json.dumps(package_dict, indent=2)
