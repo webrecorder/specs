@@ -17,43 +17,46 @@ class WACZIndexer(CDXJIndexer):
         super().__init__(*args, **kwargs)
         self.pages = {}
         self.lists = {}
-        self.title = ''
-        self.desc = ''
-        self.main_url = kwargs.pop('main_url', '')
+        self.title = ""
+        self.desc = ""
+        self.main_url = kwargs.pop("main_url", "")
 
         # if url is missing path segment, ensure it is set to '/'
         try:
             parts = list(urlsplit(self.main_url))
             if not parts[2]:
-                parts[2] = '/'
+                parts[2] = "/"
                 self.main_url = urlunsplit(parts)
         except:
             pass
 
-        self.detect_pages = kwargs.get('detect_pages')
+        self.detect_pages = kwargs.get("detect_pages")
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):
-        type_ = record.rec_headers.get('WARC-Type')
-        if type_ == 'warcinfo':
+        type_ = record.rec_headers.get("WARC-Type")
+        if type_ == "warcinfo":
             self.parse_warcinfo(record)
 
         elif type_ in CDXJIndexer.DEFAULT_RECORDS:
-            if type_ in ('response' 'resource'):
+            if type_ in ("response" "resource"):
                 self.extract_text(record)
 
             super().process_index_entry(it, record, *args)
-
 
     def process_all(self):
         super().process_all()
 
         if self.detect_pages:
-            to_delete = [id_ for id_, value in self.pages.items() if value['url'] not in self.referrers]
+            to_delete = [
+                id_
+                for id_, value in self.pages.items()
+                if value["url"] not in self.referrers
+            ]
             for delete in to_delete:
                 del self.pages[delete]
 
-            print('Num Pages Detected: {0}'.format(len(self.pages)))
+            print("Num Pages Detected: {0}".format(len(self.pages)))
 
     def _do_write(self, urlkey, ts, index, out):
         if self.detect_pages:
@@ -62,12 +65,12 @@ class WACZIndexer(CDXJIndexer):
         super()._do_write(urlkey, ts, index, out)
 
     def detect_page(self, ts, index):
-        referrer = index.get('referrer')
+        referrer = index.get("referrer")
         if referrer:
             self.referrers.add(referrer)
 
     def _read_record(self, record):
-        if hasattr(record, 'buffered_stream'):
+        if hasattr(record, "buffered_stream"):
             content = record.buffered_stream.read()
         else:
             content = record.content_stream().read()
@@ -84,11 +87,11 @@ class WACZIndexer(CDXJIndexer):
         """
         warcinfo = {}
         warcinfo_buff = self._read_record(record)
-        warcinfo_buff = warcinfo_buff.decode('utf-8')
+        warcinfo_buff = warcinfo_buff.decode("utf-8")
         metadata = None
-        for line in warcinfo_buff.rstrip().split('\n'):
-            parts = line.split(':', 1)
-            if parts[0] == 'json-metadata':
+        for line in warcinfo_buff.rstrip().split("\n"):
+            parts = line.split(":", 1)
+            if parts[0] == "json-metadata":
                 metadata = json.loads(parts[1])
             elif len(parts) == 2:
                 warcinfo[parts[0]] = parts[1].strip()
@@ -96,27 +99,27 @@ class WACZIndexer(CDXJIndexer):
         if not metadata:
             return
 
-        if metadata['type'] == 'collection':
-            self.title = metadata.get('title', '')
-            self.desc = metadata.get('desc', '')
+        if metadata["type"] == "collection":
+            self.title = metadata.get("title", "")
+            self.desc = metadata.get("desc", "")
 
-        elif metadata['type'] == 'recording':
-            pages = metadata.get('pages', [])
+        elif metadata["type"] == "recording":
+            pages = metadata.get("pages", [])
             for page in pages:
-                id_ = page['timestamp'] + '/' + page['url']
+                id_ = page["timestamp"] + "/" + page["url"]
                 self.pages[id_] = page
 
         self.detect_pages = False
 
     def extract_text(self, record):
-        url = record.rec_headers.get('WARC-Target-URI')
-        date = record.rec_headers.get('WARC-Date')
+        url = record.rec_headers.get("WARC-Target-URI")
+        date = record.rec_headers.get("WARC-Date")
         ts = iso_date_to_timestamp(date)
-        id_ = ts + '/' + url
+        id_ = ts + "/" + url
 
         if self.main_url and url == self.main_url:
-            print('Found Main Url: {0}'.format(url))
-            self.pages[id_] = {'timestamp': ts, 'url': url, 'title': url}
+            print("Found Main Url: {0}".format(url))
+            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
 
         mime = self.get_record_mime_type(record)
 
@@ -124,12 +127,12 @@ class WACZIndexer(CDXJIndexer):
             return
 
         status = record.http_headers.get_statuscode()
-        if record.http_headers and status.startswith('3'):
+        if record.http_headers and status.startswith("3"):
             return
 
         if id_ not in self.pages:
             if self.detect_pages:
-                self.pages[id_] = {'timestamp': ts, 'url': url, 'title': url}
+                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
             else:
                 return
 
@@ -167,68 +170,74 @@ class WACZIndexer(CDXJIndexer):
         return mime.split(";")[0]
 
     def serialize_cdxj_pages(self, pages):
-        yield '!meta 0 ' + json.dumps({'format': 'cdxj-pages-1.0', 'title': 'All Pages'})
+        yield "!meta 0 " + json.dumps(
+            {"format": "cdxj-pages-1.0", "title": "All Pages"}
+        )
 
         for line in pages.values():
-            ts = timestamp_to_iso_date(line['timestamp'])
-            title = quote(line.get('title') or line.get('url'), safe=':/?&=')
+            ts = timestamp_to_iso_date(line["timestamp"])
+            title = quote(line.get("title") or line.get("url"), safe=":/?&=")
 
-            data = {'url': line['url']}
-            if 'text' in line:
-                data['text'] = line['text']
+            data = {"url": line["url"]}
+            if "text" in line:
+                data["text"] = line["text"]
 
-            yield title + ' ' + ts + ' ' + json.dumps(data)
+            yield title + " " + ts + " " + json.dumps(data)
 
     def serialize_json_pages(self, pages):
-        yield json.dumps({'format': 'json-pages-1.0', 'title': 'All Pages'}) + "\n"
+        yield json.dumps({"format": "json-pages-1.0", "title": "All Pages"}) + "\n"
 
         for line in pages.values():
-            ts = timestamp_to_iso_date(line['timestamp'])
-            title = line.get('title')
+            ts = timestamp_to_iso_date(line["timestamp"])
+            title = line.get("title")
 
-            data = {'url': line['url'], 'ts': ts}
+            data = {"url": line["url"], "ts": ts}
             if title:
-                data['title']= title
+                data["title"] = title
 
-            if 'text' in line:
-                data['text'] = line['text']
+            if "text" in line:
+                data["text"] = line["text"]
 
             yield json.dumps(data) + "\n"
 
     def generate_metadata(self, res, wacz):
-    
+
         package_dict = {}
         package_dict["profile"] = "data-package"
-        package_dict['resources'] = []
+        package_dict["resources"] = []
         for i in range(0, len(wacz.infolist())):
             file = wacz.infolist()[i]
-            package_dict['resources'].append({})
-            package_dict['resources'][i]['path'] = file.filename
-            with wacz.open(file, 'r') as myfile:
+            package_dict["resources"].append({})
+            package_dict["resources"][i]["path"] = file.filename
+            with wacz.open(file, "r") as myfile:
                 content = myfile.read()
-                package_dict['resources'][i]['stats'] = {}
-                package_dict['resources'][i]['stats']['hash'] = support_hash_file(content)
-                package_dict['resources'][i]['stats']['bytes'] = len(content)
-                package_dict['resources'][i]['hashing'] = 'sha256'
+                package_dict["resources"][i]["stats"] = {}
+                package_dict["resources"][i]["stats"]["hash"] = support_hash_file(
+                    content
+                )
+                package_dict["resources"][i]["stats"]["bytes"] = len(content)
+                package_dict["resources"][i]["hashing"] = "sha256"
 
         desc = res.desc or self.desc
         title = res.title or self.title
-        textIndex = PAGE_INDEX if res.text else ''
+        textIndex = PAGE_INDEX if res.text else ""
         data = {}
         if title:
-            package_dict['title'] = title
+            package_dict["title"] = title
 
         if desc:
-            package_dict['desc'] = desc
+            package_dict["desc"] = desc
 
         if textIndex:
-            package_dict['textIndex'] = textIndex
+            package_dict["textIndex"] = textIndex
 
-        package_dict['pages'] = [
-            {'title': page.get('title') or page.get('url'),
-             'date': timestamp_to_iso_date(page['timestamp']),
-             'url': page['url']} for page in self.pages.values()]
-        
+        package_dict["pages"] = [
+            {
+                "title": page.get("title") or page.get("url"),
+                "date": timestamp_to_iso_date(page["timestamp"]),
+                "url": page["url"],
+            }
+            for page in self.pages.values()
+        ]
+
         return json.dumps(package_dict, indent=2)
-
-
