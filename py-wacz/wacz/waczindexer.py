@@ -8,7 +8,7 @@ from wacz.util import support_hash_file
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
-PAGE_INDEX = "text/pages.jsonl"
+PAGE_INDEX = "pages/pages.jsonl"
 
 
 # ============================================================================
@@ -197,7 +197,6 @@ class WACZIndexer(CDXJIndexer):
                 data["text"] = line["text"]
 
             yield json.dumps(data) + "\n"
-            id += 1
 
     def generate_metadata(self, res, wacz):
 
