@@ -94,7 +94,7 @@ class WACZIndexer(CDXJIndexer):
             elif len(parts) == 2:
                 warcinfo[parts[0]] = parts[1].strip()
 
-        if not metadata:
+        if not metadata or "type" not in metadata:
             return
 
         if metadata["type"] == "collection":
