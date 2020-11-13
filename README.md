@@ -140,8 +140,8 @@ Contains a text index as a newline-deliminted JSON format, eg.
 Currently the text index is only used if it is enabled by setting the `textIndex` entry in `datapackage.json`
 
 ```
-{"id": 0, "url": "https://example.com/", "title": "Example Domain": "text": "Example Domain\nThis domain is for..."}
-{"id": 1, "url": "https://example.com/another", "title": "Another Example", "text": "Some other text for this page..."}
+{"id": "nLwACQTa35WSg9xVpyybHa", "url": "https://example.com/", "title": "Example Domain": "text": "Example Domain\nThis domain is for..."}
+{"id": "MUKcYvLNJhkvLhLfjz2yJC", "url": "https://example.com/another", "title": "Another Example", "text": "Some other text for this page..."}
 ```
 
 This format is still experimental and may change.
