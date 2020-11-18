@@ -50,7 +50,7 @@ def main(args=None):
 
     cmd = parser.parse_args(args=args)
 
-    if cmd.ts is not None and cmd.url is None:
+    if cmd.cmd == "create" and cmd.ts is not None and cmd.url is None:
         parser.error("--url must be specified when --ts is passed")
 
     value = cmd.func(cmd)
@@ -135,7 +135,7 @@ def create_wacz(res):
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
 
-    if res.text or wacz_indexer.pages:
+    if res.text:
         print("Generating text index...")
         # generate pages/text
         pages_file = zipfile.ZipInfo(PAGE_INDEX, now())
