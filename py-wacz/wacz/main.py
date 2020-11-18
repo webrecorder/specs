@@ -38,7 +38,6 @@ def main(args=None):
 
     create.add_argument("--ts")
     create.add_argument("--url")
-
     create.add_argument("--date")
     create.add_argument("--title")
     create.add_argument("--desc")
@@ -135,7 +134,12 @@ def create_wacz(res):
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
 
-    if res.text:
+    if (
+        res.text
+        or wacz_indexer.main_url
+        and len(wacz_indexer.pages) > 0
+        and wacz_indexer.main_url_flag == True
+    ):
         print("Generating text index...")
         # generate pages/text
         pages_file = zipfile.ZipInfo(PAGE_INDEX, now())

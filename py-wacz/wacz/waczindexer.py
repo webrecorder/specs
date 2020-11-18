@@ -144,10 +144,10 @@ class WACZIndexer(CDXJIndexer):
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
             print("Found Main ts: {0}".format(ts))
+            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
         if self.main_url and self.main_url == url and self.main_ts == None:
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
-
             self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
 
         mime = self.get_record_mime_type(record)
