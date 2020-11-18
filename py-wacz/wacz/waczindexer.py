@@ -45,7 +45,7 @@ class WACZIndexer(CDXJIndexer):
         elif type_ in CDXJIndexer.DEFAULT_RECORDS:
             if type_ in ("response" "resource"):
                 self.extract_text(record)
-            
+
             super().process_index_entry(it, record, *args)
 
     def process_all(self):
@@ -62,10 +62,17 @@ class WACZIndexer(CDXJIndexer):
 
             print("Num Pages Detected: {0}".format(len(self.pages)))
 
-        if hasattr(self,'main_url_flag') and hasattr(self,'main_ts_flag') and self.main_url_flag == False and self.main_ts_flag == False:
-            raise ValueError("ts %s not found in index with %s" % (self.main_ts, self.main_url))
-        
-        if hasattr(self,'main_url_flag') and self.main_url_flag == False:
+        if (
+            hasattr(self, "main_url_flag")
+            and hasattr(self, "main_ts_flag")
+            and self.main_url_flag == False
+            and self.main_ts_flag == False
+        ):
+            raise ValueError(
+                "ts %s not found in index with %s" % (self.main_ts, self.main_url)
+            )
+
+        if hasattr(self, "main_url_flag") and self.main_url_flag == False:
             raise ValueError("Url %s not found in index" % (self.main_url))
 
     def _do_write(self, urlkey, ts, index, out):
@@ -125,7 +132,12 @@ class WACZIndexer(CDXJIndexer):
         ts = iso_date_to_timestamp(date)
         id_ = ts + "/" + url
 
-        if self.main_url and self.main_url == url and self.main_ts and self.main_ts == ts:
+        if (
+            self.main_url
+            and self.main_url == url
+            and self.main_ts
+            and self.main_ts == ts
+        ):
             self.main_ts_flag = True
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
@@ -133,7 +145,7 @@ class WACZIndexer(CDXJIndexer):
         if self.main_url and self.main_url == url and self.main_ts == None:
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
-                        
+
             self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
 
         mime = self.get_record_mime_type(record)
@@ -167,7 +179,7 @@ class WACZIndexer(CDXJIndexer):
 
             if doc.title:
                 self.pages[id_]["title"] = doc.title
-            
+
         except Exception as e:
             print(e)
             # skip text extraction in case of errors
@@ -235,7 +247,7 @@ class WACZIndexer(CDXJIndexer):
 
         desc = res.desc or self.desc
         title = res.title or self.title
-    
+
         data = {}
         if title:
             package_dict["title"] = title
