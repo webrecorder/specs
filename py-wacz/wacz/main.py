@@ -36,7 +36,9 @@ def main(args=None):
 
     create.add_argument("--detect-pages", action="store_true")
 
+    create.add_argument("--ts")
     create.add_argument("--url")
+
     create.add_argument("--date")
     create.add_argument("--title")
     create.add_argument("--desc")
@@ -47,6 +49,10 @@ def main(args=None):
     validate.set_defaults(func=validate_wacz)
 
     cmd = parser.parse_args(args=args)
+
+    if cmd.ts is not None and cmd.url is None:
+        parser.error("--url must be specified when --ts is passed")
+
     value = cmd.func(cmd)
     return value
 
@@ -108,6 +114,7 @@ def create_wacz(res):
             data_out_name="index.cdx.gz",
             records="all",
             main_url=res.url,
+            main_ts=res.ts,
             detect_pages=res.detect_pages,
         )
 
@@ -128,7 +135,7 @@ def create_wacz(res):
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
 
-    if res.text:
+    if res.text or wacz_indexer.pages:
         print("Generating text index...")
         # generate pages/text
         pages_file = zipfile.ZipInfo(PAGE_INDEX, now())
