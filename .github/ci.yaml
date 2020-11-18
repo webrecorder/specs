@@ -27,9 +27,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade -r py-wacz/requirements.txt 
-          cd wacz-format/py-wacz
+	  python -m pip install --upgrade pip
+	  pip install --upgrade -r py-wacz/requirements.txt 
+	  cd wacz-format/py-wacz
 	  python setup.py -q install
 	  black --check tests/*
 	  black --check wacz/*
