@@ -1,4 +1,4 @@
-import unittest, os, zipfile, sys, gzip, json
+import unittest, os, zipfile, sys, gzip, json, tempfile
 from wacz.main import main, now
 from unittest.mock import patch
 from wacz.util import support_hash_file
@@ -17,47 +17,51 @@ class TestWaczFormat(unittest.TestCase):
     @patch("wacz.main.now")
     def setUpClass(self, mock_now):
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
+        self.tmpdir = tempfile.TemporaryDirectory()
         main(
             [
                 "create",
                 "-f",
                 os.path.join(TEST_DIR, "example-collection.warc"),
                 "-o",
-                os.path.join(TEST_DIR, "valid_example_1.wacz"),
+                os.path.join(self.tmpdir.name, "valid_example_1.wacz"),
             ]
         )
         with zipfile.ZipFile(
-            os.path.join(TEST_DIR, "valid_example_1.wacz"), "r"
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz"), "r"
         ) as zip_ref:
-            zip_ref.extractall("tests/fixtures/unzipped_wacz_1")
+            zip_ref.extractall(os.path.join(self.tmpdir.name, "unzipped_wacz_1"))
             zip_ref.close()
 
-        self.wacz_file = os.path.join(TEST_DIR, "valid_example_1.wacz")
+        print(os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1')))
+        print('end')
+        self.wacz_file = os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         self.warc_file = os.path.join(TEST_DIR, "example-collection.warc")
+        
         self.wacz_archive = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            "fixtures/unzipped_wacz_1/archive/example-collection.warc",
+            self.tmpdir.name,
+            "unzipped_wacz_1/archive/example-collection.warc",
         )
         self.wacz_index_cdx = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            "fixtures/unzipped_wacz_1/indexes/index.cdx.gz",
+            self.tmpdir.name,
+            "unzipped_wacz_1/indexes/index.cdx.gz",
         )
         self.wacz_index_idx = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            "fixtures/unzipped_wacz_1/indexes/index.idx",
+            self.tmpdir.name,
+            "unzipped_wacz_1/indexes/index.idx",
         )
         self.wacz_json = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            "fixtures/unzipped_wacz_1/datapackage.json",
+            self.tmpdir.name,
+            "unzipped_wacz_1/datapackage.json",
         )
 
     def test_components(self):
         """Check that the basic components of a wacz file exist"""
-        self.assertEqual(os.path.exists(self.wacz_archive), True)
-        self.assertEqual(os.path.exists(self.wacz_index_cdx), True)
-        self.assertEqual(os.path.exists(self.wacz_index_idx), True)
-        self.assertEqual(os.path.exists(self.wacz_json), True)
-
+        self.assertTrue('example-collection.warc' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/archive')))
+        self.assertTrue('index.cdx.gz' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/indexes')))
+        self.assertTrue('index.idx' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/indexes')))
+        self.assertTrue('datapackage.json' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/')))
+        
     def test_archive_structure(self):
         """Check that the hash of the original warc file matches that of the warc file in the archive folder"""
         f = open(self.warc_file, "rb")
