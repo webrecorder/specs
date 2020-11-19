@@ -1,14 +1,12 @@
 import json, shortuuid
 from urllib.parse import quote, urlsplit, urlunsplit
-import os, gzip, glob
+import os, gzip, glob, zipfile
 from cdxj_indexer.main import CDXJIndexer
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
-from wacz.util import support_hash_file
+from wacz.util import support_hash_file, now
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
-
-PAGE_INDEX = "pages/pages.jsonl"
 
 
 # ============================================================================
@@ -16,9 +14,10 @@ class WACZIndexer(CDXJIndexer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.pages = {}
-        self.lists = {}
+        self.extra_page_lists = {}
         self.title = ""
         self.desc = ""
+        self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
 
@@ -37,6 +36,7 @@ class WACZIndexer(CDXJIndexer):
             pass
 
         self.detect_pages = kwargs.get("detect_pages")
+        self.extract_text = kwargs.get('extract_text')
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):
@@ -46,7 +46,7 @@ class WACZIndexer(CDXJIndexer):
 
         elif type_ in CDXJIndexer.DEFAULT_RECORDS:
             if type_ in ("response" "resource"):
-                self.extract_text(record)
+                self.check_pages_and_text(record)
 
             super().process_index_entry(it, record, *args)
 
@@ -119,6 +119,9 @@ class WACZIndexer(CDXJIndexer):
         if metadata["type"] == "collection":
             self.title = metadata.get("title", "")
             self.desc = metadata.get("desc", "")
+            lists = metadata.get("lists")
+            if lists:
+                self.extract_page_lists(lists)
 
         elif metadata["type"] == "recording":
             pages = metadata.get("pages", [])
@@ -128,7 +131,27 @@ class WACZIndexer(CDXJIndexer):
 
         self.detect_pages = False
 
-    def extract_text(self, record):
+    def extract_page_lists(self, lists):
+        for pagelist in lists:
+            pagelist_header = {}
+            # unique id for this page list, will also be the filename
+            if "slug" in pagelist:
+                uid = pagelist["slug"]
+            else:
+                uid = shortuuid.uuid()
+
+            text_list = list(
+                self.serialize_json_pages(
+                    pages=pagelist["bookmarks"],
+                    id=uid,
+                    title=pagelist.get("title"),
+                    desc=pagelist.get("desc"),
+                )
+            )
+
+            self.extra_page_lists[uid] = text_list
+
+    def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
         date = record.rec_headers.get("WARC-Date")
         ts = iso_date_to_timestamp(date)
@@ -165,6 +188,10 @@ class WACZIndexer(CDXJIndexer):
             else:
                 return
 
+        # if not extracting text, then finish here
+        if not self.extract_text:
+            return
+
         content = self._read_record(record)
         if not content:
             return
@@ -178,6 +205,7 @@ class WACZIndexer(CDXJIndexer):
 
             if doc.content:
                 self.pages[id_]["text"] = doc.content
+                self.has_text = True
 
             if doc.title:
                 self.pages[id_]["title"] = doc.title
@@ -198,29 +226,35 @@ class WACZIndexer(CDXJIndexer):
         mime = content_type or ""
         return mime.split(";")[0]
 
-    def serialize_cdxj_pages(self, pages):
-        yield "!meta 0 " + json.dumps(
-            {"format": "cdxj-pages-1.0", "title": "All Pages"}
-        )
+    def write_page_list(self, wacz, filename, page_iter):
+        pages_file = zipfile.ZipInfo(filename, now())
+        pages_file.compress_type = zipfile.ZIP_DEFLATED
 
-        for line in pages.values():
-            ts = timestamp_to_iso_date(line["timestamp"])
-            title = quote(line.get("title") or line.get("url"), safe=":/?&=")
+        with wacz.open(pages_file, "w") as pg_fh:
+            for line in page_iter:
+                pg_fh.write(line.encode("utf-8"))
 
-            data = {"url": line["url"]}
-            if "text" in line:
-                data["text"] = line["text"]
+    def serialize_json_pages(self, pages, id, title, desc=None, has_text=False):
+        page_header = {"format": "json-pages-1.0", "id": id}
 
-            yield title + " " + ts + " " + json.dumps(data)
+        if title:
+            page_header["title"] = title
 
-    def serialize_json_pages(self, pages):
-        yield json.dumps({"format": "json-pages-1.0", "title": "All Pages"}) + "\n"
-        id = shortuuid.uuid()
-        for line in pages.values():
+        if desc:
+            page_header["description"] = desc
+
+        if has_text:
+            page_header["hasText"] = True
+
+        yield json.dumps(page_header) + "\n"
+
+        for line in pages:
             ts = timestamp_to_iso_date(line["timestamp"])
             title = line.get("title")
 
-            data = {"id": id, "url": line["url"], "ts": ts}
+            uid = line.get("id") or line.get("page_id") or shortuuid.uuid()
+
+            data = {"id": uid, "url": line["url"], "ts": ts}
             if title:
                 data["title"] = title
 
@@ -230,7 +264,6 @@ class WACZIndexer(CDXJIndexer):
             yield json.dumps(data) + "\n"
 
     def generate_metadata(self, res, wacz):
-
         package_dict = {}
         package_dict["profile"] = "data-package"
         package_dict["resources"] = []
@@ -250,18 +283,21 @@ class WACZIndexer(CDXJIndexer):
         desc = res.desc or self.desc
         title = res.title or self.title
 
-        data = {}
+        metadata = {}
         if title:
-            package_dict["title"] = title
+            metadata["title"] = title
 
         if desc:
-            package_dict["desc"] = desc
+            metadata["desc"] = desc
 
         if self.main_url:
-            package_dict["mainPageURL"] = self.main_url
+            metadata["mainPageURL"] = self.main_url
             if self.main_ts:
-                package_dict["mainPageTS"] = self.main_ts
+                metadata["mainPageTS"] = self.main_ts
 
         if res.date:
-            package_dict["mainPageTS"] = res.date
+            metadata["mainPageTS"] = res.date
+
+        package_dict["metadata"] = metadata
+
         return json.dumps(package_dict, indent=2)
