@@ -30,11 +30,15 @@ def main(args=None):
     create.add_argument(
         "-t",
         "--text",
-        help="Generate experimental full-text index",
+        help="Generates pages.jsonl with a full-text index",
         action="store_true",
     )
 
-    create.add_argument("--detect-pages", action="store_true")
+    create.add_argument(
+        "--detect-pages",
+        help="Generates pages.jsonl without a text index",
+        action="store_true",
+    )
 
     create.add_argument("--ts")
     create.add_argument("--url")
@@ -136,6 +140,7 @@ def create_wacz(res):
 
     if (
         res.text
+        or res.detect_pages
         or wacz_indexer.main_url
         and len(wacz_indexer.pages) > 0
         and wacz_indexer.main_url_flag == True

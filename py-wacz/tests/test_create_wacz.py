@@ -33,11 +33,9 @@ class TestWaczFormat(unittest.TestCase):
             zip_ref.extractall(os.path.join(self.tmpdir.name, "unzipped_wacz_1"))
             zip_ref.close()
 
-        print(os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1')))
-        print('end')
         self.wacz_file = os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         self.warc_file = os.path.join(TEST_DIR, "example-collection.warc")
-        
+
         self.wacz_archive = os.path.join(
             self.tmpdir.name,
             "unzipped_wacz_1/archive/example-collection.warc",
@@ -57,11 +55,23 @@ class TestWaczFormat(unittest.TestCase):
 
     def test_components(self):
         """Check that the basic components of a wacz file exist"""
-        self.assertTrue('example-collection.warc' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/archive')))
-        self.assertTrue('index.cdx.gz' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/indexes')))
-        self.assertTrue('index.idx' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/indexes')))
-        self.assertTrue('datapackage.json' in os.listdir(os.path.join(self.tmpdir.name, 'unzipped_wacz_1/')))
-        
+        self.assertTrue(
+            "example-collection.warc"
+            in os.listdir(os.path.join(self.tmpdir.name, "unzipped_wacz_1/archive"))
+        )
+        self.assertTrue(
+            "index.cdx.gz"
+            in os.listdir(os.path.join(self.tmpdir.name, "unzipped_wacz_1/indexes"))
+        )
+        self.assertTrue(
+            "index.idx"
+            in os.listdir(os.path.join(self.tmpdir.name, "unzipped_wacz_1/indexes"))
+        )
+        self.assertTrue(
+            "datapackage.json"
+            in os.listdir(os.path.join(self.tmpdir.name, "unzipped_wacz_1/"))
+        )
+
     def test_archive_structure(self):
         """Check that the hash of the original warc file matches that of the warc file in the archive folder"""
         f = open(self.warc_file, "rb")
