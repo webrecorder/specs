@@ -36,7 +36,7 @@ class WACZIndexer(CDXJIndexer):
             pass
 
         self.detect_pages = kwargs.get("detect_pages")
-        self.extract_text = kwargs.get('extract_text')
+        self.extract_text = kwargs.get("extract_text")
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):
@@ -265,6 +265,8 @@ class WACZIndexer(CDXJIndexer):
 
     def generate_metadata(self, res, wacz):
         package_dict = {}
+        metadata = {}
+
         package_dict["profile"] = "data-package"
         package_dict["resources"] = []
         for i in range(0, len(wacz.infolist())):
@@ -280,10 +282,10 @@ class WACZIndexer(CDXJIndexer):
                 package_dict["resources"][i]["stats"]["bytes"] = len(content)
                 package_dict["resources"][i]["hashing"] = "sha256"
 
+        # set optional metadata
         desc = res.desc or self.desc
         title = res.title or self.title
 
-        metadata = {}
         if title:
             metadata["title"] = title
 
