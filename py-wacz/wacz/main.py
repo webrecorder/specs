@@ -2,12 +2,12 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 from io import BytesIO, StringIO, TextIOWrapper
 import os, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer
-from wacz.util import now
+from wacz.util import now, WACZ_VERSION
 from frictionless import validate
 from wacz.validate import Validation, OUTDATED_WACZ
 
 """
-WACZ Generator 0.1.0
+WACZ Generator 0.2.0
 """
 
 PAGE_INDEX = "pages/pages.jsonl"
@@ -61,17 +61,23 @@ def main(args=None):
 
 
 def get_version():
-    return "%(prog)s " + pkg_resources.get_distribution("wacz").version
+    return (
+        "%(prog)s "
+        + pkg_resources.get_distribution("wacz").version
+        + " -- WACZ File Format: "
+        + WACZ_VERSION
+    )
 
 
 def validate_wacz(res):
     validate = Validation(res.file)
-    version = validate.detect_version()
+    version = validate.version
     validation_tests = []
 
     if version == OUTDATED_WACZ:
         return True
-    elif version != OUTDATED_WACZ:
+
+    elif version == WACZ_VERSION:
         validation_tests += [
             validate.frictionless_validate,
             validate.check_file_paths,
@@ -140,18 +146,21 @@ def create_wacz(res):
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
 
-    if (len(wacz_indexer.pages) > 0):
+    if len(wacz_indexer.pages) > 0:
         print("Generating page index...")
         # generate pages/text
         wacz_indexer.write_page_list(
             wacz,
             PAGE_INDEX,
             wacz_indexer.serialize_json_pages(
-                wacz_indexer.pages.values(), id="pages", title="All Pages", has_text=wacz_indexer.has_text
+                wacz_indexer.pages.values(),
+                id="pages",
+                title="All Pages",
+                has_text=wacz_indexer.has_text,
             ),
         )
 
-    if (len(wacz_indexer.extra_page_lists) > 0):
+    if len(wacz_indexer.extra_page_lists) > 0:
         print("Generating extra page lists...")
 
         for name, pagelist in wacz_indexer.extra_page_lists.items():

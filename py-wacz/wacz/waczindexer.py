@@ -4,7 +4,7 @@ import os, gzip, glob, zipfile
 from cdxj_indexer.main import CDXJIndexer
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
-from wacz.util import support_hash_file, now
+from wacz.util import support_hash_file, now, WACZ_VERSION
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
@@ -203,17 +203,21 @@ class WACZIndexer(CDXJIndexer):
 
             doc = extractor.get_doc(content)
 
+            curr_page = self.pages[id_]
+
             if doc.content:
                 self.pages[id_]["text"] = doc.content
                 self.has_text = True
 
-            if doc.title:
+            # only set title if unset, or set to url (default)
+            # avoid overriding user-specified title, if any
+            if doc.title and self.pages[id_].get("title", url) == url:
                 self.pages[id_]["title"] = doc.title
 
         except Exception as e:
-            print(e)
             # skip text extraction in case of errors
-            pass
+            print("Skipping, Text Extraction Failed For: " + url)
+            print(e)
 
     def get_record_mime_type(self, record):
         if record.http_headers:
@@ -250,13 +254,13 @@ class WACZIndexer(CDXJIndexer):
 
         for line in pages:
             ts = timestamp_to_iso_date(line["timestamp"])
-            title = line.get("title")
+            page_title = line.get("title")
 
             uid = line.get("id") or line.get("page_id") or shortuuid.uuid()
 
             data = {"id": uid, "url": line["url"], "ts": ts}
-            if title:
-                data["title"] = title
+            if page_title:
+                data["title"] = page_title
 
             if "text" in line:
                 data["text"] = line["text"]
@@ -301,5 +305,6 @@ class WACZIndexer(CDXJIndexer):
             metadata["mainPageTS"] = res.date
 
         package_dict["metadata"] = metadata
+        package_dict["wacz_version"] = WACZ_VERSION
 
         return json.dumps(package_dict, indent=2)

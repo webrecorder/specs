@@ -62,7 +62,7 @@ class TestWaczIndexing(unittest.TestCase):
                 filelist = sorted(zf.namelist())
 
                 # verify pages file added for each list
-                self.assertEquals(
+                self.assertEqual(
                     filelist,
                     [
                         "archive/example-collection-with-lists.warc",
