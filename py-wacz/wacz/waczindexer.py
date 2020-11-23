@@ -20,17 +20,10 @@ class WACZIndexer(CDXJIndexer):
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
-<<<<<<< HEAD
 
         if self.main_ts != None and self.main_ts != "":
             self.main_ts_flag = False
 
-=======
-
-        if self.main_ts != None and self.main_ts != "":
-            self.main_ts_flag = False
-
->>>>>>> 7f5e0e9b6fa4c9e09c71e2636b8f95ce7f0a795b
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
         # if url is missing path segment, ensure it is set to '/'
@@ -297,10 +290,6 @@ class WACZIndexer(CDXJIndexer):
         desc = res.desc or self.desc
         title = res.title or self.title
 
-<<<<<<< HEAD
-        data = {}
-=======
->>>>>>> 7f5e0e9b6fa4c9e09c71e2636b8f95ce7f0a795b
         if title:
             metadata["title"] = title
 
@@ -308,15 +297,9 @@ class WACZIndexer(CDXJIndexer):
             metadata["desc"] = desc
 
         if self.main_url:
-<<<<<<< HEAD
-            package_dict["mainPageURL"] = self.main_url
-            if self.main_ts:
-                package_dict["mainPageTS"] = self.main_ts
-=======
             metadata["mainPageURL"] = self.main_url
             if self.main_ts:
                 metadata["mainPageTS"] = self.main_ts
->>>>>>> 7f5e0e9b6fa4c9e09c71e2636b8f95ce7f0a795b
 
         if res.date:
             metadata["mainPageTS"] = res.date
