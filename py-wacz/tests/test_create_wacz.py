@@ -111,7 +111,7 @@ class TestWaczFormat(unittest.TestCase):
         f = open(self.wacz_json, "rb")
         json_parse = json.loads(f.read())
         # Make sure it's recording the correct number of resources
-        self.assertEqual(len(json_parse["resources"]), 3)
+        self.assertEqual(len(json_parse["resources"]), 4)
 
         # Check that the correct hash was recorded for a warc
         f = open(self.warc_file, "rb")

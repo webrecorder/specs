@@ -1,14 +1,18 @@
 from argparse import ArgumentParser, RawTextHelpFormatter
 from io import BytesIO, StringIO, TextIOWrapper
 import os, datetime, shutil, zipfile, sys, gzip, pkg_resources
-from wacz.waczindexer import WACZIndexer, PAGE_INDEX
-from wacz.util import now
+from wacz.waczindexer import WACZIndexer
+from wacz.util import now, WACZ_VERSION
 from frictionless import validate
 from wacz.validate import Validation, OUTDATED_WACZ
 
 """
-WACZ Generator 0.1.0
+WACZ Generator 0.2.0
 """
+
+PAGE_INDEX = "pages/pages.jsonl"
+
+PAGE_INDEX_TEMPLATE = "pages/{0}.jsonl"
 
 
 def main(args=None):
@@ -61,17 +65,23 @@ def main(args=None):
 
 
 def get_version():
-    return "%(prog)s " + pkg_resources.get_distribution("wacz").version
+    return (
+        "%(prog)s "
+        + pkg_resources.get_distribution("wacz").version
+        + " -- WACZ File Format: "
+        + WACZ_VERSION
+    )
 
 
 def validate_wacz(res):
     validate = Validation(res.file)
-    version = validate.detect_version()
+    version = validate.version
     validation_tests = []
 
     if version == OUTDATED_WACZ:
         return True
-    elif version != OUTDATED_WACZ:
+
+    elif version == WACZ_VERSION:
         validation_tests += [
             validate.frictionless_validate,
             validate.check_file_paths,
@@ -119,9 +129,11 @@ def create_wacz(res):
             main_url=res.url,
             main_ts=res.ts,
             detect_pages=res.detect_pages,
+            extract_text=res.text,
         )
 
         wacz_indexer.process_all()
+
     index_buff.seek(0)
 
     with wacz.open(index_file, "w") as index:
@@ -138,21 +150,29 @@ def create_wacz(res):
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
 
-    if (
-        res.text
-        or res.detect_pages
-        or wacz_indexer.main_url
-        and len(wacz_indexer.pages) > 0
-        and wacz_indexer.main_url_flag == True
-    ):
-        print("Generating text index...")
+    if len(wacz_indexer.pages) > 0:
+        print("Generating page index...")
         # generate pages/text
-        pages_file = zipfile.ZipInfo(PAGE_INDEX, now())
-        pages_file.compress_type = zipfile.ZIP_DEFLATED
+        wacz_indexer.write_page_list(
+            wacz,
+            PAGE_INDEX,
+            wacz_indexer.serialize_json_pages(
+                wacz_indexer.pages.values(),
+                id="pages",
+                title="All Pages",
+                has_text=wacz_indexer.has_text,
+            ),
+        )
 
-        with wacz.open(pages_file, "w") as pg_fh:
-            for line in wacz_indexer.serialize_json_pages(wacz_indexer.pages):
-                pg_fh.write(line.encode("utf-8"))
+    if len(wacz_indexer.extra_page_lists) > 0:
+        print("Generating extra page lists...")
+
+        for name, pagelist in wacz_indexer.extra_page_lists.items():
+            if name == "pages":
+                name = shortuuid.uuid()
+            filename = PAGE_INDEX_TEMPLATE.format(name)
+
+            wacz_indexer.write_page_list(wacz, filename, pagelist)
 
     # generate metadata
     print("Generating metadata...")

@@ -14,16 +14,22 @@ class Validation(object):
         with zipfile.ZipFile(file, "r") as zip_ref:
             zip_ref.extractall(self.dir.name)
             zip_ref.close()
-        self.version = self.detect_version()
+        self.detect_version()
 
     def detect_version(self):
         self.version = None
         if os.path.exists(os.path.join(self.dir.name, "datapackage.json")):
-            self.version = pkg_resources.get_distribution("wacz").version
-            print("\nVersion detected as %s" % self.version)
             self.data_folder = os.listdir(self.dir.name)
             self.datapackage_path = os.path.join(self.dir.name, "datapackage.json")
             self.datapackage = json.loads(open(self.datapackage_path, "rb").read())
+
+            try:
+                self.version = self.datapackage["wacz_version"]
+            except:
+                print("\nVersion missing from datapackage.json, invalid wacz file")
+                return
+
+            print("\nVersion detected as %s" % self.version)
         elif os.path.exists(os.path.join(self.dir.name, "webarchive.yaml")):
             self.version = OUTDATED_WACZ
             self.webarchive_yaml = os.path.join(self.dir.name, "webarchive.yaml")
@@ -32,7 +38,6 @@ class Validation(object):
             )
         else:
             print("\nVersion not able to be detected, invalid wacz file")
-        return self.version
 
     def frictionless_validate(self):
         """Uses the frictionless data package to validate the datapackage.json file"""
