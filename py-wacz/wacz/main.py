@@ -34,11 +34,15 @@ def main(args=None):
     create.add_argument(
         "-t",
         "--text",
-        help="Generate experimental full-text index",
+        help="Generates pages.jsonl with a full-text index",
         action="store_true",
     )
 
-    create.add_argument("--detect-pages", action="store_true")
+    create.add_argument(
+        "--detect-pages",
+        help="Generates pages.jsonl without a text index",
+        action="store_true",
+    )
 
     create.add_argument("--ts")
     create.add_argument("--url")
