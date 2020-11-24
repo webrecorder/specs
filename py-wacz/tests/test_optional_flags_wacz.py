@@ -254,7 +254,9 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_pages, "rb")
             json_pages = [json.loads(jline) for jline in f.read().splitlines()]
             self.assertEqual(json_pages[1]["url"], "http://www.example.com/")
-            self.assertEqual(json_parse["metadata"]["mainPageURL"], "http://www.example.com/")
+            self.assertEqual(
+                json_parse["metadata"]["mainPageURL"], "http://www.example.com/"
+            )
             assert "mainPageTS" not in json_parse.keys()
 
     def test_warc_with_invalid_url_flag(self):
@@ -332,7 +334,9 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_pages, "rb")
             json_pages = [json.loads(jline) for jline in f.read().splitlines()]
             self.assertEqual(json_pages[1]["url"], "http://www.example.com/")
-            self.assertEqual(json_parse["metadata"]["mainPageURL"], "http://www.example.com/")
+            self.assertEqual(
+                json_parse["metadata"]["mainPageURL"], "http://www.example.com/"
+            )
             self.assertEqual(json_parse["metadata"]["mainPageTS"], "20201007212236")
 
 

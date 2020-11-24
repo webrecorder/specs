@@ -41,7 +41,6 @@ class TestWaczFormat(unittest.TestCase):
             (["validate", "-f", os.path.join(self.tmpdir.name, "valid_example_1.wacz")])
         )
 
-
     def test_check_indexes_valid(self):
         self.assertTrue(self.validation_class_valid_1.check_indexes())
 
@@ -69,7 +68,6 @@ class TestWaczFormat(unittest.TestCase):
         """Correctly succeed on a wacz with valid files"""
         valid_1 = self.validation_class_valid_1.check_file_paths()
         self.assertTrue(valid_1)
-
 
     def test_hashes_valid_wacz(self):
         """Correctly succeed on a wacz with matching hashes"""
