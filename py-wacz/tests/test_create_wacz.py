@@ -68,6 +68,10 @@ class TestWaczFormat(unittest.TestCase):
             in os.listdir(os.path.join(self.tmpdir.name, "unzipped_wacz_1/indexes"))
         )
         self.assertTrue(
+            "pages.jsonl"
+            in os.listdir(os.path.join(self.tmpdir.name, "unzipped_wacz_1/pages"))
+        )
+        self.assertTrue(
             "datapackage.json"
             in os.listdir(os.path.join(self.tmpdir.name, "unzipped_wacz_1/"))
         )
