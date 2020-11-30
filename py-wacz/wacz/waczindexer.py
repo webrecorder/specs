@@ -21,11 +21,9 @@ class WACZIndexer(CDXJIndexer):
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
 
-        if self.main_ts != None and self.main_ts != "":
-            self.main_ts_flag = False
-
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
+            self.main_ts_flag = False
         # if url is missing path segment, ensure it is set to '/'
         try:
             parts = list(urlsplit(self.main_url))
