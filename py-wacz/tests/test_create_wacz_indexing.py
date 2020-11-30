@@ -10,7 +10,7 @@ TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 class TestWaczIndexing(unittest.TestCase):
     def test_warc_with_other_metadata(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -19,22 +19,22 @@ class TestWaczIndexing(unittest.TestCase):
                         "-o",
                         os.path.join(tmpdir, "example-warcinfo-metadata.wacz"),
                     ]
-                )
+                ), 0
             )
 
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "validate",
                         "-f",
                         os.path.join(tmpdir, "example-warcinfo-metadata.wacz"),
                     ]
-                )
+                ), 0
             )
 
     def test_warc_with_extra_lists(self):
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -43,17 +43,17 @@ class TestWaczIndexing(unittest.TestCase):
                         "-o",
                         os.path.join(tmpdir, "example-collection-with-lists.wacz"),
                     ]
-                )
+                ), 0
             )
 
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "validate",
                         "-f",
                         os.path.join(tmpdir, "example-collection-with-lists.wacz"),
                     ]
-                )
+                ), 0
             )
 
             with zipfile.ZipFile(
