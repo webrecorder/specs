@@ -3,6 +3,7 @@ from frictionless import validate
 from wacz.util import support_hash_file, now
 from wacz.waczindexer import WACZIndexer
 from io import BytesIO, StringIO, TextIOWrapper
+import glob
 
 OUTDATED_WACZ = "0.1.0"
 
@@ -15,6 +16,35 @@ class Validation(object):
             zip_ref.extractall(self.dir.name)
             zip_ref.close()
         self.detect_version()
+
+    def check_required_contents(self):
+        """Checks the general component of the wacz and notifies users whats missing"""
+        if os.path.exists(os.path.join(self.dir.name, "datapackage.json")) is False:
+            print("Datapackage is missing from your wacz file")
+            return 1
+        if (
+            glob.glob(os.path.join(self.dir.name, "archive/*.warc")) == False
+            and glob.glob(os.path.join(self.dir.name, "archive/*.warc.gz")) == False
+        ):
+            print(
+                "A warc file is missing from your archive folder you must have a .warc or .warc.gz file in your archive folder"
+            )
+            return 1
+        if (
+            glob.glob(os.path.join(self.dir.name, "indexes/index.cdx.gz")) == False
+            and glob.glob(os.path.join(self.dir.name, "indexes/index.cdx.gz")) == False
+            and glob.glob(os.path.join(self.dir.name, "indexes/index.idx")) == False
+        ):
+            print(
+                "An index file is missing from your indexes folder you must have an index.cdx.gz, index,cdx or index.idx in your index folder"
+            )
+            return 1
+        if glob.glob(os.path.join(self.dir.name, "pages/pages.jsonl")) == False:
+            print(
+                "An index file is missing from your indexes folder you must have an index.cdx.gz, index,cdx or index.idx in your index folder"
+            )
+            return 1
+        return 0
 
     def detect_version(self):
         self.version = None

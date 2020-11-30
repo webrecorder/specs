@@ -79,6 +79,108 @@ class TestWaczFormat(unittest.TestCase):
         valid = self.validation_class_invalid.check_file_hashes()
         self.assertFalse(valid)
 
+    def test_invalid_wacz_missing_datapackage(self):
+        """Correctly fail on a wacz with no datapackage"""
+        tmpdir = tempfile.TemporaryDirectory()
+        main(
+            [
+                "create",
+                "-f",
+                os.path.join(TEST_DIR, "example-collection.warc"),
+                "-o",
+                os.path.join(tmpdir.name, "valid_example_1.wacz"),
+            ]
+        )
+        with zipfile.ZipFile(
+            os.path.join(tmpdir.name, "valid_example_1.wacz"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(os.path.join(tmpdir.name, "unzipped_wacz_1"))
+            zip_ref.close()
+
+        os.remove(os.path.join(tmpdir.name, "unzipped_wacz_1/datapackage.json"))
+        validation_class = Validation(
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz")
+        )
+        valid = validation_class.check_required_contents()
+        self.assertFalse(valid)
+
+    def test_invalid_wacz_missing_index(self):
+        """Correctly fail on a wacz with no index"""
+        tmpdir = tempfile.TemporaryDirectory()
+        main(
+            [
+                "create",
+                "-f",
+                os.path.join(TEST_DIR, "example-collection.warc"),
+                "-o",
+                os.path.join(tmpdir.name, "valid_example_1.wacz"),
+            ]
+        )
+        with zipfile.ZipFile(
+            os.path.join(tmpdir.name, "valid_example_1.wacz"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(os.path.join(tmpdir.name, "unzipped_wacz_1"))
+            zip_ref.close()
+
+        os.remove(os.path.join(tmpdir.name, "unzipped_wacz_1/indexes/index.cdx.gz"))
+        validation_class = Validation(
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz")
+        )
+        valid = validation_class.check_required_contents()
+        self.assertFalse(valid)
+
+    def test_invalid_wacz_missing_warc(self):
+        """Correctly fail on a wacz with no warc file"""
+        tmpdir = tempfile.TemporaryDirectory()
+        main(
+            [
+                "create",
+                "-f",
+                os.path.join(TEST_DIR, "example-collection.warc"),
+                "-o",
+                os.path.join(tmpdir.name, "valid_example_1.wacz"),
+            ]
+        )
+        with zipfile.ZipFile(
+            os.path.join(tmpdir.name, "valid_example_1.wacz"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(os.path.join(tmpdir.name, "unzipped_wacz_1"))
+            zip_ref.close()
+
+        os.remove(
+            os.path.join(tmpdir.name, "unzipped_wacz_1/archive/example-collection.warc")
+        )
+        validation_class = Validation(
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz")
+        )
+        valid = validation_class.check_required_contents()
+        self.assertFalse(valid)
+
+    def test_invalid_wacz_missing_pages(self):
+        """Correctly fail on a wacz with no pages file"""
+        tmpdir = tempfile.TemporaryDirectory()
+        main(
+            [
+                "create",
+                "-f",
+                os.path.join(TEST_DIR, "example-collection.warc"),
+                "-o",
+                os.path.join(tmpdir.name, "valid_example_1.wacz"),
+            ]
+        )
+        with zipfile.ZipFile(
+            os.path.join(tmpdir.name, "valid_example_1.wacz"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(os.path.join(tmpdir.name, "unzipped_wacz_1"))
+            zip_ref.close()
+
+        os.remove(os.path.join(tmpdir.name, "unzipped_wacz_1/pages/pages.jsonl"))
+        validation_class = Validation(
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz")
+        )
+        valid = validation_class.check_required_contents()
+        self.assertFalse(valid)
+
 
 if __name__ == "__main__":
     unittest.main()
