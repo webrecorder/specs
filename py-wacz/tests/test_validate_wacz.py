@@ -102,7 +102,7 @@ class TestWaczFormat(unittest.TestCase):
             os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         )
         valid = validation_class.check_required_contents()
-        self.assertFalse(valid)
+        self.assertEqual(valid, 0)
 
     def test_invalid_wacz_missing_index(self):
         """Correctly fail on a wacz with no index"""
@@ -127,7 +127,7 @@ class TestWaczFormat(unittest.TestCase):
             os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         )
         valid = validation_class.check_required_contents()
-        self.assertFalse(valid)
+        self.assertEqual(valid, 0)
 
     def test_invalid_wacz_missing_warc(self):
         """Correctly fail on a wacz with no warc file"""
@@ -154,7 +154,7 @@ class TestWaczFormat(unittest.TestCase):
             os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         )
         valid = validation_class.check_required_contents()
-        self.assertFalse(valid)
+        self.assertEqual(valid, 0)
 
     def test_invalid_wacz_missing_pages(self):
         """Correctly fail on a wacz with no pages file"""
@@ -179,7 +179,7 @@ class TestWaczFormat(unittest.TestCase):
             os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         )
         valid = validation_class.check_required_contents()
-        self.assertFalse(valid)
+        self.assertEqual(valid, 0)
 
 
 if __name__ == "__main__":
