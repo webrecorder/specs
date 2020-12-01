@@ -10,7 +10,7 @@ To use, first install `pip install -r requirements.txt`, and then run:
 ```
 python setup.py install
 
-wacz -o myfile.wacz <path/to/WARC>
+wacz create -o myfile.wacz <path/to/WARC>
 ```
 
 The resulting `myfile.wacz` should be loadable via [ReplayWeb.page](https://replayweb.page)
