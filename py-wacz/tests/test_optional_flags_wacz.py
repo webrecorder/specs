@@ -25,7 +25,8 @@ class TestWaczFormat(unittest.TestCase):
                         os.path.join(tmpdir, "example-collection-valid-url.wacz"),
                         "--detect-pages",
                     ]
-                ), 0
+                ),
+                0,
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url.wacz"), "r"
@@ -66,7 +67,8 @@ class TestWaczFormat(unittest.TestCase):
                         os.path.join(tmpdir, "example-collection-valid-url.wacz"),
                         "-t",
                     ]
-                ), 0
+                ),
+                0,
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url.wacz"), "r"
@@ -108,7 +110,8 @@ class TestWaczFormat(unittest.TestCase):
                             "--ts",
                             "2020104212236",
                         ]
-                    ), 0
+                    ),
+                    0,
                 )
 
     @patch("wacz.main.now")
@@ -127,7 +130,8 @@ class TestWaczFormat(unittest.TestCase):
                         "--desc",
                         "fake desc",
                     ]
-                ), 0
+                ),
+                0,
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-desc.wacz"), "r"
@@ -163,7 +167,8 @@ class TestWaczFormat(unittest.TestCase):
                         "--title",
                         "Example Title",
                     ]
-                ), 0
+                ),
+                0,
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-title.wacz"), "r"
@@ -199,7 +204,8 @@ class TestWaczFormat(unittest.TestCase):
                         "--date",
                         "2020-11-01",
                     ]
-                ), 0
+                ),
+                0,
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-date.wacz"), "r"
@@ -235,7 +241,8 @@ class TestWaczFormat(unittest.TestCase):
                         "--url",
                         "http://www.example.com/",
                     ]
-                ), 0
+                ),
+                0,
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url.wacz"), "r"
@@ -313,7 +320,8 @@ class TestWaczFormat(unittest.TestCase):
                         "--ts",
                         "20201007212236",
                     ]
-                ), 0
+                ),
+                0,
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url-valid-ts.wacz"), "r"

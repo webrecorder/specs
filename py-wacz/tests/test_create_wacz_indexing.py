@@ -19,7 +19,8 @@ class TestWaczIndexing(unittest.TestCase):
                         "-o",
                         os.path.join(tmpdir, "example-warcinfo-metadata.wacz"),
                     ]
-                ), 0
+                ),
+                0,
             )
 
             self.assertEqual(
@@ -29,7 +30,8 @@ class TestWaczIndexing(unittest.TestCase):
                         "-f",
                         os.path.join(tmpdir, "example-warcinfo-metadata.wacz"),
                     ]
-                ), 0
+                ),
+                0,
             )
 
     def test_warc_with_extra_lists(self):
@@ -43,7 +45,8 @@ class TestWaczIndexing(unittest.TestCase):
                         "-o",
                         os.path.join(tmpdir, "example-collection-with-lists.wacz"),
                     ]
-                ), 0
+                ),
+                0,
             )
 
             self.assertEqual(
@@ -53,7 +56,8 @@ class TestWaczIndexing(unittest.TestCase):
                         "-f",
                         os.path.join(tmpdir, "example-collection-with-lists.wacz"),
                     ]
-                ), 0
+                ),
+                0,
             )
 
             with zipfile.ZipFile(
