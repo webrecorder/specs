@@ -79,7 +79,7 @@ def validate_wacz(res):
     validation_tests = []
 
     if version == OUTDATED_WACZ:
-        return True
+        return 0
 
     elif version == WACZ_VERSION:
         validation_tests += [
@@ -89,16 +89,16 @@ def validate_wacz(res):
         ]
     else:
         print("Validation Failed the passed Wacz is invalid")
-        return False
+        return 1
 
     for func in validation_tests:
         success = func()
         if success is False:
             print("Validation Failed the passed Wacz is invalid")
-            return False
+            return 1
 
     print("Validation Succeeded the passed Wacz is valid")
-    return True
+    return 0
 
 
 def create_wacz(res):
@@ -181,8 +181,8 @@ def create_wacz(res):
     metadata_file = zipfile.ZipInfo("datapackage.json", now())
     metadata_file.compress_type = zipfile.ZIP_DEFLATED
     wacz.writestr(metadata_file, metadata.encode("utf-8"))
-    return wacz
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(0 if main() else 1)
+    main()

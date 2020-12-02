@@ -15,7 +15,7 @@ class TestWaczFormat(unittest.TestCase):
         """When passing the text index flag pages/pages.jsonl should be generated."""
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -25,7 +25,7 @@ class TestWaczFormat(unittest.TestCase):
                         os.path.join(tmpdir, "example-collection-valid-url.wacz"),
                         "--detect-pages",
                     ]
-                )
+                ), 0
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url.wacz"), "r"
@@ -56,7 +56,7 @@ class TestWaczFormat(unittest.TestCase):
         """When passing the text index flag pages/pages.jsonl should be generated with a full and accurate text index."""
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -66,7 +66,7 @@ class TestWaczFormat(unittest.TestCase):
                         os.path.join(tmpdir, "example-collection-valid-url.wacz"),
                         "-t",
                     ]
-                )
+                ), 0
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url.wacz"), "r"
@@ -97,7 +97,7 @@ class TestWaczFormat(unittest.TestCase):
         """If a user only passes the --ts flag we should return an error and a message about needing to also pass the --url flag"""
         with tempfile.TemporaryDirectory() as tmpdir:
             with self.assertRaises(SystemExit):
-                self.assertTrue(
+                self.assertEqual(
                     main(
                         [
                             "create",
@@ -108,7 +108,7 @@ class TestWaczFormat(unittest.TestCase):
                             "--ts",
                             "2020104212236",
                         ]
-                    )
+                    ), 0
                 )
 
     @patch("wacz.main.now")
@@ -116,7 +116,7 @@ class TestWaczFormat(unittest.TestCase):
         """When passing a valid date flag the datapackage should have that as the mainpageTS"""
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -127,7 +127,7 @@ class TestWaczFormat(unittest.TestCase):
                         "--desc",
                         "fake desc",
                     ]
-                )
+                ), 0
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-desc.wacz"), "r"
@@ -152,7 +152,7 @@ class TestWaczFormat(unittest.TestCase):
         """When passing a valid title flag the datapackage should have that as the title value"""
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -163,7 +163,7 @@ class TestWaczFormat(unittest.TestCase):
                         "--title",
                         "Example Title",
                     ]
-                )
+                ), 0
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-title.wacz"), "r"
@@ -188,7 +188,7 @@ class TestWaczFormat(unittest.TestCase):
         """When passing a valid date flag the datapackage should have that as the mainpageTS"""
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -199,7 +199,7 @@ class TestWaczFormat(unittest.TestCase):
                         "--date",
                         "2020-11-01",
                     ]
-                )
+                ), 0
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-date.wacz"), "r"
@@ -224,7 +224,7 @@ class TestWaczFormat(unittest.TestCase):
         """When passing a valid url flag the url should be added to the pages.jsonl file and appear in the datapackage"""
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -235,7 +235,7 @@ class TestWaczFormat(unittest.TestCase):
                         "--url",
                         "http://www.example.com/",
                     ]
-                )
+                ), 0
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url.wacz"), "r"
@@ -298,7 +298,7 @@ class TestWaczFormat(unittest.TestCase):
         mock_now.return_value = (2020, 10, 7, 22, 29, 10)
         """When passing an a valid url and ts flag we should see those values represented in the datapackage and pages.jsonl file"""
         with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertTrue(
+            self.assertEqual(
                 main(
                     [
                         "create",
@@ -313,7 +313,7 @@ class TestWaczFormat(unittest.TestCase):
                         "--ts",
                         "20201007212236",
                     ]
-                )
+                ), 0
             )
             with zipfile.ZipFile(
                 os.path.join(tmpdir, "example-collection-valid-url-valid-ts.wacz"), "r"
