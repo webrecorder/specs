@@ -9,10 +9,12 @@ def support_hash_file(data):
 
 
 def now():
+    """Returns the current time"""
     return tuple(datetime.datetime.utcnow().timetuple()[:6])
 
 
 def validateJSON(jsonData):
+    """Attempts to validate a string as json"""
     try:
         json.loads(jsonData)
     except ValueError as err:
