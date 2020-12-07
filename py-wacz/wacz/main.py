@@ -67,7 +67,7 @@ def main(args=None):
     if cmd.cmd == "create" and cmd.ts is not None and cmd.url is None:
         parser.error("--url must be specified when --ts is passed")
 
-    if cmd.cmd == "create" and cmd.pages is not None and cmd.detect_pages is not None:
+    if cmd.cmd == "create" and cmd.detect_pages is not False and cmd.pages is not None:
         parser.error("--pages and --detect-pages can't be set at the same time they cancel each other out.")
 
     value = cmd.func(cmd)
@@ -165,6 +165,7 @@ def create_wacz(res):
         print("Analyzing the passed pages.jsonl file and generating a page index...")
         # analyze the passed jsonl file
         passed_content = open(wacz_indexer.passed_pages, "r").read().split("\n")
+        print(passed_content)
         if passed_content[len(passed_content) - 1] == "":
             passed_content.pop()
         validate_passed_pages(passed_content)
