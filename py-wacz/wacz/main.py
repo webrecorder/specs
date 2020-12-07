@@ -39,6 +39,13 @@ def main(args=None):
     )
 
     create.add_argument(
+        "-p",
+        "--pages",
+        help="Overrides the pages generation with the passed jsonl pages",
+        action="store",
+    )
+
+    create.add_argument(
         "--detect-pages",
         help="Generates pages.jsonl without a text index",
         action="store_true",
@@ -130,13 +137,13 @@ def create_wacz(res):
             main_url=res.url,
             main_ts=res.ts,
             detect_pages=res.detect_pages,
+            passed_pages=res.pages,
             extract_text=res.text,
         )
 
         wacz_indexer.process_all()
 
     index_buff.seek(0)
-
     with wacz.open(index_file, "w") as index:
         shutil.copyfileobj(index_buff, index)
 
@@ -150,6 +157,18 @@ def create_wacz(res):
             with open(_input, "rb") as in_fh:
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
+
+    if wacz_indexer.passed_pages != None:
+        print("Analyzing the passed pages index")
+        # analyze the passed jsonl file
+        passed_content = open(wacz_indexer.passed_pages, 'r').read().split("\n")
+        wacz_indexer.validate_passed_pages(wacz_indexer.passed_pages)
+        wacz_indexer.analyze_passed_pages(
+            wacz,
+            PAGE_INDEX,
+            passed_content
+        )
+
 
     if len(wacz_indexer.pages) > 0:
         print("Generating page index...")

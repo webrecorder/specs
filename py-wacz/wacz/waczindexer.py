@@ -20,6 +20,7 @@ class WACZIndexer(CDXJIndexer):
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
+        self.passed_pages =  kwargs.pop("passed_pages", "")
 
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
@@ -122,10 +123,11 @@ class WACZIndexer(CDXJIndexer):
                 self.extract_page_lists(lists)
 
         elif metadata["type"] == "recording":
-            pages = metadata.get("pages", [])
-            for page in pages:
-                id_ = page["timestamp"] + "/" + page["url"]
-                self.pages[id_] = page
+            if self.passed_pages == None:
+                pages = metadata.get("pages", [])
+                for page in pages:
+                    id_ = page["timestamp"] + "/" + page["url"]
+                    self.pages[id_] = page
 
         self.detect_pages = False
 
@@ -149,6 +151,25 @@ class WACZIndexer(CDXJIndexer):
 
             self.extra_page_lists[uid] = text_list
 
+    def validateJSON(self, jsonData):
+        try:
+            json.loads(jsonData)
+        except ValueError as err:
+            return False
+        return True
+
+    def validate_passed_pages(self, passed_pages):
+        for pages in passed_pages:
+            if self.validateJSON(pages) == False: return 0
+        if 'format' not in json.loads(passed_pages[0]).keys(): return 0
+        if 'id' not in json.loads(passed_pages[0]).keys(): return 0
+        if 'title' not in json.loads(passed_pages[0]).keys(): return 0
+        return 1
+
+    def analyze_passed_pages(self, wacz, page_index, passed_pages):
+        header = passed_pages[0]
+        print(header)
+
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
         date = record.rec_headers.get("WARC-Date")
@@ -165,11 +186,13 @@ class WACZIndexer(CDXJIndexer):
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
             print("Found Main ts: {0}".format(ts))
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            if self.passed_pages == None:
+                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
         if self.main_url and self.main_url == url and self.main_ts == None:
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            if self.passed_pages == None:
+                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
 
         mime = self.get_record_mime_type(record)
 
@@ -203,13 +226,13 @@ class WACZIndexer(CDXJIndexer):
 
             curr_page = self.pages[id_]
 
-            if doc.content:
+            if doc.content and self.passed_pages == None:
                 self.pages[id_]["text"] = doc.content
                 self.has_text = True
 
             # only set title if unset, or set to url (default)
             # avoid overriding user-specified title, if any
-            if doc.title and self.pages[id_].get("title", url) == url:
+            if doc.title and self.pages[id_].get("title", url) == url and self.passed_pages != None:
                 self.pages[id_]["title"] = doc.title
 
         except Exception as e:
