@@ -14,13 +14,14 @@ class WACZIndexer(CDXJIndexer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.pages = {}
+        self.constructed_pages = {}
         self.extra_page_lists = {}
         self.title = ""
         self.desc = ""
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
-        self.passed_pages =  kwargs.pop("passed_pages", "")
+        self.passed_pages = kwargs.pop("passed_pages", "")
 
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
@@ -36,6 +37,11 @@ class WACZIndexer(CDXJIndexer):
 
         self.detect_pages = kwargs.get("detect_pages")
         self.extract_text = kwargs.get("extract_text")
+
+        if self.passed_pages != None:
+            self.detect_pages = True
+            self.extract_text = True
+
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):
@@ -61,7 +67,8 @@ class WACZIndexer(CDXJIndexer):
             for delete in to_delete:
                 del self.pages[delete]
 
-            print("Num Pages Detected: {0}".format(len(self.pages)))
+            if self.passed_pages == None:
+                print("Num Pages Detected: {0}".format(len(self.pages)))
 
         if (
             hasattr(self, "main_url_flag")
@@ -123,11 +130,10 @@ class WACZIndexer(CDXJIndexer):
                 self.extract_page_lists(lists)
 
         elif metadata["type"] == "recording":
-            if self.passed_pages == None:
-                pages = metadata.get("pages", [])
-                for page in pages:
-                    id_ = page["timestamp"] + "/" + page["url"]
-                    self.pages[id_] = page
+            pages = metadata.get("pages", [])
+            for page in pages:
+                id_ = page["timestamp"] + "/" + page["url"]
+                self.pages[id_] = page
 
         self.detect_pages = False
 
@@ -151,24 +157,52 @@ class WACZIndexer(CDXJIndexer):
 
             self.extra_page_lists[uid] = text_list
 
-    def validateJSON(self, jsonData):
-        try:
-            json.loads(jsonData)
-        except ValueError as err:
-            return False
-        return True
-
-    def validate_passed_pages(self, passed_pages):
-        for pages in passed_pages:
-            if self.validateJSON(pages) == False: return 0
-        if 'format' not in json.loads(passed_pages[0]).keys(): return 0
-        if 'id' not in json.loads(passed_pages[0]).keys(): return 0
-        if 'title' not in json.loads(passed_pages[0]).keys(): return 0
-        return 1
+    def match_detected_pages(self, detected_pages, passed_pages_url, passed_pages_ts):
+        for page in detected_pages:
+            page = detected_pages[page]
+            url = page["url"]
+            ts = page["timestamp"]
+            if passed_pages_url == url and passed_pages_ts == None:
+                return page
+            if passed_pages_url == url and passed_pages_ts == ts:
+                return page
+        return 0
 
     def analyze_passed_pages(self, wacz, page_index, passed_pages):
-        header = passed_pages[0]
-        print(header)
+        for page in range(1, len(passed_pages)):
+            url = json.loads(passed_pages[page])["url"]
+            ts = iso_date_to_timestamp(json.loads(passed_pages[page]).get("ts"))
+            text = json.loads(passed_pages[page]).get("text")
+
+            matched_page = self.match_detected_pages(self.pages, url, ts)
+            if matched_page == 0:
+                if ts == None:
+                    print("Error, %s not found in index" % url)
+                    return 0
+                if ts != None:
+                    print("Error, %s not found with timestamp %s in index" % url, ts)
+                    return 0
+            elif matched_page != 0:
+                id_ = ts + "/" + matched_page["url"]
+                self.constructed_pages[id_] = {
+                    "timestamp": ts,
+                    "url": matched_page["url"],
+                    "title": matched_page["url"],
+                }
+                if ts == None:
+                    id_ = matched_page["ts"] + "/" + matched_page["url"]
+                    self.constructed_pages[id_] = {
+                        "timestamp": matched_page["ts"],
+                        "url": matched_page["url"],
+                        "title": matched_page["url"],
+                    }
+                elif text != None and self.extract_text:
+                    self.constructed_pages[id_]["text"] = text
+                    self.has_text = True
+                elif text == None and self.extract_text and matched_page.get("text"):
+                    self.constructed_pages[id_]["text"] = matched_page["text"]
+                    self.has_text = True
+        return self.constructed_pages
 
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
@@ -186,13 +220,11 @@ class WACZIndexer(CDXJIndexer):
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
             print("Found Main ts: {0}".format(ts))
-            if self.passed_pages == None:
-                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
         if self.main_url and self.main_url == url and self.main_ts == None:
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
-            if self.passed_pages == None:
-                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
 
         mime = self.get_record_mime_type(record)
 
@@ -226,13 +258,13 @@ class WACZIndexer(CDXJIndexer):
 
             curr_page = self.pages[id_]
 
-            if doc.content and self.passed_pages == None:
+            if doc.content:
                 self.pages[id_]["text"] = doc.content
                 self.has_text = True
 
             # only set title if unset, or set to url (default)
             # avoid overriding user-specified title, if any
-            if doc.title and self.pages[id_].get("title", url) == url and self.passed_pages != None:
+            if doc.title and self.pages[id_].get("title", url) == url:
                 self.pages[id_]["title"] = doc.title
 
         except Exception as e:

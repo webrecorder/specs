@@ -3,8 +3,8 @@ from io import BytesIO, StringIO, TextIOWrapper
 import os, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer
 from wacz.util import now, WACZ_VERSION
-from frictionless import validate
 from wacz.validate import Validation, OUTDATED_WACZ
+from wacz.util import validate_passed_pages
 
 """
 WACZ Generator 0.2.0
@@ -66,6 +66,9 @@ def main(args=None):
 
     if cmd.cmd == "create" and cmd.ts is not None and cmd.url is None:
         parser.error("--url must be specified when --ts is passed")
+
+    if cmd.cmd == "create" and cmd.passed_pages is not None and cmd.detect_pages is not None:
+        parser.error("--pages and --detect-pages can't be set at the same time they cancel each other out.")
 
     value = cmd.func(cmd)
     return value
@@ -159,18 +162,27 @@ def create_wacz(res):
                 path = "archive/" + os.path.basename(_input)
 
     if wacz_indexer.passed_pages != None:
-        print("Analyzing the passed pages index")
+        print("Analyzing the passed pages.jsonl file and generating a page index...")
         # analyze the passed jsonl file
-        passed_content = open(wacz_indexer.passed_pages, 'r').read().split("\n")
-        wacz_indexer.validate_passed_pages(wacz_indexer.passed_pages)
-        wacz_indexer.analyze_passed_pages(
+        passed_content = open(wacz_indexer.passed_pages, "r").read().split("\n")
+        if passed_content[len(passed_content) - 1] == "":
+            passed_content.pop()
+        validate_passed_pages(passed_content)
+        vetted_passed_pages = wacz_indexer.analyze_passed_pages(
+            wacz, PAGE_INDEX, passed_content
+        )
+        wacz_indexer.write_page_list(
             wacz,
             PAGE_INDEX,
-            passed_content
+            wacz_indexer.serialize_json_pages(
+                vetted_passed_pages.values(),
+                id="pages",
+                title="All Pages",
+                has_text=wacz_indexer.has_text,
+            ),
         )
 
-
-    if len(wacz_indexer.pages) > 0:
+    if len(wacz_indexer.pages) > 0 and wacz_indexer.passed_pages == None:
         print("Generating page index...")
         # generate pages/text
         wacz_indexer.write_page_list(
