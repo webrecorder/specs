@@ -67,7 +67,7 @@ def main(args=None):
     if cmd.cmd == "create" and cmd.ts is not None and cmd.url is None:
         parser.error("--url must be specified when --ts is passed")
 
-    if cmd.cmd == "create" and cmd.passed_pages is not None and cmd.detect_pages is not None:
+    if cmd.cmd == "create" and cmd.pages is not None and cmd.detect_pages is not None:
         parser.error("--pages and --detect-pages can't be set at the same time they cancel each other out.")
 
     value = cmd.func(cmd)
