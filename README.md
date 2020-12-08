@@ -26,7 +26,7 @@ yet no standardized format exists to include all the data that is needed.
 
 In particular, a web archive collection should have:
 - A random-access index of all raw data (preferably accessible with minimal seek)
-- A set of pages, entry point URLs from which users should browse the web archive. 
+- A set of pages, entry point URLs from which users should browse the web archive.
 - Other user-defined, editable metadata about the web archive collection (title, description, etc...)
 
 All of this data can be bundled together into a single file, using the standard ZIP format.
@@ -67,42 +67,41 @@ Currently supported:
 ```
 - archive/
 - indexes/
+- pages/
 - datapackage.json
 ```
 
 ### Directories and Files
 
- 
+
 #### 1) `archive/` (required)
- 
+
 The archives directory can contain raw web archive data.
 
 Currently supported formats:
 - WARC (.warc, .warc.gz)
 
 #### 2) `indexes/` (required)
- 
+
  The indexes directory should include various indexes into the raw data stored in `archives/`
- 
+
  Currently possible index formats include:
  - CDX (.cdx, .cdxj) for raw text-based binary sorted indices
  - Compressed CDX (.cdx.gz and .idx) indices
- 
+
 #### 3) `datapackage.json` (required)
 
 This file serves as the manifest for the web archive and is compliant with the frictionless (data standard)[https://frictionlessdata.io/data-package/#the-data-package-suite-of-specifications]
 
-The file 
+The file
 
 Keys specified in this file take precedent over other files, and provide a way to override the configuration
 of the web archive.
 
-`resources` is a list containing objects with this structure as a default 
+`resources` is a list containing objects with this structure as a default
 ```{"path": "example_path", "stats": {"hash": "example_hash", "bytes": 0}```
 
-
-
-##### `pages` key
+#### 4) `pages` (optional)
 
 pages is a list of 'Page' objects, each containing at least the following fields:
 
@@ -110,41 +109,12 @@ pages is a list of 'Page' objects, each containing at least the following fields
 - `date` - a valid ISO 8601 Date string
 - `title` - any string or omitted
 - `id` - any string or omitted.
-
+- `text` - an optional extraction of the text of the page,
 Ex:
 ```json
 pages: [{'url': 'https://example.com/', 'date': '2020-06-11T04:56:41Z', 'title': 'Example Domain', 'id': '123'}, {'url': 'https://another.example.com/', 'date': '2020-06-26T01:02:03Z', 'id': '456'}]
 
 ```
-
-
-##### `pageLists` key (optional)
-
-The `pageLists` key provides further grouping of pages into specific curatorial groups, or page lists.
-
-Each 'PageList' can contain at least the following fields: `title`, `desc`, `id`, `pageIds`.
-All fields are optional. `title, `desc`, and `id` are strings.
-
-`pageIds` is a list of page ids, and each id should match a page specified in the `pages` key / file.
-
-```pageLists: [{'title':'Import Pages', 'desc': 'These are pages that you should definitely view in this web archive', 'id': '1', 'pageIds': ['123', 'abc', '10']}]```
-
-##### `textIndex` key (optional, NEW/experimental)
-
-A path to a text index file in the ZIP which contains a full text search index and metadata information about the pages,
-ideally in the `text/` directory.
-
-#### 5) `text/` directory (experimental)
-
-Contains a text index as a newline-deliminted JSON format, eg.
-Currently the text index is only used if it is enabled by setting the `textIndex` entry in `datapackage.json`
-
-```
-{"id": "nLwACQTa35WSg9xVpyybHa", "url": "https://example.com/", "title": "Example Domain": "text": "Example Domain\nThis domain is for..."}
-{"id": "MUKcYvLNJhkvLhLfjz2yJC", "url": "https://example.com/another", "title": "Another Example", "text": "Some other text for this page..."}
-```
-
-This format is still experimental and may change.
 
 ## Possible Support in the future
 
@@ -176,8 +146,7 @@ Generally, keys specified in `datapackage.json` take precedence over data loaded
 For pages, the following precedence should be used:
 
 1) if `datapackage.json` `pages` key exists, pages loaded from there.
-2) otherwise, if `pages.yaml` exists, pages are loaded from there.
-3) otherwise, if `pages.csv` exists page are loaded from there.
+2) otherwise, if a `pages.jsonl` file is passed, pages are loaded from there.
 
 
 ## Zip Format
@@ -221,14 +190,14 @@ To lookup a given URL, such as from the page or page list:
 2) Binary search index
   2a) If using compressed CDX, read compressed CDX chunk in CDX.GZ file in ZIP.
 3) If index match found, get offset/length/location in WARC
-4) Read compressed WARC chunk in ZIP 
+4) Read compressed WARC chunk in ZIP
 ```
 
 This approach is being used by https://replayweb.page/.
 
 The implementation is in https://github.com/webrecorder/wabac.js/blob/develop/src/ziparchive.js
 
-and is based on: https://github.com/Rob--W/zipinfo.js/blob/master/zipinfo.js 
+and is based on: https://github.com/Rob--W/zipinfo.js/blob/master/zipinfo.js
 
 
 
@@ -237,7 +206,7 @@ and is based on: https://github.com/Rob--W/zipinfo.js/blob/master/zipinfo.js
 This spec refers to the following formats, which could be packaged inside a Web Archive Collection structure.
 Some of the formats serve similar functions, but require custom serialization and are not extensible with custom metadata.
 
-### WARC 
+### WARC
 
 The WARC format is a well established standard for storing raw web archive data.
 
@@ -253,7 +222,7 @@ variation of CDX.
 
 More Info: https://pywb.readthedocs.io/en/latest/manual/indexing.html#index-formats for more info.
 
-### Compressed CDX / "ZipNum" 
+### Compressed CDX / "ZipNum"
 
 The Compressed CDX format uses gzip compression on top of the plain-text CDX, and a secondary
 index to search the compressed index. This allows the CDX index to scale to considerably larger datasets.
