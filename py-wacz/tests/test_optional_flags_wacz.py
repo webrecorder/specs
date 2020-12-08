@@ -11,7 +11,7 @@ TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
 class TestWaczFormat(unittest.TestCase):
     def test_warc_with_invalid_passed_pages(self):
-        """If a user passes and invalid file using --pagee should return an error"""
+        """If a user passes an invalid file using --page we should return an error"""
         with tempfile.TemporaryDirectory() as tmpdir:
             fp = tempfile.NamedTemporaryFile()
             fp.write(

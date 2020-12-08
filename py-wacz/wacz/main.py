@@ -165,7 +165,6 @@ def create_wacz(res):
         print("Analyzing the passed pages.jsonl file and generating a page index...")
         # analyze the passed jsonl file
         passed_content = open(wacz_indexer.passed_pages, "r").read().split("\n")
-        print(passed_content)
         if passed_content[len(passed_content) - 1] == "":
             passed_content.pop()
         validate_passed_pages(passed_content)
