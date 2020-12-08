@@ -169,7 +169,7 @@ def create_wacz(res):
             passed_content.pop()
         validate_passed_pages(passed_content)
         vetted_passed_pages = wacz_indexer.analyze_passed_pages(
-            wacz, PAGE_INDEX, passed_content
+            PAGE_INDEX, passed_content
         )
         wacz_indexer.write_page_list(
             wacz,

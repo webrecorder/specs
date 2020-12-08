@@ -168,19 +168,21 @@ class WACZIndexer(CDXJIndexer):
                 return page
         return 0
 
-    def analyze_passed_pages(self, wacz, page_index, passed_pages):
+    def analyze_passed_pages(self, page_index, passed_pages):
         for page in range(1, len(passed_pages)):
             url = json.loads(passed_pages[page])["url"]
-            ts = iso_date_to_timestamp(json.loads(passed_pages[page]).get("ts"))
+            if json.loads(passed_pages[page]).get("ts") != None:
+                ts = iso_date_to_timestamp(json.loads(passed_pages[page]).get("ts"))
+            else:
+                ts = None
             text = json.loads(passed_pages[page]).get("text")
-
             matched_page = self.match_detected_pages(self.pages, url, ts)
             if matched_page == 0:
                 if ts == None:
                     print("Error, %s not found in index" % url)
                     return 0
                 if ts != None:
-                    print("Error, %s not found with timestamp %s in index" % url, ts)
+                    print("Error, %s not found with timestamp in index" % url)
                     return 0
             elif matched_page != 0:
                 id_ = ts + "/" + matched_page["url"]

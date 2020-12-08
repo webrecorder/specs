@@ -24,7 +24,6 @@ def validateJSON(jsonData):
 
 def validate_passed_pages(passed_pages):
     """Validates that a passed pages.jsonl file has the correct header and is valid json"""
-    print(passed_pages)
     if "format" not in json.loads(passed_pages[0]).keys():
         print("The header of the jsonl file is missing the format key")
         return 0
