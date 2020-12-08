@@ -27,14 +27,10 @@ def validate_passed_pages(passed_pages):
     if "format" not in json.loads(passed_pages[0]).keys():
         print("The header of the jsonl file is missing the format key")
         return 0
-    if "id" not in json.loads(passed_pages[0]).keys():
-        print("The header of the jsonl file is missing the id key")
-        return 0
-    if "title" not in json.loads(passed_pages[0]).keys():
-        print("The header of the jsonl file is missing the title key")
-        return 0
 
     for i in range(0, len(passed_pages)):
+        if "url" not in json.loads(passed_pages[i]).keys():
+            print("Line %s does not include a url" % i)
         if validateJSON(passed_pages[i]) == False:
             print("Line %s is not valid JSON" % i)
             return 0

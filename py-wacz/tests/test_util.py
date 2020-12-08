@@ -49,20 +49,12 @@ class TestUtilFunctions(unittest.TestCase):
 
         self.assertEqual(validate_passed_pages(passed_pages_missing_format), 0)
 
-        passed_pages_missing_id = [
+        passed_pages_missing_url = [
             '{"format": "json-pages-1.0", "title": "All Pages", "hasText": true}',
-            '{"s://test/", "ts": "2020-12-07T14:34:44Z", "title": "https://test/", "text": "test"}'
+            '{"id": "nMPmELqfFP8erKRXHeZgSa","ts": "2020-12-07T14:34:44Z", "title": "https://test/", "text": "test"}'
             ]
 
         self.assertEqual(validate_passed_pages(passed_pages_missing_id), 0)
-
-        passed_pages_missing_title = [
-            '{"format": "json-pages-1.0", "id": "pages", "hasText": true}',
-            '{"s://test/", "ts": "2020-12-07T14:34:44Z", "title": "https://test/", "text": "test"}'
-            ]
-
-        self.assertEqual(validate_passed_pages(passed_pages_missing_title), 0)
-
 
 if __name__ == "__main__":
     unittest.main()

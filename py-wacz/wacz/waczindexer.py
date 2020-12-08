@@ -40,7 +40,6 @@ class WACZIndexer(CDXJIndexer):
 
         if self.passed_pages != None:
             self.detect_pages = True
-            self.extract_text = True
 
         self.referrers = set()
 
@@ -182,7 +181,7 @@ class WACZIndexer(CDXJIndexer):
                     print("Error, %s not found in index" % url)
                     return 0
                 if ts != None:
-                    print("Error, %s not found with timestamp in index" % url)
+                    print("Error, %s not found with timestamp %s in index" % url, ts)
                     return 0
             elif matched_page != 0:
                 id_ = ts + "/" + matched_page["url"]
@@ -293,7 +292,7 @@ class WACZIndexer(CDXJIndexer):
             for line in page_iter:
                 pg_fh.write(line.encode("utf-8"))
 
-    def serialize_json_pages(self, pages, id, title, desc=None, has_text=False):
+    def serialize_json_pages(self, pages, title, desc=None, has_text=False):
         page_header = {"format": "json-pages-1.0", "id": id}
 
         if title:

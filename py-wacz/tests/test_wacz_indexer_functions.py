@@ -47,5 +47,11 @@ class TestWaczIndexerFunctions(unittest.TestCase):
         passed_pages = ['{"format": "json-pages-1.0", "id": "pages", "title": "All Pages"}', '{"id": "1db0ef709a", "url": "http://www.fake.com/", "title": "Example Domain"}']
         self.assertEqual(index.analyze_passed_pages(PAGE_INDEX, passed_pages), 0)
 
+        detected_pages = {'20201007212236/http://www.example.com/': {'url': 'http://www.example.com/', 'timestamp': '20201007212236', 'title': 'Example Domain', 'rec': 'fbt5hqmtseanlxzt', 'id': '1db0ef709a', 'text': 'Example Domain\nThis domain is for use in illustrative examples in documents. You may use this\n    domain in literature without prior coordination or asking for permission.\n'}}
+        index = WACZIndexer('output', 'input')
+        index.pages = detected_pages
+        passed_pages = ['{"format": "json-pages-1.0", "id": "pages", "title": "All Pages"}', '{"id": "1db0ef709a", "timestamp": "20101007212236", "url": "http://www.fake.com/", "title": "Example Domain"}']
+        self.assertEqual(index.analyze_passed_pages(PAGE_INDEX, passed_pages), 0)
+
 if __name__ == "__main__":
     unittest.main()
