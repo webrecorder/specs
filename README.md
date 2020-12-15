@@ -101,7 +101,7 @@ of the web archive.
 `resources` is a list containing objects with this structure as a default
 ```{"path": "example_path", "stats": {"hash": "example_hash", "bytes": 0}```
 
-#### 4) `pages` (optional)
+#### 4) `pages` (required)
 
 pages is a list of 'Page' objects, each containing at least the following fields:
 
@@ -111,9 +111,14 @@ pages is a list of 'Page' objects, each containing at least the following fields
 - `id` - any string or omitted.
 - `text` - an optional extraction of the text of the page,
 Ex:
-```json
-pages: [{'url': 'https://example.com/', 'date': '2020-06-11T04:56:41Z', 'title': 'Example Domain', 'id': '123'}, {'url': 'https://another.example.com/', 'date': '2020-06-26T01:02:03Z', 'id': '456'}]
+```jsonl
+```
+{"format": "json-pages-1.0", "id": "pages", "title": "All Pages"}
+{'url': 'https://example.com/', 'date': '2020-06-11T04:56:41Z', 'title': 'Example Domain', 'id': '123'}
+{'url': 'https://another.example.com/', 'date': '2020-06-26T01:02:03Z', 'id': '456'}
+```
 
+Other .jsonl files can optionally be added on using the same format.
 ```
 
 ## Possible Support in the future
@@ -145,7 +150,7 @@ Generally, keys specified in `datapackage.json` take precedence over data loaded
 
 For pages, the following precedence should be used:
 
-1) if `datapackage.json` `pages` key exists, pages loaded from there.
+1) if `datapackage.json` `mainPageURL` key exists, pages loaded from there.
 2) otherwise, if a `pages.jsonl` file is passed, pages are loaded from there.
 
 
