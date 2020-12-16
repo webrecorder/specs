@@ -292,7 +292,7 @@ class WACZIndexer(CDXJIndexer):
             for line in page_iter:
                 pg_fh.write(line.encode("utf-8"))
 
-    def serialize_json_pages(self, pages, title, desc=None, has_text=False):
+    def serialize_json_pages(self, pages, id, title, desc=None, has_text=False):
         page_header = {"format": "json-pages-1.0", "id": id}
 
         if title:
@@ -313,11 +313,11 @@ class WACZIndexer(CDXJIndexer):
             uid = line.get("id") or line.get("page_id") or shortuuid.uuid()
 
             data = {"id": uid, "url": line["url"], "ts": ts}
-            if page_title:
-                data["title"] = page_title
 
             if "text" in line:
                 data["text"] = line["text"]
+                if page_title:
+                    data["title"] = page_title
 
             yield json.dumps(data) + "\n"
 
