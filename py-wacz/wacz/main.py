@@ -69,7 +69,9 @@ def main(args=None):
         parser.error("--url must be specified when --ts is passed")
 
     if cmd.cmd == "create" and cmd.detect_pages is not False and cmd.pages is not None:
-        parser.error("--pages and --detect-pages can't be set at the same time they cancel each other out.")
+        parser.error(
+            "--pages and --detect-pages can't be set at the same time they cancel each other out."
+        )
 
     value = cmd.func(cmd)
     return value
@@ -140,12 +142,15 @@ def create_wacz(res):
         for i in range(1, len(passed_content)):
             pages_json = json.loads(passed_content[i])
             pages_dict = dict(pages_json)
-            if 'ts' in pages_dict.keys():
-                key = '%s/%s' % (iso_date_to_timestamp(pages_dict['ts']), pages_dict['url'])
+            if "ts" in pages_dict.keys():
+                key = "%s/%s" % (
+                    iso_date_to_timestamp(pages_dict["ts"]),
+                    pages_dict["url"],
+                )
                 passed_pages_dict[key] = {}
-                passed_pages_dict["%s" % pages_dict['url']] = {}
+                passed_pages_dict["%s" % pages_dict["url"]] = {}
             else:
-                passed_pages_dict["%s" % pages_dict['url']] = {}
+                passed_pages_dict["%s" % pages_dict["url"]] = {}
 
     with wacz.open(data_file, "w") as data:
         wacz_indexer = WACZIndexer(

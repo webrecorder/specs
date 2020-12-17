@@ -9,7 +9,6 @@ TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
 
 class TestWaczIndexing(unittest.TestCase):
-
     def test_warc_with_other_metadata(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             self.assertEqual(

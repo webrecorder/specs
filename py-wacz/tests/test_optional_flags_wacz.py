@@ -15,7 +15,10 @@ class TestWaczFormat(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             fp = tempfile.NamedTemporaryFile()
             fp.write(
-            """{"format": "title": "All Pages"}\n{"http://www.example.com/", "ts": "2020-10-07T21:22:36Z", "title": "Example Domain"}""".encode('utf-8'))
+                """{"format": "title": "All Pages"}\n{"http://www.example.com/", "ts": "2020-10-07T21:22:36Z", "title": "Example Domain"}""".encode(
+                    "utf-8"
+                )
+            )
             fp.seek(0)
             with self.assertRaises(json.JSONDecodeError):
                 self.assertEqual(
@@ -27,7 +30,7 @@ class TestWaczFormat(unittest.TestCase):
                             "-o",
                             os.path.join(tmpdir, "example-collection-valid-url.wacz"),
                             "-p",
-                            os.path.join(tmpdir, fp.name)
+                            os.path.join(tmpdir, fp.name),
                         ]
                     ),
                     1,
@@ -41,7 +44,10 @@ class TestWaczFormat(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             fp = tempfile.NamedTemporaryFile()
             fp.write(
-            """{"format": "json-pages-1.0", "id": "pages", "title": "All Pages"}\n{"id": "1db0ef709a", "url": "http://www.example.com/", "ts": "2020-10-07T21:22:36Z", "title": "Example Domain"}""".encode('utf-8'))
+                """{"format": "json-pages-1.0", "id": "pages", "title": "All Pages"}\n{"id": "1db0ef709a", "url": "http://www.example.com/", "ts": "2020-10-07T21:22:36Z", "title": "Example Domain"}""".encode(
+                    "utf-8"
+                )
+            )
             fp.seek(0)
             self.assertEqual(
                 main(
@@ -52,7 +58,7 @@ class TestWaczFormat(unittest.TestCase):
                         "-o",
                         os.path.join(tmpdir, "example-collection-valid-url.wacz"),
                         "-p",
-                        os.path.join(tmpdir, fp.name)
+                        os.path.join(tmpdir, fp.name),
                     ]
                 ),
                 0,
@@ -188,7 +194,7 @@ class TestWaczFormat(unittest.TestCase):
                             os.path.join(tmpdir, "example-collection.wacz"),
                             "--detect_pages",
                             "-p",
-                            "test.jsonl"
+                            "test.jsonl",
                         ]
                     ),
                     0,
