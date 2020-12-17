@@ -87,7 +87,6 @@ class TestWaczFormat(unittest.TestCase):
                     obj = json.loads(line)
                     self.assertTrue("id" in obj.keys())
                     self.assertTrue("ts" in obj.keys())
-                    self.assertTrue("title" in obj.keys())
                     self.assertTrue("url" in obj.keys())
                     self.assertTrue(obj["url"].encode() in cdx_content)
 
@@ -129,7 +128,6 @@ class TestWaczFormat(unittest.TestCase):
                     obj = json.loads(line)
                     self.assertTrue("id" in obj.keys())
                     self.assertTrue("ts" in obj.keys())
-                    self.assertTrue("title" in obj.keys())
                     self.assertTrue("url" in obj.keys())
                     self.assertTrue(obj["url"].encode() in cdx_content)
 
