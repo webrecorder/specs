@@ -165,44 +165,6 @@ class WACZIndexer(CDXJIndexer):
                 return page
         return 0
 
-    def analyze_passed_pages(self, page_index, passed_pages):
-        for page in range(1, len(passed_pages)):
-            url = json.loads(passed_pages[page])["url"]
-            if json.loads(passed_pages[page]).get("ts") != None:
-                ts = iso_date_to_timestamp(json.loads(passed_pages[page]).get("ts"))
-            else:
-                ts = None
-            text = json.loads(passed_pages[page]).get("text")
-            matched_page = self.match_detected_pages(self.pages, url, ts)
-            if matched_page == 0:
-                if ts == None:
-                    print("Error, %s not found in index" % url)
-                    return 0
-                if ts != None:
-                    print("Error, %s not found with timestamp %s in index" % url, ts)
-                    return 0
-            elif matched_page != 0:
-                id_ = ts + "/" + matched_page["url"]
-                self.constructed_pages[id_] = {
-                    "timestamp": ts,
-                    "url": matched_page["url"],
-                    "title": matched_page["url"],
-                }
-                if ts == None:
-                    id_ = matched_page["ts"] + "/" + matched_page["url"]
-                    self.constructed_pages[id_] = {
-                        "timestamp": matched_page["ts"],
-                        "url": matched_page["url"],
-                        "title": matched_page["url"],
-                    }
-                elif text != None and self.extract_text:
-                    self.constructed_pages[id_]["text"] = text
-                    self.has_text = True
-                elif text == None and self.extract_text and matched_page.get("text"):
-                    self.constructed_pages[id_]["text"] = matched_page["text"]
-                    self.has_text = True
-        return self.constructed_pages
-
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
         date = record.rec_headers.get("WARC-Date")

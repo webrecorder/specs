@@ -31,30 +31,5 @@ class TestUtilFunctions(unittest.TestCase):
 
         self.assertEqual(validate_passed_pages(passed_pages_valid), 1)
 
-    def test_util_validate_passed_pages_invalid(self):
-        """validate_passed_pages should return 0 if the passed pages are invalid json"""
-        passed_pages_valid = [
-            '{"format": "json-pages-1.0", "id": "pages", "title": "All Pages", "hasText": true}',
-            '{"s://test/", "ts": "2020-12-07T14:34:44Z", "title": "https://test/", "text": "test"}'
-            ]
-
-        self.assertEqual(validate_passed_pages(passed_pages_valid), 0)
-
-    def test_util_validate_passed_pages_invalid_header(self):
-        """validate_passed_pages should return 0 if the passed pages have an invalid header"""
-        passed_pages_missing_format = [
-            '{"id": "pages", "title": "All Pages", "hasText": true}',
-            '{"s://test/", "ts": "2020-12-07T14:34:44Z", "title": "https://test/", "text": "test"}'
-            ]
-
-        self.assertEqual(validate_passed_pages(passed_pages_missing_format), 0)
-
-        passed_pages_missing_url = [
-            '{"format": "json-pages-1.0", "title": "All Pages", "hasText": true}',
-            '{"id": "nMPmELqfFP8erKRXHeZgSa","ts": "2020-12-07T14:34:44Z", "title": "https://test/", "text": "test"}'
-            ]
-
-        self.assertEqual(validate_passed_pages(passed_pages_missing_id), 0)
-
 if __name__ == "__main__":
     unittest.main()
