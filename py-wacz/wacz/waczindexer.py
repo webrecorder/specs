@@ -18,6 +18,7 @@ class WACZIndexer(CDXJIndexer):
         self.extra_page_lists = {}
         self.title = ""
         self.desc = ""
+        self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
@@ -37,9 +38,6 @@ class WACZIndexer(CDXJIndexer):
 
         self.detect_pages = kwargs.get("detect_pages")
         self.extract_text = kwargs.get("extract_text")
-
-        if self.passed_pages != None:
-            self.detect_pages = True
 
         self.referrers = set()
 
@@ -210,7 +208,12 @@ class WACZIndexer(CDXJIndexer):
         date = record.rec_headers.get("WARC-Date")
         ts = iso_date_to_timestamp(date)
         id_ = ts + "/" + url
-
+        if id_ in self.passed_pages_dict.keys():
+            del self.passed_pages_dict[id_]
+            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+        if url in self.passed_pages_dict.keys():
+            del self.passed_pages_dict[url]
+            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
         if (
             self.main_url
             and self.main_url == url
@@ -221,11 +224,13 @@ class WACZIndexer(CDXJIndexer):
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
             print("Found Main ts: {0}".format(ts))
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            if id_ not in self.pages:
+                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
         if self.main_url and self.main_url == url and self.main_ts == None:
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            if id_ not in self.pages:
+                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
 
         mime = self.get_record_mime_type(record)
 

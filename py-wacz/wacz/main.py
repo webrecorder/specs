@@ -1,10 +1,11 @@
 from argparse import ArgumentParser, RawTextHelpFormatter
 from io import BytesIO, StringIO, TextIOWrapper
-import os, datetime, shutil, zipfile, sys, gzip, pkg_resources
+import os, json, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer
 from wacz.util import now, WACZ_VERSION
 from wacz.validate import Validation, OUTDATED_WACZ
 from wacz.util import validate_passed_pages
+from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 
 """
 WACZ Generator 0.2.0
@@ -128,6 +129,24 @@ def create_wacz(res):
     text_wrap = TextIOWrapper(index_buff, "utf-8", write_through=True)
 
     wacz_indexer = None
+    passed_pages_dict = {}
+
+    if res.pages != None:
+        print("Validate passed Pages")
+        passed_content = open(res.pages, "r").read().split("\n")
+        if passed_content[len(passed_content) - 1] == "":
+            passed_content.pop()
+        validate_passed_pages(passed_content)
+        for i in range(1, len(passed_content)):
+            pages_json = json.loads(passed_content[i])
+            pages_dict = dict(pages_json)
+            if 'ts' in pages_dict.keys():
+                key = '%s/%s' % (iso_date_to_timestamp(pages_dict['ts']), pages_dict['url'])
+                passed_pages_dict[key] = {}
+                passed_pages_dict["%s" % pages_dict['url']] = {}
+            else:
+                passed_pages_dict["%s" % pages_dict['url']] = {}
+
     with wacz.open(data_file, "w") as data:
         wacz_indexer = WACZIndexer(
             text_wrap,
@@ -141,6 +160,7 @@ def create_wacz(res):
             main_ts=res.ts,
             detect_pages=res.detect_pages,
             passed_pages=res.pages,
+            passed_pages_dict=passed_pages_dict,
             extract_text=res.text,
         )
 
@@ -162,27 +182,10 @@ def create_wacz(res):
                 path = "archive/" + os.path.basename(_input)
 
     if wacz_indexer.passed_pages != None:
-        print("Analyzing the passed pages.jsonl file and generating a page index...")
-        # analyze the passed jsonl file
-        passed_content = open(wacz_indexer.passed_pages, "r").read().split("\n")
-        if passed_content[len(passed_content) - 1] == "":
-            passed_content.pop()
-        validate_passed_pages(passed_content)
-        vetted_passed_pages = wacz_indexer.analyze_passed_pages(
-            PAGE_INDEX, passed_content
-        )
-        wacz_indexer.write_page_list(
-            wacz,
-            PAGE_INDEX,
-            wacz_indexer.serialize_json_pages(
-                vetted_passed_pages.values(),
-                id="pages",
-                title="All Pages",
-                has_text=wacz_indexer.has_text,
-            ),
-        )
+        for key in wacz_indexer.passed_pages_dict:
+            print("Invalid passed page %s" % str(key))
 
-    if len(wacz_indexer.pages) > 0 and wacz_indexer.passed_pages == None:
+    if len(wacz_indexer.pages) > 0:
         print("Generating page index...")
         # generate pages/text
         wacz_indexer.write_page_list(
