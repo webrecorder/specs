@@ -5,7 +5,7 @@ from wacz.waczindexer import WACZIndexer
 from wacz.util import now, WACZ_VERSION, construct_passed_pages_dict
 from wacz.validate import Validation, OUTDATED_WACZ
 from wacz.util import validateJSON
-from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
+from warcio.timeutils import iso_date_to_timestamp
 
 """
 WACZ Generator 0.2.0
@@ -132,10 +132,11 @@ def create_wacz(res):
 
     wacz_indexer = None
 
+    passed_pages_dict = {}
+
     # If the flag for passed pages has been passed
     if res.pages != None:
         print("Attempt to validate passed pages.jsonl file")
-        passed_pages_dict = {}
         passed_content = open(res.pages, "r").read().split("\n")
 
         # Get rid of the blank end line that editors can sometimes add to jsonl files if it's present
@@ -145,12 +146,13 @@ def create_wacz(res):
         # Confirm the passed jsonl file has valid json on each line
         for page_str in passed_content:
             page_json = validateJSON(page_str)
+
             if not page_json:
                 print(
                     "The passed jsonl file cannot be validated. Error found on the following line\n %s"
                     % page_str
                 )
-                return 0
+                return 1
 
         # Create a dict of the passed pages that will be used in the construction of the index
         passed_pages_dict = construct_passed_pages_dict(passed_content)
@@ -189,7 +191,7 @@ def create_wacz(res):
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
 
-    if wacz_indexer.passed_pages != None:
+    if wacz_indexer.passed_pages_dict != None:
         for key in wacz_indexer.passed_pages_dict:
             print(
                 "Invalid passed page. We were unable to find a match for %s" % str(key)

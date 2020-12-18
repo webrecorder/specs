@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import os
 import zipfile, json, gzip, hashlib
-from wacz.util import support_hash_file, validateJSON, validate_passed_pages
+from wacz.util import support_hash_file, validateJSON
 
 TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 

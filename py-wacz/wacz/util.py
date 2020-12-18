@@ -1,4 +1,5 @@
 import hashlib, datetime, json
+from warcio.timeutils import iso_date_to_timestamp
 
 WACZ_VERSION = "1.0.0"
 

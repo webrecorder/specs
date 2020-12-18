@@ -7,6 +7,16 @@ from wacz.waczindexer import WACZIndexer
 
 PAGE_INDEX = "pages/pages.jsonl"
 
+def match_detected_pages(self, detected_pages, passed_pages_url, passed_pages_ts):
+    for page in detected_pages:
+        page = detected_pages[page]
+        url = page["url"]
+        ts = page["timestamp"]
+        if passed_pages_url == url and passed_pages_ts == None:
+            return page
+        if passed_pages_url == url and passed_pages_ts == ts:
+            return page
+    return 0
 
 class TestWaczIndexerFunctions(unittest.TestCase):
     def test_match_detected_page_invalid(self):
@@ -22,10 +32,10 @@ class TestWaczIndexerFunctions(unittest.TestCase):
             }
         }
         self.assertEqual(
-            WACZIndexer.match_detected_pages(self, detected_pages, "fake_url", None), 0
+            match_detected_pages(self, detected_pages, "fake_url", None), 0
         )
         self.assertEqual(
-            WACZIndexer.match_detected_pages(
+            match_detected_pages(
                 self, detected_pages, "fake_url", "fake-ts"
             ),
             0,
@@ -44,7 +54,7 @@ class TestWaczIndexerFunctions(unittest.TestCase):
             }
         }
         self.assertEqual(
-            WACZIndexer.match_detected_pages(
+            match_detected_pages(
                 self, detected_pages, "http://www.example.com/", None
             ),
             {
@@ -57,7 +67,7 @@ class TestWaczIndexerFunctions(unittest.TestCase):
             },
         )
         self.assertEqual(
-            WACZIndexer.match_detected_pages(
+            match_detected_pages(
                 self, detected_pages, "http://www.example.com/", "20201007212236"
             ),
             {

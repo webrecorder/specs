@@ -15,26 +15,25 @@ class TestWaczFormat(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmpdir:
             fp = tempfile.NamedTemporaryFile()
             fp.write(
-                """{"format": "title": "All Pages"}\n{"http://www.example.com/", "ts": "2020-10-07T21:22:36Z", "title": "Example Domain"}""".encode(
+                """{"format": "title": "All Pages"}\n{"http://www.example"  "0-10-07T21:22:36Z", "title": "Example Domain"}""".encode(
                     "utf-8"
                 )
             )
             fp.seek(0)
-            with self.assertRaises(json.JSONDecodeError):
-                self.assertEqual(
-                    main(
-                        [
-                            "create",
-                            "-f",
-                            os.path.join(TEST_DIR, "example-collection.warc"),
-                            "-o",
-                            os.path.join(tmpdir, "example-collection-valid-url.wacz"),
-                            "-p",
-                            os.path.join(tmpdir, fp.name),
-                        ]
-                    ),
-                    1,
-                )
+            self.assertEqual(
+                main(
+                    [
+                        "create",
+                        "-f",
+                        os.path.join(TEST_DIR, "example-collection.warc"),
+                        "-o",
+                        os.path.join(tmpdir, "example-collection-valid-url.wacz"),
+                        "-p",
+                        os.path.join(tmpdir, fp.name),
+                    ]
+                ),
+                1,
+            )
 
     @patch("wacz.main.now")
     def test_warc_with_pages_flag(self, mock_now):
