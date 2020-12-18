@@ -2,7 +2,6 @@ import unittest
 import tempfile
 import os
 from wacz.main import main, now
-from wacz.waczindexer import WACZIndexer
 import zipfile
 
 TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
