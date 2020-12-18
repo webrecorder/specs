@@ -2,7 +2,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 from io import BytesIO, StringIO, TextIOWrapper
 import os, json, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer
-from wacz.util import now, WACZ_VERSION
+from wacz.util import now, WACZ_VERSION, construct_passed_pages_dict
 from wacz.validate import Validation, OUTDATED_WACZ
 from wacz.util import validate_passed_pages
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
@@ -136,21 +136,12 @@ def create_wacz(res):
     if res.pages != None:
         print("Validate passed Pages")
         passed_content = open(res.pages, "r").read().split("\n")
+        #Get rid of the blank end line that editors can sometimes add to jsonl files
         if passed_content[len(passed_content) - 1] == "":
             passed_content.pop()
+        # TODO decide on this logic
         validate_passed_pages(passed_content)
-        for i in range(1, len(passed_content)):
-            pages_json = json.loads(passed_content[i])
-            pages_dict = dict(pages_json)
-            if "ts" in pages_dict.keys():
-                key = "%s/%s" % (
-                    iso_date_to_timestamp(pages_dict["ts"]),
-                    pages_dict["url"],
-                )
-                passed_pages_dict[key] = {}
-                passed_pages_dict["%s" % pages_dict["url"]] = {}
-            else:
-                passed_pages_dict["%s" % pages_dict["url"]] = {}
+        passed_pages_dict = constructed_pages(passed_pages)
 
     with wacz.open(data_file, "w") as data:
         wacz_indexer = WACZIndexer(

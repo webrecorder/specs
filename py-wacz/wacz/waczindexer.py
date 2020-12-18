@@ -14,15 +14,14 @@ class WACZIndexer(CDXJIndexer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.pages = {}
-        self.constructed_pages = {}
         self.extra_page_lists = {}
         self.title = ""
         self.desc = ""
-        self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
         self.passed_pages = kwargs.pop("passed_pages", "")
+        self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
 
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
@@ -154,28 +153,25 @@ class WACZIndexer(CDXJIndexer):
 
             self.extra_page_lists[uid] = text_list
 
-    def match_detected_pages(self, detected_pages, passed_pages_url, passed_pages_ts):
-        for page in detected_pages:
-            page = detected_pages[page]
-            url = page["url"]
-            ts = page["timestamp"]
-            if passed_pages_url == url and passed_pages_ts == None:
-                return page
-            if passed_pages_url == url and passed_pages_ts == ts:
-                return page
-        return 0
-
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
         date = record.rec_headers.get("WARC-Date")
         ts = iso_date_to_timestamp(date)
         id_ = ts + "/" + url
-        if id_ in self.passed_pages_dict.keys():
-            del self.passed_pages_dict[id_]
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
-        if url in self.passed_pages_dict.keys():
-            del self.passed_pages_dict[url]
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+        matched_id = ""
+        if id_ in self.passed_pages_dict():
+            matched_id = id_
+        if url in self.passed_pages_dict():
+            matched_id = url
+
+        if matched_id != "":
+            self.pages[matched_id] = {"timestamp": ts, "url": url}
+            if "title" in self.passed_pages_dict[matched_id]:
+                 self.pages[matched_id]["title"] = self.passed_pages_dict[matched_id]["title"]
+            if "text" in self.passed_pages_dict[matched_id]:
+                 self.pages[matched_id]["text"] = self.passed_pages_dict[matched_id]["text"]
+            del self.passed_pages_dict[matched_id]
+
         if (
             self.main_url
             and self.main_url == url

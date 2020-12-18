@@ -7,6 +7,33 @@ def support_hash_file(data):
     """Hashes the passed content using sha256"""
     return hashlib.sha256(data).hexdigest()
 
+def construct_passed_pages_dict(passed_pages):
+    """Creates a dictionary of the passed pages with the url as the key or ts/url if ts is present and the title and text as the values if they have been passed"""
+    passed_pages_dict = {}
+    # Skip the first line of the pages.jsonl content as it will be the file's header
+    for i in range(1, len(passed_content)):
+        pages_json = json.loads(passed_content[i])
+        pages_dict = dict(pages_json)
+
+        # Set the default key as url
+        key = "%s" pages_dict["url"]
+
+        # If timestamp is present overwrite the key to be 'ts/url'
+        if "ts" in pages_dict:
+            key = "%s/%s" % (
+                iso_date_to_timestamp(pages_dict["ts"]),
+                pages_dict["url"],
+            )
+
+        #Add the key to the dictionary with a blank value
+        passed_pages_dict[key] = {}
+        if "title"in pages_dict:
+            # If title was in the passed pages line add it to the value of the just created dictionary entry
+            passed_pages_dict[key]['title'] = pages_dict['title']
+        if "text"in pages_dict:
+            # If text was in the passed pages line add it to the value of the just created dictionary entry
+            passed_pages_dict[key]['text'] = pages_dict['text']
+    return passed_pages_dict
 
 def now():
     """Returns the current time"""
@@ -23,7 +50,11 @@ def validateJSON(jsonData):
 
 
 def validate_passed_pages(passed_pages):
-    """Validates that a passed pages.jsonl fileis valid json"""
+    """Validates that a passed pages.jsonl file is valid json and has a header"""
+
+    if "format" not in json.loads(passed_pages[0]).keys():
+        print("The header of the jsonl file is missing the format key")
+        return 0
 
     for i in range(1, len(passed_pages)):
         if validateJSON(passed_pages[i]) == False:
