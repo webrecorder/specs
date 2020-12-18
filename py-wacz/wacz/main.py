@@ -4,7 +4,7 @@ import os, json, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer
 from wacz.util import now, WACZ_VERSION, construct_passed_pages_dict
 from wacz.validate import Validation, OUTDATED_WACZ
-from wacz.util import validate_passed_pages
+from wacz.util import validateJSON
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 
 """
@@ -131,21 +131,28 @@ def create_wacz(res):
     text_wrap = TextIOWrapper(index_buff, "utf-8", write_through=True)
 
     wacz_indexer = None
-    passed_pages_dict = {}
 
+    # If the flag for passed pages has been passed
     if res.pages != None:
-        print("Validate passed Pages")
+        print("Attempt to validate passed pages.jsonl file")
+        passed_pages_dict = {}
         passed_content = open(res.pages, "r").read().split("\n")
-        #Get rid of the blank end line that editors can sometimes add to jsonl files
+
+        # Get rid of the blank end line that editors can sometimes add to jsonl files if it's present
         if passed_content[len(passed_content) - 1] == "":
             passed_content.pop()
 
-        validate_passed_pages(passed_content)
-        header = {}
+        # Confirm the passed jsonl file has valid json on each line
+        for page_str in passed_content:
+            page_json = validateJSON(page_str)
+            if not page_json:
+                print(
+                    "The passed jsonl file cannot be validated. Error found on the following line\n %s"
+                    % page_str
+                )
+                return 0
 
-        if "format" in json.loads(passed_content[0]):
-            print("format found")
-            header = json.loads(passed_content[0])
+        # Create a dict of the passed pages that will be used in the construction of the index
         passed_pages_dict = construct_passed_pages_dict(passed_content)
 
     with wacz.open(data_file, "w") as data:
@@ -160,7 +167,6 @@ def create_wacz(res):
             main_url=res.url,
             main_ts=res.ts,
             detect_pages=res.detect_pages,
-            passed_pages=res.pages,
             passed_pages_dict=passed_pages_dict,
             extract_text=res.text,
         )
@@ -168,6 +174,7 @@ def create_wacz(res):
         wacz_indexer.process_all()
 
     index_buff.seek(0)
+
     with wacz.open(index_file, "w") as index:
         shutil.copyfileobj(index_buff, index)
 
@@ -184,7 +191,9 @@ def create_wacz(res):
 
     if wacz_indexer.passed_pages != None:
         for key in wacz_indexer.passed_pages_dict:
-            print("Invalid passed page %s" % str(key))
+            print(
+                "Invalid passed page. We were unable to find a match for %s" % str(key)
+            )
 
     if len(wacz_indexer.pages) > 0 and res.pages == None:
         print("Generating page index...")
@@ -202,16 +211,19 @@ def create_wacz(res):
 
     if len(wacz_indexer.pages) > 0 and res.pages != None:
         print("Generating page index from passed pages...")
-        # generate pages/text
+        # Initially set the default value of the header id and title
         id_value = "pages"
         title_value = "All Pages"
 
-        if header != {}:
+        # If the user has provided a title or an id in a header of their file we will use those instead of our default.
+        if "format" in json.loads(passed_content[0]):
+            print("Header detected in the passed pages.jsonl file")
+            header = json.loads(passed_content[0])
 
-            if 'id' in header:
-                id_value = header['id']
-            if 'title' in header:
-                title_value = header['title']
+            if "id" in header:
+                id_value = header["id"]
+            if "title" in header:
+                title_value = header["title"]
 
         wacz_indexer.write_page_list(
             wacz,

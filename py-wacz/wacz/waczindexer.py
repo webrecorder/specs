@@ -20,7 +20,6 @@ class WACZIndexer(CDXJIndexer):
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
-        self.passed_pages = kwargs.pop("passed_pages", "")
         self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
 
         if self.main_url != None and self.main_url != "":
@@ -63,7 +62,7 @@ class WACZIndexer(CDXJIndexer):
             for delete in to_delete:
                 del self.pages[delete]
 
-            if self.passed_pages == None:
+            if self.passed_pages_dict == {}:
                 print("Num Pages Detected: {0}".format(len(self.pages)))
 
         if (
@@ -160,18 +159,24 @@ class WACZIndexer(CDXJIndexer):
         ts = iso_date_to_timestamp(date)
         id_ = ts + "/" + url
         matched_id = ""
+        # Check for both a matching url/ts and url entry
         if id_ in self.passed_pages_dict.keys():
             matched_id = id_
         if url in self.passed_pages_dict.keys():
             matched_id = url
-
+        # If we find a match build a record
         if matched_id != "":
             self.pages[matched_id] = {"timestamp": ts, "url": url, "title": url}
-
+            # Add title and text if they've been provided
             if "title" in self.passed_pages_dict[matched_id]:
-                 self.pages[matched_id]["title"] = self.passed_pages_dict[matched_id]["title"]
+                self.pages[matched_id]["title"] = self.passed_pages_dict[matched_id][
+                    "title"
+                ]
             if "text" in self.passed_pages_dict[matched_id]:
-                 self.pages[matched_id]["text"] = self.passed_pages_dict[matched_id]["text"]
+                self.pages[matched_id]["text"] = self.passed_pages_dict[matched_id][
+                    "text"
+                ]
+            # Delete the entry from our pages_dict so we can't match it again
             del self.passed_pages_dict[matched_id]
 
         if (
@@ -184,7 +189,8 @@ class WACZIndexer(CDXJIndexer):
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
             print("Found Main ts: {0}".format(ts))
-            if id_ not in self.pages:
+            # If were not relying on passed in pages we want to add all records to the self.pages object
+            if self.passed_pages_dict == {}:
                 self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
         if self.main_url and self.main_url == url and self.main_ts == None:
             self.main_url_flag = True
@@ -280,10 +286,11 @@ class WACZIndexer(CDXJIndexer):
 
             data = {"id": uid, "url": line["url"], "ts": ts}
 
+            if page_title:
+                data["title"] = page_title
+
             if "text" in line:
                 data["text"] = line["text"]
-                if page_title:
-                    data["title"] = page_title
 
             yield json.dumps(data) + "\n"
 
