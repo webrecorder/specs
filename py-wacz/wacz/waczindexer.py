@@ -125,7 +125,8 @@ class WACZIndexer(CDXJIndexer):
             if lists:
                 self.extract_page_lists(lists)
 
-        elif metadata["type"] == "recording":
+        # Don't add the record to the self.pages if were evaluating passed in pages
+        elif metadata["type"] == "recording" and self.passed_pages_dict == {}:
             pages = metadata.get("pages", [])
             for page in pages:
                 id_ = page["timestamp"] + "/" + page["url"]
@@ -159,13 +160,14 @@ class WACZIndexer(CDXJIndexer):
         ts = iso_date_to_timestamp(date)
         id_ = ts + "/" + url
         matched_id = ""
-        if id_ in self.passed_pages_dict():
+        if id_ in self.passed_pages_dict.keys():
             matched_id = id_
-        if url in self.passed_pages_dict():
+        if url in self.passed_pages_dict.keys():
             matched_id = url
 
         if matched_id != "":
-            self.pages[matched_id] = {"timestamp": ts, "url": url}
+            self.pages[matched_id] = {"timestamp": ts, "url": url, "title": url}
+
             if "title" in self.passed_pages_dict[matched_id]:
                  self.pages[matched_id]["title"] = self.passed_pages_dict[matched_id]["title"]
             if "text" in self.passed_pages_dict[matched_id]:
@@ -200,6 +202,7 @@ class WACZIndexer(CDXJIndexer):
             return
 
         if id_ not in self.pages:
+
             if self.detect_pages:
                 self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
             else:

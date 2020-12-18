@@ -139,9 +139,14 @@ def create_wacz(res):
         #Get rid of the blank end line that editors can sometimes add to jsonl files
         if passed_content[len(passed_content) - 1] == "":
             passed_content.pop()
-        # TODO decide on this logic
+
         validate_passed_pages(passed_content)
-        passed_pages_dict = constructed_pages(passed_pages)
+        header = {}
+
+        if "format" in json.loads(passed_content[0]):
+            print("format found")
+            header = json.loads(passed_content[0])
+        passed_pages_dict = construct_passed_pages_dict(passed_content)
 
     with wacz.open(data_file, "w") as data:
         wacz_indexer = WACZIndexer(
@@ -181,7 +186,7 @@ def create_wacz(res):
         for key in wacz_indexer.passed_pages_dict:
             print("Invalid passed page %s" % str(key))
 
-    if len(wacz_indexer.pages) > 0:
+    if len(wacz_indexer.pages) > 0 and res.pages == None:
         print("Generating page index...")
         # generate pages/text
         wacz_indexer.write_page_list(
@@ -191,6 +196,30 @@ def create_wacz(res):
                 wacz_indexer.pages.values(),
                 id="pages",
                 title="All Pages",
+                has_text=wacz_indexer.has_text,
+            ),
+        )
+
+    if len(wacz_indexer.pages) > 0 and res.pages != None:
+        print("Generating page index from passed pages...")
+        # generate pages/text
+        id_value = "pages"
+        title_value = "All Pages"
+
+        if header != {}:
+
+            if 'id' in header:
+                id_value = header['id']
+            if 'title' in header:
+                title_value = header['title']
+
+        wacz_indexer.write_page_list(
+            wacz,
+            PAGE_INDEX,
+            wacz_indexer.serialize_json_pages(
+                wacz_indexer.pages.values(),
+                id=id_value,
+                title=title_value,
                 has_text=wacz_indexer.has_text,
             ),
         )
