@@ -44,6 +44,12 @@ def main(args=None):
         action="store_true",
     )
 
+    create.add_argument(
+        "--hash-type",
+        choices=["sha256", "md5"],
+        help="Allows the user to specify the hash type used. Currently we allow sha256 and md5",
+    )
+
     create.add_argument("--ts")
     create.add_argument("--url")
     create.add_argument("--date")
@@ -79,6 +85,7 @@ def validate_wacz(res):
     validation_tests = []
 
     if version == OUTDATED_WACZ:
+        print("Validation Succeeded the passed Wacz is outdate but valid")
         return 0
 
     elif version == WACZ_VERSION:
@@ -127,6 +134,7 @@ def create_wacz(res):
             fields="referrer",
             data_out_name="index.cdx.gz",
             records="all",
+            hash_type=res.hash_type,
             main_url=res.url,
             main_ts=res.ts,
             detect_pages=res.detect_pages,

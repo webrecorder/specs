@@ -1,6 +1,5 @@
 import unittest, os, zipfile, sys, gzip, json, tempfile
 from wacz.main import main
-from wacz.util import support_hash_file
 from frictionless import validate
 from wacz.validate import Validation
 from unittest.mock import patch
@@ -79,8 +78,92 @@ class TestWaczFormat(unittest.TestCase):
         valid = self.validation_class_invalid.check_file_hashes()
         self.assertFalse(valid)
 
+    def test_ability_to_detect_hash_md5(self):
+        """Correctly identify the hash type of a file as md5"""
+        tmpdir = tempfile.TemporaryDirectory()
+        main(
+            [
+                "create",
+                "-f",
+                os.path.join(TEST_DIR, "example-collection.warc"),
+                "-o",
+                os.path.join(tmpdir.name, "valid_example_1.wacz"),
+                "--hash-type",
+                "md5"
+            ]
+        )
+        with zipfile.ZipFile(
+            os.path.join(tmpdir.name, "valid_example_1.wacz"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(os.path.join(tmpdir.name, "unzipped_wacz_1"))
+            zip_ref.close()
+
+        validation_class = Validation(
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz")
+        )
+        valid = validation_class.detect_hash_type()
+        self.assertEqual(valid, 0)
+        valid = validation_class.hash_type
+        self.assertEqual(valid, 'md5')
+
+    def test_ability_to_detect_hash_md5(self):
+        """Correctly validate hashes and identify the type when no flag is set to md5"""
+        tmpdir = tempfile.TemporaryDirectory()
+        main(
+            [
+                "create",
+                "-f",
+                os.path.join(TEST_DIR, "example-collection.warc"),
+                "-o",
+                os.path.join(tmpdir.name, "valid_example_1.wacz"),
+                "--hash-type",
+                "sha256"
+            ]
+        )
+        with zipfile.ZipFile(
+            os.path.join(tmpdir.name, "valid_example_1.wacz"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(os.path.join(tmpdir.name, "unzipped_wacz_1"))
+            zip_ref.close()
+
+        validation_class = Validation(
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz")
+        )
+        valid = validation_class.detect_hash_type()
+        self.assertEqual(valid, 0)
+        valid = validation_class.hash_type
+        self.assertEqual(valid, 'sha256')
+
+    def test_ability_to_detect_hash_md5(self):
+        """Correctly validate hashes and identify the type when flag is set to 256"""
+        tmpdir = tempfile.TemporaryDirectory()
+        main(
+            [
+                "create",
+                "-f",
+                os.path.join(TEST_DIR, "example-collection.warc"),
+                "-o",
+                os.path.join(tmpdir.name, "valid_example_1.wacz"),
+                "--hash-type",
+                "sha256"
+            ]
+        )
+        with zipfile.ZipFile(
+            os.path.join(tmpdir.name, "valid_example_1.wacz"), "r"
+        ) as zip_ref:
+            zip_ref.extractall(os.path.join(tmpdir.name, "unzipped_wacz_1"))
+            zip_ref.close()
+
+        validation_class = Validation(
+            os.path.join(self.tmpdir.name, "valid_example_1.wacz")
+        )
+        valid = validation_class.detect_hash_type()
+        self.assertEqual(valid, 0)
+        valid = validation_class.hash_type
+        self.assertEqual(valid, 'sha256')
+
     def test_invalid_wacz_missing_datapackage(self):
-        """Correctly fail on a wacz with no datapackage"""
+        """Correctly validate hashes and identify the type when no flag is set"""
         tmpdir = tempfile.TemporaryDirectory()
         main(
             [

@@ -16,6 +16,7 @@ class Validation(object):
             zip_ref.extractall(self.dir.name)
             zip_ref.close()
         self.detect_version()
+        self.detect_hash_type()
 
     def check_required_contents(self):
         """Checks the general component of the wacz and notifies users whats missing"""
@@ -44,7 +45,22 @@ class Validation(object):
                 "An index file is missing from your indexes folder you must have an index.cdx.gz, index,cdx or index.idx in your index folder"
             )
             return 1
+
         return 0
+
+    def detect_hash_type(self):
+        self.hash_type = None
+        # we know the datapackage exists at this point because we're running it after the version check
+        self.datapackage_path = os.path.join(self.dir.name, "datapackage.json")
+        self.datapackage = json.loads(open(self.datapackage_path, "rb").read())
+        try:
+            self.hash_type = self.datapackage["resources"][0]["hashing"]
+            return 0
+        except:
+            print(
+                "\nHashing type was unable to be detected the wacz file may have no resources"
+            )
+            return 1
 
     def detect_version(self):
         self.version = None
@@ -150,7 +166,7 @@ class Validation(object):
             zip_ref.close()
 
         with open(os.path.join(dir.name, "indexes/index.cdx.gz"), "rb") as fd:
-            hash = support_hash_file(fd.read())
+            hash = support_hash_file(self.hash_type, fd.read())
             gzip_fd = gzip.GzipFile(fileobj=fd)
 
         return cdx == hash
@@ -160,7 +176,7 @@ class Validation(object):
         for filepath in pathlib.Path(self.dir.name).glob("**/*.*"):
             if not os.path.basename(filepath).endswith("datapackage.json"):
                 file = open(filepath, "rb").read()
-                hash = support_hash_file(file)
+                hash = support_hash_file(self.hash_type, file)
                 file = str(filepath).split("/")[-2:]
                 file = "/".join(file)
                 res = None
