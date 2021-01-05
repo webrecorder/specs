@@ -184,6 +184,7 @@ class TestWaczFormat(unittest.TestCase):
         validation_class = Validation(
             os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         )
+        
         valid = validation_class.check_required_contents()
         self.assertEqual(valid, 0)
 
