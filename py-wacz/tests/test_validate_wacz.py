@@ -162,6 +162,7 @@ class TestWaczFormat(unittest.TestCase):
         valid = validation_class.hash_type
         self.assertEqual(valid, 'sha256')
 
+
     def test_invalid_wacz_missing_datapackage(self):
         """Correctly validate hashes and identify the type when no flag is set"""
         tmpdir = tempfile.TemporaryDirectory()
