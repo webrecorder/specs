@@ -154,6 +154,7 @@ class WACZIndexer(CDXJIndexer):
 
             self.extra_page_lists[uid] = text_list
 
+
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
         date = record.rec_headers.get("WARC-Date")
