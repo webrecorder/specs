@@ -34,6 +34,7 @@ jobs:
           set -e
           cd py-wacz
           pytest -v --cov wacz -s
+          pytest --cov=./ --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
