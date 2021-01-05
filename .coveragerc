@@ -1,0 +1,5 @@
+[run]
+source = codecov
+branch = True
+omit =
+    */test/*
