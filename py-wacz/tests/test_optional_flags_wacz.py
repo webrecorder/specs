@@ -359,9 +359,7 @@ class TestWaczFormat(unittest.TestCase):
                         "-f",
                         os.path.join(TEST_DIR, "example-collection.warc"),
                         "-o",
-                        os.path.join(
-                            tmpdir, "example-collection-md5.wacz"
-                        ),
+                        os.path.join(tmpdir, "example-collection-md5.wacz"),
                         "--hash-type",
                         "md5",
                     ]
@@ -374,9 +372,7 @@ class TestWaczFormat(unittest.TestCase):
                 zip_ref.extractall(os.path.join(tmpdir, "unzipped_md5"))
                 zip_ref.close()
 
-            self.wacz_json = os.path.join(
-                tmpdir, "unzipped_md5/datapackage.json"
-            )
+            self.wacz_json = os.path.join(tmpdir, "unzipped_md5/datapackage.json")
 
             f = open(self.wacz_json, "rb")
             json_parse = json.loads(f.read())
@@ -395,9 +391,7 @@ class TestWaczFormat(unittest.TestCase):
                         "-f",
                         os.path.join(TEST_DIR, "example-collection.warc"),
                         "-o",
-                        os.path.join(
-                            tmpdir, "example-collection-sha256.wacz"
-                        ),
+                        os.path.join(tmpdir, "example-collection-sha256.wacz"),
                         "--hash-type",
                         "sha256",
                     ]
@@ -410,9 +404,7 @@ class TestWaczFormat(unittest.TestCase):
                 zip_ref.extractall(os.path.join(tmpdir, "unzipped_sha256"))
                 zip_ref.close()
 
-            self.wacz_json = os.path.join(
-                tmpdir, "unzipped_sha256/datapackage.json"
-            )
+            self.wacz_json = os.path.join(tmpdir, "unzipped_sha256/datapackage.json")
 
             f = open(self.wacz_json, "rb")
             json_parse = json.loads(f.read())
@@ -431,9 +423,7 @@ class TestWaczFormat(unittest.TestCase):
                         "-f",
                         os.path.join(TEST_DIR, "example-collection.warc"),
                         "-o",
-                        os.path.join(
-                            tmpdir, "example-collection-sha256.wacz"
-                        )
+                        os.path.join(tmpdir, "example-collection-sha256.wacz"),
                     ]
                 ),
                 0,
@@ -444,14 +434,13 @@ class TestWaczFormat(unittest.TestCase):
                 zip_ref.extractall(os.path.join(tmpdir, "unzipped_sha256"))
                 zip_ref.close()
 
-            self.wacz_json = os.path.join(
-                tmpdir, "unzipped_sha256/datapackage.json"
-            )
+            self.wacz_json = os.path.join(tmpdir, "unzipped_sha256/datapackage.json")
 
             f = open(self.wacz_json, "rb")
             json_parse = json.loads(f.read())
 
             self.assertEqual(json_parse["resources"][0]["hashing"], "sha256")
+
 
 if __name__ == "__main__":
     unittest.main()

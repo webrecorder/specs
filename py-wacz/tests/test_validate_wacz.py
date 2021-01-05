@@ -89,7 +89,7 @@ class TestWaczFormat(unittest.TestCase):
                 "-o",
                 os.path.join(tmpdir.name, "valid_example_1.wacz"),
                 "--hash-type",
-                "md5"
+                "md5",
             ]
         )
         with zipfile.ZipFile(
@@ -104,7 +104,7 @@ class TestWaczFormat(unittest.TestCase):
         valid = validation_class.detect_hash_type()
         self.assertEqual(valid, 0)
         valid = validation_class.hash_type
-        self.assertEqual(valid, 'md5')
+        self.assertEqual(valid, "md5")
 
     def test_ability_to_detect_hash_md5(self):
         """Correctly validate hashes and identify the type when no flag is set to md5"""
@@ -117,7 +117,7 @@ class TestWaczFormat(unittest.TestCase):
                 "-o",
                 os.path.join(tmpdir.name, "valid_example_1.wacz"),
                 "--hash-type",
-                "sha256"
+                "sha256",
             ]
         )
         with zipfile.ZipFile(
@@ -132,7 +132,7 @@ class TestWaczFormat(unittest.TestCase):
         valid = validation_class.detect_hash_type()
         self.assertEqual(valid, 0)
         valid = validation_class.hash_type
-        self.assertEqual(valid, 'sha256')
+        self.assertEqual(valid, "sha256")
 
     def test_ability_to_detect_hash_md5(self):
         """Correctly validate hashes and identify the type when flag is set to 256"""
@@ -145,7 +145,7 @@ class TestWaczFormat(unittest.TestCase):
                 "-o",
                 os.path.join(tmpdir.name, "valid_example_1.wacz"),
                 "--hash-type",
-                "sha256"
+                "sha256",
             ]
         )
         with zipfile.ZipFile(
@@ -160,8 +160,7 @@ class TestWaczFormat(unittest.TestCase):
         valid = validation_class.detect_hash_type()
         self.assertEqual(valid, 0)
         valid = validation_class.hash_type
-        self.assertEqual(valid, 'sha256')
-
+        self.assertEqual(valid, "sha256")
 
     def test_invalid_wacz_missing_datapackage(self):
         """Correctly validate hashes and identify the type when no flag is set"""
@@ -185,7 +184,7 @@ class TestWaczFormat(unittest.TestCase):
         validation_class = Validation(
             os.path.join(self.tmpdir.name, "valid_example_1.wacz")
         )
-        
+
         valid = validation_class.check_required_contents()
         self.assertEqual(valid, 0)
 
