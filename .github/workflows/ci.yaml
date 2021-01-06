@@ -21,8 +21,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ls 
-          echo $GITHUB_WORKSPACE
           python -m pip install --upgrade pip
           pip install --upgrade -r py-wacz/requirements.txt 
           cd py-wacz
@@ -30,8 +28,9 @@ jobs:
 
       - name: Style Check
         run: |
-          set -e
+          ls
           cd py-wacz
+          ls
           black --check tests/*
           black --check wacz/*
 
