@@ -7,6 +7,6 @@ coverage:
   range: "70...100"
   
   ignore:
-  - "*/tests/*"
+  - "py-wacz/tests/*"
   - "py-wacz/wacz/__init__.py"
   - "py-wacz/wacz/__main__.py"
