@@ -1,10 +1,11 @@
 from argparse import ArgumentParser, RawTextHelpFormatter
 from io import BytesIO, StringIO, TextIOWrapper
-import os, datetime, shutil, zipfile, sys, gzip, pkg_resources
+import os, json, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer
-from wacz.util import now, WACZ_VERSION
-from frictionless import validate
+from wacz.util import now, WACZ_VERSION, construct_passed_pages_dict
 from wacz.validate import Validation, OUTDATED_WACZ
+from wacz.util import validateJSON
+from warcio.timeutils import iso_date_to_timestamp
 
 """
 WACZ Generator 0.2.0
@@ -39,6 +40,13 @@ def main(args=None):
     )
 
     create.add_argument(
+        "-p",
+        "--pages",
+        help="Overrides the pages generation with the passed jsonl pages",
+        action="store",
+    )
+
+    create.add_argument(
         "--detect-pages",
         help="Generates pages.jsonl without a text index",
         action="store_true",
@@ -65,6 +73,11 @@ def main(args=None):
 
     if cmd.cmd == "create" and cmd.ts is not None and cmd.url is None:
         parser.error("--url must be specified when --ts is passed")
+
+    if cmd.cmd == "create" and cmd.detect_pages is not False and cmd.pages is not None:
+        parser.error(
+            "--pages and --detect-pages can't be set at the same time they cancel each other out."
+        )
 
     value = cmd.func(cmd)
     return value
@@ -125,6 +138,32 @@ def create_wacz(res):
     text_wrap = TextIOWrapper(index_buff, "utf-8", write_through=True)
 
     wacz_indexer = None
+
+    passed_pages_dict = {}
+
+    # If the flag for passed pages has been passed
+    if res.pages != None:
+        print("Attempt to validate passed pages.jsonl file")
+        passed_content = open(res.pages, "r").read().split("\n")
+
+        # Get rid of the blank end line that editors can sometimes add to jsonl files if it's present
+        if passed_content[len(passed_content) - 1] == "":
+            passed_content.pop()
+
+        # Confirm the passed jsonl file has valid json on each line
+        for page_str in passed_content:
+            page_json = validateJSON(page_str)
+
+            if not page_json:
+                print(
+                    "The passed jsonl file cannot be validated. Error found on the following line\n %s"
+                    % page_str
+                )
+                return 1
+
+        # Create a dict of the passed pages that will be used in the construction of the index
+        passed_pages_dict = construct_passed_pages_dict(passed_content)
+
     with wacz.open(data_file, "w") as data:
         wacz_indexer = WACZIndexer(
             text_wrap,
@@ -138,6 +177,7 @@ def create_wacz(res):
             main_url=res.url,
             main_ts=res.ts,
             detect_pages=res.detect_pages,
+            passed_pages_dict=passed_pages_dict,
             extract_text=res.text,
         )
 
@@ -159,7 +199,13 @@ def create_wacz(res):
                 shutil.copyfileobj(in_fh, out_fh)
                 path = "archive/" + os.path.basename(_input)
 
-    if len(wacz_indexer.pages) > 0:
+    if wacz_indexer.passed_pages_dict != None:
+        for key in wacz_indexer.passed_pages_dict:
+            print(
+                "Invalid passed page. We were unable to find a match for %s" % str(key)
+            )
+
+    if len(wacz_indexer.pages) > 0 and res.pages == None:
         print("Generating page index...")
         # generate pages/text
         wacz_indexer.write_page_list(
@@ -169,6 +215,32 @@ def create_wacz(res):
                 wacz_indexer.pages.values(),
                 id="pages",
                 title="All Pages",
+                has_text=wacz_indexer.has_text,
+            ),
+        )
+
+    if len(wacz_indexer.pages) > 0 and res.pages != None:
+        print("Generating page index from passed pages...")
+        # Initially set the default value of the header id and title
+        id_value = "pages"
+        title_value = "All Pages"
+
+        # If the user has provided a title or an id in a header of their file we will use those instead of our default.
+        header = json.loads(passed_content[0])
+        if "format" in header:
+            print("Header detected in the passed pages.jsonl file")
+            if "id" in header:
+                id_value = header["id"]
+            if "title" in header:
+                title_value = header["title"]
+
+        wacz_indexer.write_page_list(
+            wacz,
+            PAGE_INDEX,
+            wacz_indexer.serialize_json_pages(
+                wacz_indexer.pages.values(),
+                id=id_value,
+                title=title_value,
                 has_text=wacz_indexer.has_text,
             ),
         )

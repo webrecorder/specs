@@ -10,6 +10,91 @@ TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
 
 class TestWaczFormat(unittest.TestCase):
+    def test_warc_with_invalid_passed_pages(self):
+        """If a user passes an invalid file using --page we should return an error"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fp = tempfile.NamedTemporaryFile()
+            fp.write(
+                """{"format": "title": "All Pages"}\n{"http://www.example"  "0-10-07T21:22:36Z", "title": "Example Domain"}""".encode(
+                    "utf-8"
+                )
+            )
+            fp.seek(0)
+            self.assertEqual(
+                main(
+                    [
+                        "create",
+                        "-f",
+                        os.path.join(TEST_DIR, "example-collection.warc"),
+                        "-o",
+                        os.path.join(tmpdir, "example-collection-valid-url.wacz"),
+                        "-p",
+                        os.path.join(tmpdir, fp.name),
+                    ]
+                ),
+                1,
+            )
+
+    @patch("wacz.main.now")
+    def test_warc_with_pages_flag(self, mock_now):
+        """When passing the pages flag with a valid pages.jsonl file a pages/pages.jsonl file should be created"""
+        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fp = tempfile.NamedTemporaryFile()
+            fp.write(
+                """{"format": "json-pages-1.0", "id": "pages", "title": "All Pages"}\n{"id": "1db0ef709a", "url": "http://www.example.com/", "ts": "2020-10-07T21:22:36Z", "title": "Example Domain"}""".encode(
+                    "utf-8"
+                )
+            )
+            fp.seek(0)
+            self.assertEqual(
+                main(
+                    [
+                        "create",
+                        "-f",
+                        os.path.join(TEST_DIR, "example-collection.warc"),
+                        "-o",
+                        os.path.join(tmpdir, "example-collection-valid-url.wacz"),
+                        "-p",
+                        os.path.join(tmpdir, fp.name),
+                    ]
+                ),
+                0,
+            )
+            with zipfile.ZipFile(
+                os.path.join(tmpdir, "example-collection-valid-url.wacz"), "r"
+            ) as zip_ref:
+                zip_ref.extractall(os.path.join(tmpdir, "unzipped_valid_pages"))
+                zip_ref.close()
+
+            self.assertEqual(
+                main(
+                    [
+                        "validate",
+                        "-f",
+                        os.path.join(tmpdir, "example-collection-valid-url.wacz"),
+                    ]
+                ),
+                0,
+            )
+            wacz_pages = os.path.join(tmpdir, "unzipped_valid_pages/pages/pages.jsonl")
+            wacz_cdx = os.path.join(tmpdir, "unzipped_valid_pages/indexes/index.cdx.gz")
+            cdx_content = gzip.open(wacz_cdx, "rb").read()
+            self.assertTrue(
+                "pages.jsonl"
+                in os.listdir(os.path.join(tmpdir, "unzipped_valid_pages/pages/"))
+            )
+            with open(wacz_pages) as f:
+                for _ in range(1):
+                    next(f)
+                for line in f:
+                    obj = json.loads(line)
+                    self.assertTrue("id" in obj.keys())
+                    self.assertTrue("ts" in obj.keys())
+                    self.assertTrue("url" in obj.keys())
+                    self.assertTrue(obj["url"].encode() in cdx_content)
+
     @patch("wacz.main.now")
     def test_warc_with_detect_pages_flag(self, mock_now):
         """When passing the text index flag pages/pages.jsonl should be generated."""
@@ -94,6 +179,26 @@ class TestWaczFormat(unittest.TestCase):
                     self.assertTrue("url" in obj.keys())
                     self.assertTrue(obj["url"].encode() in cdx_content)
                     self.assertTrue("text" in obj.keys())
+
+    def test_warc_with_both_p_and_d_flag(self):
+        """If a user passes both the --pages and --detect-pages flags we should return an error and a message about needing only one"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with self.assertRaises(SystemExit):
+                self.assertEqual(
+                    main(
+                        [
+                            "create",
+                            "-f",
+                            os.path.join(TEST_DIR, "example-collection.warc"),
+                            "-o",
+                            os.path.join(tmpdir, "example-collection.wacz"),
+                            "--detect_pages",
+                            "-p",
+                            "test.jsonl",
+                        ]
+                    ),
+                    0,
+                )
 
     def test_warc_with_only_ts_flag(self):
         """If a user only passes the --ts flag we should return an error and a message about needing to also pass the --url flag"""
