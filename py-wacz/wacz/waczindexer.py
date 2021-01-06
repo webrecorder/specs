@@ -20,6 +20,12 @@ class WACZIndexer(CDXJIndexer):
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
+        self.hash_type = kwargs.pop("hash_type", "")
+
+        # If the user has specified a hash type use that otherwise default to sha256
+        if self.hash_type == None:
+            self.hash_type = "sha256"
+
         self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
 
         if self.main_url != None and self.main_url != "":
@@ -308,10 +314,10 @@ class WACZIndexer(CDXJIndexer):
                 content = myfile.read()
                 package_dict["resources"][i]["stats"] = {}
                 package_dict["resources"][i]["stats"]["hash"] = support_hash_file(
-                    content
+                    self.hash_type, content
                 )
                 package_dict["resources"][i]["stats"]["bytes"] = len(content)
-                package_dict["resources"][i]["hashing"] = "sha256"
+                package_dict["resources"][i]["hashing"] = self.hash_type
 
         # set optional metadata
         desc = res.desc or self.desc
