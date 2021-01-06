@@ -1,0 +1,15 @@
+[run]
+source = codecov
+branch = True
+omit =
+    */test/*
+    py-wacz/wacz/__init__.py
+    py-wacz/wacz/__main__.py
+    [run]
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    def __repr__
+    raise NotImplementedError
