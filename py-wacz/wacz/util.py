@@ -14,8 +14,9 @@ def construct_passed_pages_dict(passed_content):
     passed_pages_dict = {}
     for i in range(0, len(passed_content)):
         # Skip the file's header if it's been set
-        if "format" not in json.loads(passed_content[i]):
-            pages_dict = dict(json.loads(passed_content[i]))
+        header = json.loads(passed_content[i])
+        if "format" not in header:
+            pages_dict = dict(header)
 
             # Set the default key as url
             key = "%s" % pages_dict["url"]

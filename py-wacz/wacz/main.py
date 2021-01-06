@@ -218,10 +218,9 @@ def create_wacz(res):
         title_value = "All Pages"
 
         # If the user has provided a title or an id in a header of their file we will use those instead of our default.
-        if "format" in json.loads(passed_content[0]):
+        header = json.loads(passed_content[0])
+        if "format" in header:
             print("Header detected in the passed pages.jsonl file")
-            header = json.loads(passed_content[0])
-
             if "id" in header:
                 id_value = header["id"]
             if "title" in header:
