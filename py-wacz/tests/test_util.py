@@ -1,25 +1,20 @@
-import unittest
-import tempfile
-import os
-import zipfile, json, gzip, hashlib
-from wacz.util import support_hash_file, validateJSON
-
-TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
+import unittest, hashlib, datetime
+from wacz.util import support_hash_file
 
 
-class TestUtilFunctions(unittest.TestCase):
-    def test_util_hash(self):
-        """When invoking the util hash method a sha 256 hash should be returned"""
-        test_hash = hashlib.sha256("test".encode("utf-8")).hexdigest()
-        self.assertEqual(support_hash_file("test".encode("utf-8")), test_hash)
+class TestUtil(unittest.TestCase):
+    def test_support_hash_file(self):
+        """Check that the hash function works correctly"""
 
-    def test_util_validate_json_succeed(self):
-        """validate json method should succed with valid json"""
-        self.assertTrue(validateJSON('{"test": "test"}'))
-
-    def test_util_validate_json_fail(self):
-        """validate json method should fail with valid json"""
-        self.assertFalse(validateJSON('test": "test"}'))
+        test_string = "test"
+        self.assertEqual(
+            hashlib.sha256(test_string).hexdigest(),
+            support_hash_file("sha256", test_string),
+        )
+        self.assertEqual(
+            hashlib.sha256(test_string).hexdigest(),
+            support_hash_file("md5", test_string),
+        )
 
 
 if __name__ == "__main__":
