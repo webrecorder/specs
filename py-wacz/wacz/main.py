@@ -14,6 +14,7 @@ PAGE_INDEX = "pages/pages.jsonl"
 
 PAGE_INDEX_TEMPLATE = "pages/{0}.jsonl"
 
+
 def main(args=None):
     parser = ArgumentParser(
         description="WACZ creator", formatter_class=RawTextHelpFormatter
