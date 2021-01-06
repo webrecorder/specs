@@ -1,14 +1,12 @@
-source = codecov
-branch = True
-omit =
-    */tests/* 
-    py-wacz/wacz/__init__.py
-    py-wacz/wacz/__main__.py
-    [run]
+codecov:
+  disable_default_path_fixes: false
 
-[report]
-exclude_lines =
-    pragma: no cover
-    if __name__ == .__main__.:
-    def __repr__
-    raise NotImplementedError
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  
+  ignore:
+  - "*/tests/*"
+  - "py-wacz/wacz/__init__.py"
+  - "py-wacz/wacz/__main__.py"
