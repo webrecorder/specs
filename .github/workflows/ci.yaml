@@ -27,8 +27,14 @@ jobs:
           git clone https://github.com/webrecorder/wacz-format.git
           cd wacz-format/py-wacz
           python setup.py -q install
+      
+      - name: Style Check
+        run: |
+          set -e
+          cd py-wacz
           black --check tests/*
           black --check wacz/*
+          
       - name: Test with pytest
         run: |
           set -e
