@@ -153,6 +153,7 @@ class WACZIndexer(CDXJIndexer):
 
             self.extra_page_lists[uid] = text_list
 
+
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
         date = record.rec_headers.get("WARC-Date")
@@ -160,9 +161,9 @@ class WACZIndexer(CDXJIndexer):
         id_ = ts + "/" + url
         matched_id = ""
         # Check for both a matching url/ts and url entry
-        if id_ in self.passed_pages_dict.keys():
+        if id_ in self.passed_pages_dict:
             matched_id = id_
-        if url in self.passed_pages_dict.keys():
+        if url in self.passed_pages_dict:
             matched_id = url
         # If we find a match build a record
         if matched_id != "":
