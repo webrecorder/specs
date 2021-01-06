@@ -452,6 +452,100 @@ class TestWaczFormat(unittest.TestCase):
             )
             self.assertEqual(json_parse["metadata"]["mainPageTS"], "20201007212236")
 
+    @patch("wacz.main.now")
+    def test_warc_with_hash_flag_md5(self, mock_now):
+        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
+        """When passing the --hash-type flag with a value of md5 the datapackage should be hashed using md5"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self.assertEqual(
+                main(
+                    [
+                        "create",
+                        "-f",
+                        os.path.join(TEST_DIR, "example-collection.warc"),
+                        "-o",
+                        os.path.join(tmpdir, "example-collection-md5.wacz"),
+                        "--hash-type",
+                        "md5",
+                    ]
+                ),
+                0,
+            )
+            with zipfile.ZipFile(
+                os.path.join(tmpdir, "example-collection-md5.wacz"), "r"
+            ) as zip_ref:
+                zip_ref.extractall(os.path.join(tmpdir, "unzipped_md5"))
+                zip_ref.close()
+
+            self.wacz_json = os.path.join(tmpdir, "unzipped_md5/datapackage.json")
+
+            f = open(self.wacz_json, "rb")
+            json_parse = json.loads(f.read())
+
+            self.assertEqual(json_parse["resources"][0]["hashing"], "md5")
+
+    @patch("wacz.main.now")
+    def test_warc_with_hash_flag_sha256(self, mock_now):
+        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
+        """When passing the --hash-type flag with a value of sha256 the datapackage should be hashed using sha256"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self.assertEqual(
+                main(
+                    [
+                        "create",
+                        "-f",
+                        os.path.join(TEST_DIR, "example-collection.warc"),
+                        "-o",
+                        os.path.join(tmpdir, "example-collection-sha256.wacz"),
+                        "--hash-type",
+                        "sha256",
+                    ]
+                ),
+                0,
+            )
+            with zipfile.ZipFile(
+                os.path.join(tmpdir, "example-collection-sha256.wacz"), "r"
+            ) as zip_ref:
+                zip_ref.extractall(os.path.join(tmpdir, "unzipped_sha256"))
+                zip_ref.close()
+
+            self.wacz_json = os.path.join(tmpdir, "unzipped_sha256/datapackage.json")
+
+            f = open(self.wacz_json, "rb")
+            json_parse = json.loads(f.read())
+
+            self.assertEqual(json_parse["resources"][0]["hashing"], "sha256")
+
+    @patch("wacz.main.now")
+    def test_warc_with_hash_flag_sha256(self, mock_now):
+        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
+        """When not passing the --hash-type flag the datapackage should be hashed using sha256"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self.assertEqual(
+                main(
+                    [
+                        "create",
+                        "-f",
+                        os.path.join(TEST_DIR, "example-collection.warc"),
+                        "-o",
+                        os.path.join(tmpdir, "example-collection-sha256.wacz"),
+                    ]
+                ),
+                0,
+            )
+            with zipfile.ZipFile(
+                os.path.join(tmpdir, "example-collection-sha256.wacz"), "r"
+            ) as zip_ref:
+                zip_ref.extractall(os.path.join(tmpdir, "unzipped_sha256"))
+                zip_ref.close()
+
+            self.wacz_json = os.path.join(tmpdir, "unzipped_sha256/datapackage.json")
+
+            f = open(self.wacz_json, "rb")
+            json_parse = json.loads(f.read())
+
+            self.assertEqual(json_parse["resources"][0]["hashing"], "sha256")
+
 
 if __name__ == "__main__":
     unittest.main()
