@@ -1,11 +1,12 @@
-codecov:
-  disable_default_path_fixes: false
-
 coverage:
-  precision: 2
-  round: down
-  range: "70...100"
-  
+  status:
+    project:
+      default:
+        # basic
+        target: 80%
+        threshold: 2%
+        base: auto 
+ 
   ignore:
   - "py-wacz/tests/*"
   - "py-wacz/wacz/__init__.py"
