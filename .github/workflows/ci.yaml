@@ -1,7 +1,11 @@
 name: CI
-
-on: [push, pull_request]
-
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
