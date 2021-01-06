@@ -20,6 +20,7 @@ class WACZIndexer(CDXJIndexer):
         self.has_text = False
         self.main_url = kwargs.pop("main_url", "")
         self.main_ts = kwargs.pop("main_ts", "")
+        self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
 
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
@@ -35,6 +36,7 @@ class WACZIndexer(CDXJIndexer):
 
         self.detect_pages = kwargs.get("detect_pages")
         self.extract_text = kwargs.get("extract_text")
+
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):
@@ -60,7 +62,8 @@ class WACZIndexer(CDXJIndexer):
             for delete in to_delete:
                 del self.pages[delete]
 
-            print("Num Pages Detected: {0}".format(len(self.pages)))
+            if self.passed_pages_dict == {}:
+                print("Num Pages Detected: {0}".format(len(self.pages)))
 
         if (
             hasattr(self, "main_url_flag")
@@ -121,7 +124,8 @@ class WACZIndexer(CDXJIndexer):
             if lists:
                 self.extract_page_lists(lists)
 
-        elif metadata["type"] == "recording":
+        # Don't add the record to the self.pages if were evaluating passed in pages
+        elif metadata["type"] == "recording" and self.passed_pages_dict == {}:
             pages = metadata.get("pages", [])
             for page in pages:
                 id_ = page["timestamp"] + "/" + page["url"]
@@ -149,11 +153,32 @@ class WACZIndexer(CDXJIndexer):
 
             self.extra_page_lists[uid] = text_list
 
+
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
         date = record.rec_headers.get("WARC-Date")
         ts = iso_date_to_timestamp(date)
         id_ = ts + "/" + url
+        matched_id = ""
+        # Check for both a matching url/ts and url entry
+        if id_ in self.passed_pages_dict:
+            matched_id = id_
+        if url in self.passed_pages_dict:
+            matched_id = url
+        # If we find a match build a record
+        if matched_id != "":
+            self.pages[matched_id] = {"timestamp": ts, "url": url, "title": url}
+            # Add title and text if they've been provided
+            if "title" in self.passed_pages_dict[matched_id]:
+                self.pages[matched_id]["title"] = self.passed_pages_dict[matched_id][
+                    "title"
+                ]
+            if "text" in self.passed_pages_dict[matched_id]:
+                self.pages[matched_id]["text"] = self.passed_pages_dict[matched_id][
+                    "text"
+                ]
+            # Delete the entry from our pages_dict so we can't match it again
+            del self.passed_pages_dict[matched_id]
 
         if (
             self.main_url
@@ -165,11 +190,14 @@ class WACZIndexer(CDXJIndexer):
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
             print("Found Main ts: {0}".format(ts))
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            # If were not relying on passed in pages we want to add all records to the self.pages object
+            if self.passed_pages_dict == {}:
+                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
         if self.main_url and self.main_url == url and self.main_ts == None:
             self.main_url_flag = True
             print("Found Main Url: {0}".format(url))
-            self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
+            if id_ not in self.pages:
+                self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
 
         mime = self.get_record_mime_type(record)
 
@@ -181,6 +209,7 @@ class WACZIndexer(CDXJIndexer):
             return
 
         if id_ not in self.pages:
+
             if self.detect_pages:
                 self.pages[id_] = {"timestamp": ts, "url": url, "title": url}
             else:
@@ -257,6 +286,7 @@ class WACZIndexer(CDXJIndexer):
             uid = line.get("id") or line.get("page_id") or shortuuid.uuid()
 
             data = {"id": uid, "url": line["url"], "ts": ts}
+
             if page_title:
                 data["title"] = page_title
 
