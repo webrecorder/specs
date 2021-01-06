@@ -25,7 +25,7 @@ class WACZIndexer(CDXJIndexer):
         # If the user has specified a hash type use that otherwise default to sha256
         if self.hash_type == None:
             self.hash_type = "sha256"
-       
+
         self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
 
         if self.main_url != None and self.main_url != "":
@@ -158,7 +158,6 @@ class WACZIndexer(CDXJIndexer):
             )
 
             self.extra_page_lists[uid] = text_list
-
 
     def check_pages_and_text(self, record):
         url = record.rec_headers.get("WARC-Target-URI")
