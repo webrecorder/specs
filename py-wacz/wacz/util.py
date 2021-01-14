@@ -1,7 +1,7 @@
 import hashlib, datetime, json
 from warcio.timeutils import iso_date_to_timestamp
 
-WACZ_VERSION = "1.0.0"
+WACZ_VERSION = "0.2.0"
 
 
 def support_hash_file(hash_type, data):
