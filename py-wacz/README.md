@@ -114,3 +114,9 @@ Overrides the desc metadata value in the datapackage.json file
 
 -------
  
+```  --hash-type ```
+  Allows the user to specify the hash type used. Currently we allow sha256 and md5
+
+```wacz create tests/fixtures/example-collection.warc --hash-type md5```
+
+-------
