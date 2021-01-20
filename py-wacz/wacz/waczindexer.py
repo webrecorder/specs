@@ -42,7 +42,8 @@ class WACZIndexer(CDXJIndexer):
 
         self.detect_pages = kwargs.get("detect_pages")
         self.extract_text = kwargs.get("extract_text")
-
+        if (self.extract_text == True and self.detect_pages == False):
+            print("Warning. You've passed the --text flag without the --detect-pages flag. No pages.jsonl file will be generated. You must enable the --detect-pages and --text flags together in order to get a pages.jsonl file with full text.")
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):
