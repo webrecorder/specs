@@ -62,7 +62,7 @@ Explicitly declare the name of the wacz being created
 -------
 `-t --text`
 
-Generates pages.jsonl page index with a full-text index
+Generates pages.jsonl page index with a full-text index, must be run in conjunction with --detect-pages. Will have no effect if run alone
 
 ```wacz create tests/fixtures/example-collection.warc -t```
 
