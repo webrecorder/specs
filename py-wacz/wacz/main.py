@@ -35,7 +35,7 @@ def main(args=None):
     create.add_argument(
         "-t",
         "--text",
-        help="Generates pages.jsonl with a full-text index",
+        help="Generates pages.jsonl with a full-text index. Must be run in addition with --detect-pages or it will have no effect",
         action="store_true",
     )
 
