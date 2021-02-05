@@ -110,7 +110,7 @@ Other `.jsonl` files can optionally be added on using the same format in the `pa
 
 #### 4) `datapackage.json`
 
-This file serves as the manifest for the web archive and is compliant with the Frictionless [Data Package Specification](https://frictionlessdata.io/data-package/#the-data-package-suite-of-specifications)
+This file serves as the manifest for the web archive and is compliant with the Frictionless [Data Package Specification](https://specs.frictionlessdata.io/data-package/)
 
 The file contains the following keys:
 
