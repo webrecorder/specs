@@ -169,6 +169,7 @@ def create_wacz(res):
             text_wrap,
             res.inputs,
             sort=True,
+            post_append=True,
             compress=data,
             fields="referrer",
             data_out_name="index.cdx.gz",
