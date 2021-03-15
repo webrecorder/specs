@@ -3,9 +3,15 @@
 This directory contains the beginning of a new tool to create WACZ files in python.
 It is designed to be in sync with the WACZ format specification.
 
-Currently, it supports converting WARC files created with Webrecorder and Conifer into WACZ files, and optionally generating full-text search indices of pages.
+It supports converting any WARC files into WACZ files, and optionally generating full-text search indices of pages.
 
-To use, first install `pip install -r requirements.txt`, and then run:
+WARCs created with Webrecorder and Conifer already contain additional metadata, such as a list of pages for the WACZ file.
+
+For other WARCs, pages can also be detected by guessing which URLs are pages with the `--detect-pages` flag.
+Alternatively, a page list can be specified (in newline-delimeted JSON form) with the `--pages` flag.
+
+
+To use, run:
 
 ```
 python setup.py install

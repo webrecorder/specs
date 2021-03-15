@@ -8,6 +8,9 @@ from wacz.util import support_hash_file, now, WACZ_VERSION
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
+# Add warcinfo as a default record for indexing to simplify filtering logic
+CDXJIndexer.DEFAULT_RECORDS.append("warcinfo")
+
 
 # ============================================================================
 class WACZIndexer(CDXJIndexer):
@@ -49,11 +52,11 @@ class WACZIndexer(CDXJIndexer):
         self.referrers = set()
 
     def process_index_entry(self, it, record, *args):
-        type_ = record.rec_headers.get("WARC-Type")
+        type_ = record.rec_type
         if type_ == "warcinfo":
             self.parse_warcinfo(record)
 
-        elif type_ in CDXJIndexer.DEFAULT_RECORDS:
+        elif self.filter_record(record):
             if type_ in ("response" "resource"):
                 self.check_pages_and_text(record)
 

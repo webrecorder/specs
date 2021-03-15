@@ -47,6 +47,7 @@ def main(args=None):
     )
 
     create.add_argument(
+        "-d",
         "--detect-pages",
         help="Generates pages.jsonl without a text index",
         action="store_true",
@@ -173,7 +174,6 @@ def create_wacz(res):
             compress=data,
             fields="referrer",
             data_out_name="index.cdx.gz",
-            records="all",
             hash_type=res.hash_type,
             main_url=res.url,
             main_ts=res.ts,
