@@ -125,21 +125,21 @@ class TestWaczFormat(unittest.TestCase):
         warc_resource = self.find_resource(
             json_parse["resources"], "example-collection.warc"
         )
-        self.assertEqual(original_warc, warc_resource["stats"]["hash"])
+        self.assertEqual("sha256:%s" % original_warc, warc_resource["hash"])
 
         # Check that the correct hash was recorded for the index.idx
         f = open(self.wacz_index_idx, "rb")
         original_wacz_index_idx = support_hash_file("sha256", f.read())
         f.close()
         idx_resource = self.find_resource(json_parse["resources"], "idx")
-        self.assertEqual(original_wacz_index_idx, idx_resource["stats"]["hash"])
+        self.assertEqual("sha256:%s" % original_wacz_index_idx, idx_resource["hash"])
 
         # Check that the correct hash was recorded for the index.cdx.gz
         f = open(self.wacz_index_cdx, "rb")
         original_wacz_index_cdx = support_hash_file("sha256", f.read())
         f.close()
         cdx_resource = self.find_resource(json_parse["resources"], "cdx")
-        self.assertEqual(original_wacz_index_cdx, cdx_resource["stats"]["hash"])
+        self.assertEqual("sha256:%s" % original_wacz_index_cdx, cdx_resource["hash"])
 
         # Use frictionless validation
         valid = validate(self.wacz_json)
