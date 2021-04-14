@@ -514,7 +514,7 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_json, "rb")
             json_parse = json.loads(f.read())
 
-            self.assertEqual(json_parse["resources"][0]["hashing"], "sha256")
+            self.assert('sha256' in json_parse["resources"][0]["hash"])
 
     @patch("wacz.main.now")
     def test_warc_with_hash_flag_sha256(self, mock_now):
