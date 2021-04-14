@@ -54,7 +54,7 @@ class Validation(object):
         self.datapackage_path = os.path.join(self.dir.name, "datapackage.json")
         self.datapackage = json.loads(open(self.datapackage_path, "rb").read())
         try:
-            self.hash_type = self.datapackage["resources"][0]["hashing"]
+            self.hash_type = self.datapackage["resources"][0]["hash"].split(":")[0]
             return 0
         except:
             print(
@@ -70,7 +70,7 @@ class Validation(object):
             self.datapackage = json.loads(open(self.datapackage_path, "rb").read())
 
             try:
-                self.version = self.datapackage["wacz_version"]
+                self.version = self.datapackage["software"]["wacz_version"]
             except:
                 print("\nVersion missing from datapackage.json, invalid wacz file")
                 return
@@ -131,7 +131,7 @@ class Validation(object):
         if os.path.exists(os.path.join(self.dir.name, "indexes/index.cdx.gz")):
             for resource in self.datapackage["resources"]:
                 if resource["path"] == "indexes/index.cdx.gz":
-                    cdx = resource["stats"]["hash"]
+                    cdx = resource["hash"]
         else:
             return False
 
@@ -183,7 +183,7 @@ class Validation(object):
                 for item in self.datapackage["resources"]:
                     if item["path"] == file:
                         res = item
-                if res == None or (res["stats"]["hash"] != hash):
+                if res == None or (res["hash"] != hash):
                     print(
                         "\nfile %s's hash does not match the has listed in the datapackage"
                         % file
