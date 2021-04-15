@@ -5,6 +5,7 @@ from cdxj_indexer.main import CDXJIndexer
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
 from wacz.util import support_hash_file, now, WACZ_VERSION
+import subprocess
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
@@ -342,8 +343,10 @@ class WACZIndexer(CDXJIndexer):
             metadata["mainPageTS"] = res.date
 
         package_dict["metadata"] = metadata
-        package_dict["software"] = {}
+        package_dict["wacz_version"] = WACZ_VERSION
 
-        package_dict["software"]["wacz_version"] = WACZ_VERSION
+        result = subprocess.run(['wacz', '--version'], stdout=subprocess.PIPE)
+        version = str(result.stdout).split("--")[0].split('wacz ')[1]
+        package_dict["software"] = "py-wacz " + version
 
         return json.dumps(package_dict, indent=2)

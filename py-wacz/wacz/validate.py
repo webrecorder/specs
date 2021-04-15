@@ -4,6 +4,7 @@ from wacz.util import support_hash_file, now
 from wacz.waczindexer import WACZIndexer
 from io import BytesIO, StringIO, TextIOWrapper
 import glob
+import pkg_resources
 
 OUTDATED_WACZ = "0.1.0"
 
@@ -70,7 +71,7 @@ class Validation(object):
             self.datapackage = json.loads(open(self.datapackage_path, "rb").read())
 
             try:
-                self.version = self.datapackage["software"]["wacz_version"]
+                self.version = self.datapackage["wacz_version"]
             except:
                 print("\nVersion missing from datapackage.json, invalid wacz file")
                 return
