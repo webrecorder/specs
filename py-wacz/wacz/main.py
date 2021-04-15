@@ -85,12 +85,7 @@ def main(args=None):
 
 
 def get_version():
-    return (
-        "%(prog)s "
-        + get_py_wacz_version()
-        + " -- WACZ File Format: "
-        + WACZ_VERSION
-    )
+    return "%(prog)s " + get_py_wacz_version() + " -- WACZ File Format: " + WACZ_VERSION
 
 
 def validate_wacz(res):
