@@ -345,8 +345,8 @@ class WACZIndexer(CDXJIndexer):
         package_dict["metadata"] = metadata
         package_dict["wacz_version"] = WACZ_VERSION
 
-        result = subprocess.run(['wacz', '--version'], stdout=subprocess.PIPE)
-        version = str(result.stdout).split("--")[0].split('wacz ')[1]
+        result = subprocess.run(["wacz", "--version"], stdout=subprocess.PIPE)
+        version = str(result.stdout).split("--")[0].split("wacz ")[1]
         package_dict["software"] = "py-wacz " + version
 
         return json.dumps(package_dict, indent=2)
