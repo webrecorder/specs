@@ -4,7 +4,7 @@ import os, json, datetime, shutil, zipfile, sys, gzip, pkg_resources
 from wacz.waczindexer import WACZIndexer
 from wacz.util import now, WACZ_VERSION, construct_passed_pages_dict
 from wacz.validate import Validation, OUTDATED_WACZ
-from wacz.util import validateJSON
+from wacz.util import validateJSON, get_py_wacz_version
 from warcio.timeutils import iso_date_to_timestamp
 
 """
@@ -87,7 +87,7 @@ def main(args=None):
 def get_version():
     return (
         "%(prog)s "
-        + pkg_resources.get_distribution("wacz").version
+        + get_py_wacz_version()
         + " -- WACZ File Format: "
         + WACZ_VERSION
     )
