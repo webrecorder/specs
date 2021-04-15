@@ -4,7 +4,6 @@ from wacz.util import support_hash_file, now
 from wacz.waczindexer import WACZIndexer
 from io import BytesIO, StringIO, TextIOWrapper
 import glob
-import pkg_resources
 
 OUTDATED_WACZ = "0.1.0"
 
