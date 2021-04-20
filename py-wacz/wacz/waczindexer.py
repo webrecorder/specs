@@ -4,7 +4,8 @@ import os, gzip, glob, zipfile
 from cdxj_indexer.main import CDXJIndexer
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
-from wacz.util import support_hash_file, now, WACZ_VERSION
+from wacz.util import support_hash_file, now, WACZ_VERSION, get_py_wacz_version
+import datetime
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
@@ -308,7 +309,6 @@ class WACZIndexer(CDXJIndexer):
 
     def generate_metadata(self, res, wacz):
         package_dict = {}
-        metadata = {}
 
         package_dict["profile"] = "data-package"
         package_dict["resources"] = []
@@ -318,32 +318,35 @@ class WACZIndexer(CDXJIndexer):
             package_dict["resources"][i]["path"] = file.filename
             with wacz.open(file, "r") as myfile:
                 content = myfile.read()
-                package_dict["resources"][i]["stats"] = {}
-                package_dict["resources"][i]["stats"]["hash"] = support_hash_file(
+                package_dict["resources"][i]["hash"] = support_hash_file(
                     self.hash_type, content
                 )
-                package_dict["resources"][i]["stats"]["bytes"] = len(content)
-                package_dict["resources"][i]["hashing"] = self.hash_type
+                package_dict["resources"][i]["bytes"] = len(content)
 
         # set optional metadata
         desc = res.desc or self.desc
         title = res.title or self.title
 
         if title:
-            metadata["title"] = title
+            package_dict["title"] = title
 
         if desc:
-            metadata["desc"] = desc
+            package_dict["description"] = desc
 
         if self.main_url:
-            metadata["mainPageURL"] = self.main_url
+            package_dict["mainPageURL"] = self.main_url
             if self.main_ts:
-                metadata["mainPageTS"] = self.main_ts
+                package_dict["mainPageDate"] = timestamp_to_iso_date(self.main_ts)
 
         if res.date:
-            metadata["mainPageTS"] = res.date
+            package_dict["mainPageDate"] = res.date
 
-        package_dict["metadata"] = metadata
+        package_dict["created"] = datetime.datetime.utcnow().strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
+
         package_dict["wacz_version"] = WACZ_VERSION
+
+        package_dict["software"] = "py-wacz " + get_py_wacz_version()
 
         return json.dumps(package_dict, indent=2)

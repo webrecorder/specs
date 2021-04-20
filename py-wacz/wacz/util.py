@@ -1,15 +1,21 @@
 import hashlib, datetime, json
 from warcio.timeutils import iso_date_to_timestamp
+import pkg_resources
 
-WACZ_VERSION = "1.0.0"
+WACZ_VERSION = "1.0.1"
+
+
+def get_py_wacz_version():
+    """Get version of the py-wacz package"""
+    return pkg_resources.get_distribution("wacz").version
 
 
 def support_hash_file(hash_type, data):
     """Hashes the passed content using sha256 or md5"""
     if hash_type == "sha256":
-        return hashlib.sha256(data).hexdigest()
+        return "sha256:%s" % hashlib.sha256(data).hexdigest()
     if hash_type == "md5":
-        return hashlib.md5(data).hexdigest()
+        return "md5:%s" % hashlib.md5(data).hexdigest()
 
 
 def construct_passed_pages_dict(passed_content):

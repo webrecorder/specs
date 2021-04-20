@@ -328,7 +328,7 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_json, "rb")
             json_parse = json.loads(f.read())
 
-            self.assertEqual(json_parse["metadata"]["mainPageTS"], "2020-11-01")
+            self.assertEqual(json_parse["mainPageDate"], "2020-11-01")
 
     @patch("wacz.main.now")
     def test_warc_with_valid_url_flag(self, mock_now):
@@ -366,10 +366,8 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_pages, "rb")
             json_pages = [json.loads(jline) for jline in f.read().splitlines()]
             self.assertEqual(json_pages[1]["url"], "http://www.example.com/")
-            self.assertEqual(
-                json_parse["metadata"]["mainPageURL"], "http://www.example.com/"
-            )
-            assert "mainPageTS" not in json_parse.keys()
+            self.assertEqual(json_parse["mainPageURL"], "http://www.example.com/")
+            assert "mainPageDate" not in json_parse.keys()
 
     def test_warc_with_invalid_url_flag(self):
         """When passing an invalid url flag we should raise a ValueError"""
@@ -447,10 +445,8 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_pages, "rb")
             json_pages = [json.loads(jline) for jline in f.read().splitlines()]
             self.assertEqual(json_pages[1]["url"], "http://www.example.com/")
-            self.assertEqual(
-                json_parse["metadata"]["mainPageURL"], "http://www.example.com/"
-            )
-            self.assertEqual(json_parse["metadata"]["mainPageTS"], "20201007212236")
+            self.assertEqual(json_parse["mainPageURL"], "http://www.example.com/")
+            self.assertEqual(json_parse["mainPageDate"], "2020-10-07T21:22:36Z")
 
     @patch("wacz.main.now")
     def test_warc_with_hash_flag_md5(self, mock_now):
@@ -482,7 +478,7 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_json, "rb")
             json_parse = json.loads(f.read())
 
-            self.assertEqual(json_parse["resources"][0]["hashing"], "md5")
+            assert "md5" in json_parse["resources"][0]["hash"]
 
     @patch("wacz.main.now")
     def test_warc_with_hash_flag_sha256(self, mock_now):
@@ -514,37 +510,7 @@ class TestWaczFormat(unittest.TestCase):
             f = open(self.wacz_json, "rb")
             json_parse = json.loads(f.read())
 
-            self.assertEqual(json_parse["resources"][0]["hashing"], "sha256")
-
-    @patch("wacz.main.now")
-    def test_warc_with_hash_flag_sha256(self, mock_now):
-        mock_now.return_value = (2020, 10, 7, 22, 29, 10)
-        """When not passing the --hash-type flag the datapackage should be hashed using sha256"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            self.assertEqual(
-                main(
-                    [
-                        "create",
-                        "-f",
-                        os.path.join(TEST_DIR, "example-collection.warc"),
-                        "-o",
-                        os.path.join(tmpdir, "example-collection-sha256.wacz"),
-                    ]
-                ),
-                0,
-            )
-            with zipfile.ZipFile(
-                os.path.join(tmpdir, "example-collection-sha256.wacz"), "r"
-            ) as zip_ref:
-                zip_ref.extractall(os.path.join(tmpdir, "unzipped_sha256"))
-                zip_ref.close()
-
-            self.wacz_json = os.path.join(tmpdir, "unzipped_sha256/datapackage.json")
-
-            f = open(self.wacz_json, "rb")
-            json_parse = json.loads(f.read())
-
-            self.assertEqual(json_parse["resources"][0]["hashing"], "sha256")
+            assert "sha256" in json_parse["resources"][0]["hash"]
 
 
 if __name__ == "__main__":

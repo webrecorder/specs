@@ -123,27 +123,36 @@ The file contains the following keys:
     "resources": [
        {
          "path": "pages/pages.jsonl",
-         "stats": {
-           "hash": "8a7fc0d302700bed02294404a627ddbbf0e35487565b1c6181c729dff8d2fff6",
-           "bytes": 75
-         },
-         "hashing": "sha256"
+         "hash": "sha256:8a7fc0d302700bed02294404a627ddbbf0e35487565b1c6181c729dff8d2fff6",
+         "bytes": 75
        },
        {
          "path": "archive/data.warc",
-         "stats": {
-           "hash": "0e7101316ba5d4b66f86a371ee615fbd20f9d3f32d32563ed2c829db062f7714",
-           "bytes": 11469796
-         },
-         "hashing": "sha256"
+         "hash": "sha256:0e7101316ba5d4b66f86a371ee615fbd20f9d3f32d32563ed2c829db062f7714",
+         "bytes": 11469796
        },
        ...
+   ]
    ```
 
-- `wacz_version`: Should be set to `1.0.0` (or current version of WACZ)
+WACZ data packages can also include optional data package fields, in particular:
 
-- `metadata`: WACZ specific metadata dictionary, can contain `title`, `description` for the collection as well as `mainPageURL` and `mainPageTS`
-to identify a 'main' starting URL for the collection. All metadata is optional.
+- `title`: Can contain title for this collection.
+
+- `description`: Can contain description for this collection.
+
+- `created`: ISO date string for when the WACZ file was created.
+
+
+#### WACZ Specific fields
+
+The following fields are not part of the standard data package specification and are additional fields used with WACZ:
+
+- `wacz_version`: Should be set to `1.0.1` (or current version of WACZ). This field is required to identify the package as a WACZ.
+
+- `mainPageURL`: An optional URL of the main or starting page in the collection, if any, to be used for initial replay.
+
+- `mainPageDate`: An optional ISO-formatted date of the main or startng page in the collection, if any, to be used for initial replay. Specified only if `mainPageURL` is specified.
 
 
 ## Possible Support in the future
