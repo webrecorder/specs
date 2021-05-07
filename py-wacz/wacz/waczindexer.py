@@ -2,10 +2,12 @@ import json, shortuuid
 from urllib.parse import quote, urlsplit, urlunsplit
 import os, gzip, glob, zipfile
 from cdxj_indexer.main import CDXJIndexer
+from warcio.warcwriter import BufferWARCWriter
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
 from wacz.util import support_hash_file, now, WACZ_VERSION, get_py_wacz_version
 import datetime
+import hashlib
 
 HTML_MIME_TYPES = ("text/html", "application/xhtml", "application/xhtml+xml")
 
@@ -30,7 +32,7 @@ class WACZIndexer(CDXJIndexer):
         if self.hash_type == None:
             self.hash_type = "sha256"
 
-        self.passed_pages_dict = kwargs.pop("passed_pages_dict", "")
+        self.passed_pages_dict = kwargs.pop("passed_pages_dict", {})
 
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
@@ -58,7 +60,7 @@ class WACZIndexer(CDXJIndexer):
             self.parse_warcinfo(record)
 
         elif self.filter_record(record):
-            if type_ in ("response" "resource"):
+            if type_ in ("response", "resource", "revisit"):
                 self.check_pages_and_text(record)
 
             super().process_index_entry(it, record, *args)
@@ -90,12 +92,6 @@ class WACZIndexer(CDXJIndexer):
 
         if hasattr(self, "main_url_flag") and self.main_url_flag == False:
             raise ValueError("Url %s not found in index" % (self.main_url))
-
-    def _do_write(self, urlkey, ts, index, out):
-        if self.detect_pages:
-            self.detect_page(ts, index)
-
-        super()._do_write(urlkey, ts, index, out)
 
     def detect_page(self, ts, index):
         referrer = index.get("referrer")
@@ -216,8 +212,7 @@ class WACZIndexer(CDXJIndexer):
         if mime not in HTML_MIME_TYPES:
             return
 
-        status = record.http_headers.get_statuscode()
-        if record.http_headers and status.startswith("3"):
+        if record.http_headers and record.http_headers.get_statuscode().startswith("3"):
             return
 
         if id_ not in self.pages:
@@ -307,7 +302,7 @@ class WACZIndexer(CDXJIndexer):
 
             yield json.dumps(data) + "\n"
 
-    def generate_metadata(self, res, wacz):
+    def generate_datapackage(self, res, wacz):
         package_dict = {}
 
         package_dict["profile"] = "data-package"
@@ -350,3 +345,12 @@ class WACZIndexer(CDXJIndexer):
         package_dict["software"] = "py-wacz " + get_py_wacz_version()
 
         return json.dumps(package_dict, indent=2)
+
+    def generate_datapackage_digest(self, datapackage_bytes):
+        digest_dict = {
+            "path": "datapackage.json",
+            "hash": "sha256:" + hashlib.sha256(datapackage_bytes).hexdigest(),
+        }
+
+        # TODO: add optional signature
+        return json.dumps(digest_dict, indent=2)

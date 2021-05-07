@@ -70,6 +70,7 @@ class TestWaczIndexing(unittest.TestCase):
                     filelist,
                     [
                         "archive/example-collection-with-lists.warc",
+                        "datapackage-digest.json",
                         "datapackage.json",
                         "indexes/index.cdx.gz",
                         "indexes/index.idx",

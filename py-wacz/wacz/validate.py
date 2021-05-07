@@ -101,7 +101,11 @@ class Validation(object):
         if self.version != OUTDATED_WACZ:
             package_files = [item["path"] for item in self.datapackage["resources"]]
             for filepath in pathlib.Path(self.dir.name).glob("**/*.*"):
-                if not os.path.basename(filepath).endswith("datapackage.json"):
+                filename = os.path.basename(filepath)
+                if (
+                    filename != "datapackage.json"
+                    and filename != "datapackage-digest.json"
+                ):
                     file = str(filepath).split("/")[-2:]
                     file = "/".join(file)
                     if file not in package_files:
@@ -174,7 +178,8 @@ class Validation(object):
     def check_file_hashes(self):
         """Uses the datapackage to check that all the hashes of file in the data folder match those in the datapackage"""
         for filepath in pathlib.Path(self.dir.name).glob("**/*.*"):
-            if not os.path.basename(filepath).endswith("datapackage.json"):
+            filename = os.path.basename(filepath)
+            if filename != "datapackage.json" and filename != "datapackage-digest.json":
                 file = open(filepath, "rb").read()
                 hash = support_hash_file(self.hash_type, file)
                 file = str(filepath).split("/")[-2:]
@@ -185,7 +190,7 @@ class Validation(object):
                         res = item
                 if res == None or (res["hash"] != hash):
                     print(
-                        "\nfile %s's hash does not match the has listed in the datapackage"
+                        "\nfile %s's hash does not match the hash listed in the datapackage"
                         % file
                     )
                     return False
