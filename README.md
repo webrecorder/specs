@@ -128,7 +128,7 @@ The file contains the following keys:
 - `resources` is a list containing the contents of the WACZ, in accordance with the Frictionless Data Package spec.
 
   Ex:
-   ```json
+   ```
     "resources": [
        {
          "path": "pages/pages.jsonl",
