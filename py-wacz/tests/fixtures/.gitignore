@@ -3,3 +3,4 @@
 !.gitignore
 !*.warc
 !*.wacz
+!*.jsonl
