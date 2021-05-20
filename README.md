@@ -45,7 +45,7 @@ The spec is not designed to replace any other format, but to set up a convention
 following a certain directory and naming convention, into a standard ZIP (or ZIP64) file.
 
 
-# WACZ 1.1
+# WACZ 1.1.0
 
 The spec currently consists of the following:
 
@@ -55,6 +55,8 @@ The spec currently consists of the following:
 
 The documentation is split into what is currently supported in [wabac.js](https://github.com/webrecorder/wabac.js) as stable,
 experimental ideas, and possible future extensions.
+
+See the [CHANGES.md](CHANGES.md) file for a list of changes to WACZ spec and py-wacz tool.
 
 ## Currently Supported
 
@@ -126,7 +128,7 @@ The file contains the following keys:
 - `resources` is a list containing the contents of the WACZ, in accordance with the Frictionless Data Package spec.
 
   Ex:
-   ```
+   ```json
     "resources": [
        {
          "path": "pages/pages.jsonl",
@@ -163,19 +165,20 @@ The following fields are not part of the standard data package specification and
 
 #### 5) `datapackage-digest.json` and Signed WACZ
 
-With WACZ 1.1, there is now also support for a special datapackage-digest.json, which makes it possible to verify the datapackage.json
-and provide an optional signature for the hash, and thus for the entire contents of the WACZ.
+With WACZ 1.1, there is now also support for a special *datapackage-digest.json*, which makes it possible to verify the *datapackage.json* manifest
+with a hash, and an optional signature, and thus for the entire contents of the WACZ.
 
 The `hash` and `path` keys are required, while `signature` and `publicKey` are optional.
 
 Ex:
-  ```
+  ```json
   {
     "hash": "sha256:...",
     "path": "datapackage.json",
     "signature": "...",
     "publicKey": "..."
   }
+  ```
 
 #### WACZ 1.1 Record Digests
 
@@ -281,7 +284,7 @@ variation of CDX.
 
 More Info: https://pywb.readthedocs.io/en/latest/manual/indexing.html#index-formats for more info.
 
-Starting with WACZ 1.1, it is possible to include a `recordDigest` including the full digest of each WARC record as part of the CDX.
+Starting with WACZ 1.1, it is possible to include a `recordDigest` in each CDX entry to specify the hash/digest of each full WARC record.
 
 ### Compressed CDX / "ZipNum"
 
@@ -289,7 +292,7 @@ The Compressed CDX format uses gzip compression on top of the plain-text CDX, an
 index to search the compressed index. This allows the CDX index to scale to considerably larger datasets.
 This index format is in use by Internet Archive's Wayback Machine and CommonCrawl.
 
-Starting with WACZ 1.1, the index entry for each compressed CDX block also includes a `digest` for the block.
+Starting with WACZ 1.1, the index entry for each compressed CDX block also includes a `digest` field indicating the hash/digest of each block.
 
 More Info: https://pywb.readthedocs.io/en/latest/manual/indexing.html#zipnum-sharded-index)
 
