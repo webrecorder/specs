@@ -93,6 +93,12 @@ class WACZIndexer(CDXJIndexer):
         if hasattr(self, "main_url_flag") and self.main_url_flag == False:
             raise ValueError("Url %s not found in index" % (self.main_url))
 
+    def _do_write(self, urlkey, ts, index, out):
+        if self.detect_pages:
+            self.detect_page(ts, index)
+
+        super()._do_write(urlkey, ts, index, out)
+
     def detect_page(self, ts, index):
         referrer = index.get("referrer")
         if referrer:

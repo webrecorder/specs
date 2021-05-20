@@ -165,7 +165,7 @@ def create_wacz(res):
         print("Validating extra pages file")
         with open(res.extra_pages) as fh:
             data = fh.read()
-            for page in data.split("\n"):
+            for page_str in data.strip().split("\n"):
                 page_json = validateJSON(page_str)
 
                 if not page_json:
@@ -232,7 +232,7 @@ def create_wacz(res):
             wacz_indexer.serialize_json_pages(
                 wacz_indexer.pages.values(),
                 id="pages",
-                title="All Pages",
+                title="Pages",
                 has_text=wacz_indexer.has_text,
             ),
         )
@@ -241,7 +241,7 @@ def create_wacz(res):
         print("Generating page index from passed pages...")
         # Initially set the default value of the header id and title
         id_value = "pages"
-        title_value = "All Pages"
+        title_value = "Pages"
 
         # If the user has provided a title or an id in a header of their file we will use those instead of our default.
         header = json.loads(passed_content[0])

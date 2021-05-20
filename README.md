@@ -45,7 +45,7 @@ The spec is not designed to replace any other format, but to set up a convention
 following a certain directory and naming convention, into a standard ZIP (or ZIP64) file.
 
 
-# WACZ 1.0
+# WACZ 1.1
 
 The spec currently consists of the following:
 
@@ -69,6 +69,7 @@ Currently supported:
 - indexes/
 - pages/
 - datapackage.json
+- datapackage-digest.json
 ```
 
 ### Directories and Files
@@ -107,6 +108,12 @@ Ex:
 ```
 
 Other `.jsonl` files can optionally be added on using the same format in the `pages/` directory.
+
+For example, py-wacz supports specifying an 'extra' pages list, loaded from `extraPages.jsonl`.
+
+A common use case is to include only the main pages in the `pages.jsonl`, while including additional pages, such as those discovered automatically
+via a crawl in an `extraPages.jsonl`.
+
 
 #### 4) `datapackage.json`
 
@@ -153,6 +160,30 @@ The following fields are not part of the standard data package specification and
 - `mainPageURL`: An optional URL of the main or starting page in the collection, if any, to be used for initial replay.
 
 - `mainPageDate`: An optional ISO-formatted date of the main or startng page in the collection, if any, to be used for initial replay. Specified only if `mainPageURL` is specified.
+
+#### 5) `datapackage-digest.json` and Signed WACZ
+
+With WACZ 1.1, there is now also support for a special datapackage-digest.json, which makes it possible to verify the datapackage.json
+and provide an optional signature for the hash, and thus for the entire contents of the WACZ.
+
+The `hash` and `path` keys are required, while `signature` and `publicKey` are optional.
+
+Ex:
+  ```
+  {
+    "hash": "sha256:...",
+    "path": "datapackage.json",
+    "signature": "...",
+    "publicKey": "..."
+  }
+
+#### WACZ 1.1 Record Digests
+
+With WACZ 1.1, index entries for each individual WARC record in the index (CDX) includes a digest of the WARC record.
+
+When a compressed CDX with a secondary index is used, each entry in the secondary index also includes a digest field.
+
+This makes it possible to also verify each URL as it is loaded via random access, without downloading the entire WACZ file.
 
 
 ## Possible Support in the future
@@ -250,11 +281,15 @@ variation of CDX.
 
 More Info: https://pywb.readthedocs.io/en/latest/manual/indexing.html#index-formats for more info.
 
+Starting with WACZ 1.1, it is possible to include a `recordDigest` including the full digest of each WARC record as part of the CDX.
+
 ### Compressed CDX / "ZipNum"
 
 The Compressed CDX format uses gzip compression on top of the plain-text CDX, and a secondary
 index to search the compressed index. This allows the CDX index to scale to considerably larger datasets.
 This index format is in use by Internet Archive's Wayback Machine and CommonCrawl.
+
+Starting with WACZ 1.1, the index entry for each compressed CDX block also includes a `digest` for the block.
 
 More Info: https://pywb.readthedocs.io/en/latest/manual/indexing.html#zipnum-sharded-index)
 
