@@ -8,12 +8,16 @@ from wacz.util import validateJSON, get_py_wacz_version
 from warcio.timeutils import iso_date_to_timestamp
 
 """
-WACZ Generator 0.2.0
+WACZ Generator
 """
 
 PAGE_INDEX = "pages/pages.jsonl"
+EXTRA_PAGES_INDEX = "pages/extraPages.jsonl"
 
 PAGE_INDEX_TEMPLATE = "pages/{0}.jsonl"
+
+# setting to size matching archiveweb.page defaults
+DEFAULT_NUM_LINES = 1024
 
 
 def main(args=None):
@@ -31,6 +35,8 @@ def main(args=None):
     create.add_argument("-f", "--file", action="store_true")
 
     create.add_argument("-o", "--output", default="archive.wacz")
+
+    create.add_argument("-e", "--extra-pages")
 
     create.add_argument(
         "-t",
@@ -121,8 +127,6 @@ def validate_wacz(res):
 def create_wacz(res):
     wacz = zipfile.ZipFile(res.output, "w")
 
-    print("Generating indexes...")
-
     # write index
     data_file = zipfile.ZipInfo("indexes/index.cdx.gz", now())
 
@@ -139,7 +143,7 @@ def create_wacz(res):
 
     # If the flag for passed pages has been passed
     if res.pages != None:
-        print("Attempt to validate passed pages.jsonl file")
+        print("Validating passed pages.jsonl file")
         passed_content = open(res.pages, "r").read().split("\n")
 
         # Get rid of the blank end line that editors can sometimes add to jsonl files if it's present
@@ -160,6 +164,25 @@ def create_wacz(res):
         # Create a dict of the passed pages that will be used in the construction of the index
         passed_pages_dict = construct_passed_pages_dict(passed_content)
 
+    if res.extra_pages:
+        print("Validating extra pages file")
+        with open(res.extra_pages) as fh:
+            data = fh.read()
+            for page_str in data.strip().split("\n"):
+                page_json = validateJSON(page_str)
+
+                if not page_json:
+                    print(
+                        "The extra pages jsonl file cannot be validated. Error found on the following line\n %s"
+                        % page_str
+                    )
+                    return 1
+
+        extra_pages_file = zipfile.ZipInfo(EXTRA_PAGES_INDEX, now())
+        with wacz.open(extra_pages_file, "w") as efh:
+            efh.write(data.encode("utf-8"))
+
+    print("Reading and Indexing All WARCs")
     with wacz.open(data_file, "w") as data:
         wacz_indexer = WACZIndexer(
             text_wrap,
@@ -167,6 +190,8 @@ def create_wacz(res):
             sort=True,
             post_append=True,
             compress=data,
+            lines=DEFAULT_NUM_LINES,
+            digest_records=True,
             fields="referrer",
             data_out_name="index.cdx.gz",
             hash_type=res.hash_type,
@@ -210,7 +235,7 @@ def create_wacz(res):
             wacz_indexer.serialize_json_pages(
                 wacz_indexer.pages.values(),
                 id="pages",
-                title="All Pages",
+                title="Pages",
                 has_text=wacz_indexer.has_text,
             ),
         )
@@ -219,7 +244,7 @@ def create_wacz(res):
         print("Generating page index from passed pages...")
         # Initially set the default value of the header id and title
         id_value = "pages"
-        title_value = "All Pages"
+        title_value = "Pages"
 
         # If the user has provided a title or an id in a header of their file we will use those instead of our default.
         header = json.loads(passed_content[0])
@@ -251,13 +276,23 @@ def create_wacz(res):
 
             wacz_indexer.write_page_list(wacz, filename, pagelist)
 
-    # generate metadata
-    print("Generating metadata...")
+    # generate datapackage
+    print("Generating datapackage.json")
 
-    metadata = wacz_indexer.generate_metadata(res, wacz)
-    metadata_file = zipfile.ZipInfo("datapackage.json", now())
-    metadata_file.compress_type = zipfile.ZIP_DEFLATED
-    wacz.writestr(metadata_file, metadata.encode("utf-8"))
+    datapackage = wacz_indexer.generate_datapackage(res, wacz)
+    datapackage_file = zipfile.ZipInfo("datapackage.json", now())
+    datapackage_file.compress_type = zipfile.ZIP_DEFLATED
+    datapackage_bytes = datapackage.encode("utf-8")
+    wacz.writestr(datapackage_file, datapackage_bytes)
+
+    print("Generating datapackage-digest.json")
+    datapackage_digest_file = zipfile.ZipInfo("datapackage-digest.json", now())
+    datapackage_digest_file.compress_type = zipfile.ZIP_DEFLATED
+    wacz.writestr(
+        datapackage_digest_file,
+        wacz_indexer.generate_datapackage_digest(datapackage_bytes),
+    )
+
     return 0
 
 

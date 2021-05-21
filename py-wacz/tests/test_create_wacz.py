@@ -93,9 +93,13 @@ class TestWaczFormat(unittest.TestCase):
         with open(self.wacz_index_idx, "rb") as f:
             content = f.read()
         f.close()
-        self.assertEqual(
-            content,
-            b'!meta 0 {"format": "cdxj-gzip-1.0", "filename": "index.cdx.gz"}\ncom,example)/ 20201007212236 {"offset": 0, "length": 194}\n',
+
+        # doing a startswith because compressed gzip block may be different depending on platform, so sha256 is platform dependent
+        # just checking that the hash is set
+        self.assertTrue(
+            content.startswith(
+                b'!meta 0 {"format": "cdxj-gzip-1.0", "filename": "index.cdx.gz"}\ncom,example)/ 20201007212236 {"offset": 0, "length": 256, "digest": "sha256:',
+            )
         )
 
     def test_cdx_structure(self):
@@ -107,7 +111,7 @@ class TestWaczFormat(unittest.TestCase):
         f.close()
         self.assertEqual(
             content,
-            'com,example)/ 20201007212236 {"url": "http://www.example.com/", "mime": "text/html", "status": "200", "digest": "WJM2KPM4GF3QK2BISVUH2ASX64NOUY7L", "length": "1293", "offset": "845", "filename": "example-collection.warc"}\n',
+            'com,example)/ 20201007212236 {"url": "http://www.example.com/", "mime": "text/html", "status": "200", "digest": "sha1:WJM2KPM4GF3QK2BISVUH2ASX64NOUY7L", "length": "1293", "offset": "845", "filename": "example-collection.warc", "recordDigest": "sha256:f78838ace891c96f7a6299e9e085b55a5aba8950a6d77f0f2e9ffe90f63255f2"}\n',
         )
 
     def test_data_package_structure(self):

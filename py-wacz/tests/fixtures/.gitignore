@@ -2,4 +2,6 @@
 */
 !.gitignore
 !*.warc
+!*.warc.gz
 !*.wacz
+!*.jsonl
