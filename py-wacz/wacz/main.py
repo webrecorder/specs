@@ -16,6 +16,9 @@ EXTRA_PAGES_INDEX = "pages/extraPages.jsonl"
 
 PAGE_INDEX_TEMPLATE = "pages/{0}.jsonl"
 
+# setting to size matching archiveweb.page defaults
+DEFAULT_NUM_LINES = 1024
+
 
 def main(args=None):
     parser = ArgumentParser(
@@ -187,7 +190,7 @@ def create_wacz(res):
             sort=True,
             post_append=True,
             compress=data,
-            lines=1024,
+            lines=DEFAULT_NUM_LINES,
             digest_records=True,
             fields="referrer",
             data_out_name="index.cdx.gz",
