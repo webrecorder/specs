@@ -131,11 +131,13 @@ The file contains the following keys:
    ```
     "resources": [
        {
+         "path": "pages.jsonl",
          "path": "pages/pages.jsonl",
          "hash": "sha256:8a7fc0d302700bed02294404a627ddbbf0e35487565b1c6181c729dff8d2fff6",
          "bytes": 75
        },
        {
+         "name": "data.warc",
          "path": "archive/data.warc",
          "hash": "sha256:0e7101316ba5d4b66f86a371ee615fbd20f9d3f32d32563ed2c829db062f7714",
          "bytes": 11469796
