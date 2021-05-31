@@ -194,7 +194,7 @@ This makes it possible to also verify each URL as it is loaded via random access
 #### Archive formats besides WARC
 
 It is possible that other formats, such as HAR, Web Bundle, ZIM be supported
-in the `archive/` directory. (See Appendix for this formats).
+in the `archive/` directory. (See Appendix for these formats).
 
 #### Custom Derivatives and a general-purposes `derivatives/` directory.
 
