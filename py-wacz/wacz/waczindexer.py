@@ -316,6 +316,9 @@ class WACZIndexer(CDXJIndexer):
         for i in range(0, len(wacz.infolist())):
             file = wacz.infolist()[i]
             package_dict["resources"].append({})
+            package_dict["resources"][i]["name"] = os.path.basename(
+                file.filename
+            ).lower()
             package_dict["resources"][i]["path"] = file.filename
             with wacz.open(file, "r") as myfile:
                 content = myfile.read()

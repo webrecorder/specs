@@ -2,7 +2,7 @@ import hashlib, datetime, json
 from warcio.timeutils import iso_date_to_timestamp
 import pkg_resources
 
-WACZ_VERSION = "1.1.0"
+WACZ_VERSION = "1.1.1"
 
 
 def get_py_wacz_version():
