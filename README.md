@@ -131,7 +131,7 @@ The file contains the following keys:
    ```
     "resources": [
        {
-         "path": "pages.jsonl",
+         "name": "pages.jsonl",
          "path": "pages/pages.jsonl",
          "hash": "sha256:8a7fc0d302700bed02294404a627ddbbf0e35487565b1c6181c729dff8d2fff6",
          "bytes": 75
