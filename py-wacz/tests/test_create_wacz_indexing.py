@@ -2,12 +2,36 @@ import unittest
 import tempfile
 import os
 from wacz.main import main, now
+from wacz.waczindexer import check_http_and_https
+
 import zipfile
 
 TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
 
 class TestWaczIndexing(unittest.TestCase):
+    def test_check_http_and_https_fail(self):
+        pages_dict = {
+            "id": "1db0ef709a",
+            "url": "https://www.example.org/",
+            "ts": "2020-10-07T21:22:36Z",
+            "title": "Example Domain",
+        }
+        check_url = "http://www.example.org/"
+        match = check_http_and_https(check_url, pages_dict)
+        self.assertEqual(match, True)
+
+    def test_check_http_and_https_success(self):
+        pages_dict = {
+            "id": "1db0ef709a",
+            "url": "https://www.example.org/",
+            "ts": "2020-10-07T21:22:36Z",
+            "title": "Example Domain",
+        }
+        check_url = "http://fake"
+        match = check_http_and_https(check_url, pages_dict)
+        self.assertEqual(match, False)
+
     def test_warc_with_other_metadata(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             self.assertEqual(
