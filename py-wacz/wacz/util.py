@@ -12,10 +12,6 @@ def check_http_and_https(url, pages_dict):
     :returns: True or False depending on if a match was found
     :rtype: boolean
     """
-    print("hi")
-    print("url")
-    print(url)
-    print(pages_dict)
     url_body = url.split(":")[1]
     if f"http:{url_body}" in pages_dict:
         return True
