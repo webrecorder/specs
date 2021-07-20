@@ -5,6 +5,25 @@ import pkg_resources
 WACZ_VERSION = "1.1.1"
 
 
+def check_http_and_https(url, pages_dict):
+    """Checks for http and https versions of the passed url
+    in the pages dict
+    :param url to check, pages_dict the user passed
+    :returns: True or False depending on if a match was found
+    :rtype: boolean
+    """
+    print("hi")
+    print("url")
+    print(url)
+    print(pages_dict)
+    url_body = url.split(":")[1]
+    if f"http:{url_body}" in pages_dict:
+        return True
+    if f"https:{url_body}" in pages_dict:
+        return True
+    return False
+
+
 def get_py_wacz_version():
     """Get version of the py-wacz package"""
     return pkg_resources.get_distribution("wacz").version

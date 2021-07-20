@@ -5,7 +5,13 @@ from cdxj_indexer.main import CDXJIndexer
 from warcio.warcwriter import BufferWARCWriter
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
-from wacz.util import support_hash_file, now, WACZ_VERSION, get_py_wacz_version
+from wacz.util import (
+    support_hash_file,
+    now,
+    WACZ_VERSION,
+    get_py_wacz_version,
+    check_http_and_https,
+)
 import datetime
 import hashlib
 
@@ -112,20 +118,6 @@ class WACZIndexer(CDXJIndexer):
 
         return content
 
-    def check_http_and_https(self, url, pages_dict):
-        """Checks for http and https versions of the passed url
-        in the pages dict
-        :param url to check, pages_dict the user passed
-        :returns: True or False depending on if a match was found
-        :rtype: boolean
-        """
-        url_body = url.split(":")[1]
-        if f"http:{url_body}" in self.passed_pages_dict:
-            return True
-        if f"https:{url_body}" in self.passed_pages_dict:
-            return True
-        return False
-
     def parse_warcinfo(self, record):
         """Parse WARC information.
         :param record: WARC information
@@ -189,10 +181,11 @@ class WACZIndexer(CDXJIndexer):
         id_ = ts + "/" + url
         matched_id = ""
         # Check for both a matching url/ts and url entry
-        if id_ in self.passed_pages_dict:
-            matched_id = id
 
-        if self.check_http_and_https(url, self.passed_pages_dict):
+        if id_ in self.passed_pages_dict:
+            matched_id = id_
+
+        if check_http_and_https(url, self.passed_pages_dict):
             matched_id = url
         # If we find a match build a record
         if matched_id != "":
