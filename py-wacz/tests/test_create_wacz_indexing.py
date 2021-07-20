@@ -12,7 +12,6 @@ TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 class TestWaczIndexing(unittest.TestCase):
     def test_check_http_and_https_fail(self):
         pages_dict = {"https://www.example.org/": "1db0ef709a"}
-        pages_dict = construct_passed_pages_dict(pages_dict)
         check_url = "http://www.example.org/"
         match = check_http_and_https(check_url, pages_dict)
         self.assertEqual(match, True)
