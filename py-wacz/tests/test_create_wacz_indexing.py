@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import os
 from wacz.main import main, now
-from wacz.util import check_http_and_https, constru
+from wacz.util import check_http_and_https
 
 import zipfile
 
