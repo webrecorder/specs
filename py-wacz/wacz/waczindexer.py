@@ -112,7 +112,7 @@ class WACZIndexer(CDXJIndexer):
 
         return content
 
-    def check_http_and_https(url, pages_dict):
+    def check_http_and_https(self, url, pages_dict):
         """Checks for http and https versions of the passed url
         in the pages dict
         :param url to check, pages_dict the user passed
@@ -190,8 +190,9 @@ class WACZIndexer(CDXJIndexer):
         matched_id = ""
         # Check for both a matching url/ts and url entry
         if id_ in self.passed_pages_dict:
-            matched_id = id_
-        if check_http_and_https(url, self.passed_pages_dict):
+            matched_id = id
+
+        if self.check_http_and_https(url, self.passed_pages_dict):
             matched_id = url
         # If we find a match build a record
         if matched_id != "":

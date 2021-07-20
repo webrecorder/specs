@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import os
 from wacz.main import main, now
-from wacz.waczindexer import check_http_and_https
+from wacz.waczindexer import WACZIndexer
 
 import zipfile
 
@@ -18,7 +18,7 @@ class TestWaczIndexing(unittest.TestCase):
             "title": "Example Domain",
         }
         check_url = "http://www.example.org/"
-        match = check_http_and_https(check_url, pages_dict)
+        match = WACZIndexer.check_http_and_https(check_url, pages_dict)
         self.assertEqual(match, True)
 
     def test_check_http_and_https_success(self):
@@ -29,7 +29,7 @@ class TestWaczIndexing(unittest.TestCase):
             "title": "Example Domain",
         }
         check_url = "http://fake"
-        match = check_http_and_https(check_url, pages_dict)
+        match = WACZIndexer.check_http_and_https(check_url, pages_dict)
         self.assertEqual(match, False)
 
     def test_warc_with_other_metadata(self):
