@@ -1,6 +1,6 @@
 frictionless>=3.23.4
 shortuuid>=1.0.1
-cdxj-indexer>=1.3.0
+cdxj-indexer>=1.4.1
 boilerpy3>=1.0.2
 pytest-cov>=2.10.1
 PyYAML>=5.3.1

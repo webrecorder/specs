@@ -1,3 +1,8 @@
+# py-wacz 0.3.1
+
+- Ensure passed in pages are check via both http and https URLs
+- Update to cdxj-indexer 1.4.1, supporting improved indexing of JSON POST requests
+
 # WACZ 1.1.1 / py-wacz 0.3.0
 
 - Add `name` field to `resources` for better compatibility with frictionless spec.
