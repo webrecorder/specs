@@ -5,7 +5,13 @@ from cdxj_indexer.main import CDXJIndexer
 from warcio.warcwriter import BufferWARCWriter
 from warcio.timeutils import iso_date_to_timestamp, timestamp_to_iso_date
 from boilerpy3 import extractors
-from wacz.util import support_hash_file, now, WACZ_VERSION, get_py_wacz_version
+from wacz.util import (
+    support_hash_file,
+    now,
+    WACZ_VERSION,
+    get_py_wacz_version,
+    check_http_and_https,
+)
 import datetime
 import hashlib
 
@@ -175,9 +181,11 @@ class WACZIndexer(CDXJIndexer):
         id_ = ts + "/" + url
         matched_id = ""
         # Check for both a matching url/ts and url entry
+
         if id_ in self.passed_pages_dict:
             matched_id = id_
-        if url in self.passed_pages_dict:
+
+        if check_http_and_https(url, self.passed_pages_dict):
             matched_id = url
         # If we find a match build a record
         if matched_id != "":
