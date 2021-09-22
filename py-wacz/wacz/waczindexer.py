@@ -185,10 +185,9 @@ class WACZIndexer(CDXJIndexer):
         if id_ in self.passed_pages_dict:
             matched_id = id_
 
-        if check_http_and_https(url, self.passed_pages_dict):
-            matched_id = url
+        matched_id = check_http_and_https(url, self.passed_pages_dict)
         # If we find a match build a record
-        if matched_id != "":
+        if matched_id:
             self.pages[matched_id] = {"timestamp": ts, "url": url, "title": url}
             # Add title and text if they've been provided
             if "title" in self.passed_pages_dict[matched_id]:

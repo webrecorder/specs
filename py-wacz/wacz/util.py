@@ -14,10 +14,10 @@ def check_http_and_https(url, pages_dict):
     """
     url_body = url.split(":")[1]
     if f"http:{url_body}" in pages_dict:
-        return True
+        return f"http:{url_body}"
     if f"https:{url_body}" in pages_dict:
-        return True
-    return False
+        return f"https:{url_body}"
+    return ""
 
 
 def get_py_wacz_version():
