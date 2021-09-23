@@ -5,7 +5,7 @@ import pkg_resources
 WACZ_VERSION = "1.1.1"
 
 
-def check_http_and_https(url, pages_dict):
+def check_http_and_https(url, ts, pages_dict):
     """Checks for http and https versions of the passed url
     in the pages dict
     :param url to check, pages_dict the user passed
@@ -13,10 +13,17 @@ def check_http_and_https(url, pages_dict):
     :rtype: boolean
     """
     url_body = url.split(":")[1]
-    if f"http:{url_body}" in pages_dict:
-        return f"http:{url_body}"
-    if f"https:{url_body}" in pages_dict:
-        return f"https:{url_body}"
+    checks = [
+        f"http:{url_body}",
+        f"https:{url_body}",
+        f"{ts}/http:{url_body}",
+        f"{ts}/https:{url_body}",
+    ]
+
+    for check in checks:
+        if check in pages_dict:
+            return check
+
     return ""
 
 
@@ -41,27 +48,17 @@ def construct_passed_pages_dict(passed_content):
         header = json.loads(passed_content[i])
         if "format" not in header:
             pages_dict = dict(header)
+            url = pages_dict.pop("url", "")
 
             # Set the default key as url
-            key = "%s" % pages_dict["url"]
+            key = url
 
             # If timestamp is present overwrite the key to be 'ts/url'
             if "ts" in pages_dict:
-                key = "%s/%s" % (
-                    iso_date_to_timestamp(pages_dict["ts"]),
-                    pages_dict["url"],
-                )
+                key = iso_date_to_timestamp(pages_dict.pop("ts")) + "/" + url
 
-            # Add the key to the dictionary with a blank value
-            passed_pages_dict[key] = {}
-
-            # If title was in the passed pages line add it to the value of the just created dictionary entry
-            if "title" in pages_dict:
-                passed_pages_dict[key]["title"] = pages_dict["title"]
-
-            # If text was in the passed pages line add it to the value of the just created dictionary entry
-            if "text" in pages_dict:
-                passed_pages_dict[key]["text"] = pages_dict["text"]
+            # Add the key to the dictionary with remaining data
+            passed_pages_dict[key] = pages_dict
 
     return passed_pages_dict
 

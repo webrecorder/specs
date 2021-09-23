@@ -10,17 +10,17 @@ TEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures")
 
 
 class TestWaczIndexing(unittest.TestCase):
-    def test_check_http_and_https_fail(self):
+    def test_check_http_and_https_changed(self):
         pages_dict = {"https://www.example.org/": "1db0ef709a"}
         check_url = "http://www.example.org/"
-        match = check_http_and_https(check_url, pages_dict)
-        self.assertEqual(match, True)
+        match = check_http_and_https(check_url, "", pages_dict)
+        self.assertEqual(match, "https://www.example.org/")
 
-    def test_check_http_and_https_success(self):
+    def test_check_http_and_https_not_found(self):
         pages_dict = {"https://www.example.org/": "1db0ef709a"}
         check_url = "http://fake"
-        match = check_http_and_https(check_url, pages_dict)
-        self.assertEqual(match, False)
+        match = check_http_and_https(check_url, "", pages_dict)
+        self.assertEqual(match, "")
 
     def test_warc_with_other_metadata(self):
         with tempfile.TemporaryDirectory() as tmpdir:

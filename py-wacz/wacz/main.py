@@ -65,6 +65,8 @@ def main(args=None):
         help="Allows the user to specify the hash type used. Currently we allow sha256 and md5",
     )
 
+    create.add_argument("--split-seeds", action="store_true")
+
     create.add_argument("--ts")
     create.add_argument("--url")
     create.add_argument("--date")
@@ -200,6 +202,7 @@ def create_wacz(res):
             detect_pages=res.detect_pages,
             passed_pages_dict=passed_pages_dict,
             extract_text=res.text,
+            split_seeds=res.split_seeds,
         )
 
         wacz_indexer.process_all()
@@ -265,6 +268,18 @@ def create_wacz(res):
                 has_text=wacz_indexer.has_text,
             ),
         )
+
+        if len(wacz_indexer.extra_pages) > 0:
+            wacz_indexer.write_page_list(
+                wacz,
+                EXTRA_PAGES_INDEX,
+                wacz_indexer.serialize_json_pages(
+                    wacz_indexer.extra_pages.values(),
+                    id="extra-pages",
+                    title="Extra Pages",
+                    has_text=wacz_indexer.has_text,
+                ),
+            )
 
     if len(wacz_indexer.extra_page_lists) > 0:
         print("Generating extra page lists...")
