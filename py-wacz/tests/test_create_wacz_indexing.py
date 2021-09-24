@@ -97,10 +97,12 @@ class TestWaczIndexing(unittest.TestCase):
     def test_warc_with_extra_pages(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             with open(os.path.join(tmpdir, "test-extra-pages.jsonl"), "wt") as fh:
-                fh.write("""\
+                fh.write(
+                    """\
 {"url": "https://www.iana.org/about"}
 {"url": "https://www.iana.org/protocols"}\
-""")
+"""
+                )
 
             self.assertEqual(
                 main(
@@ -149,11 +151,13 @@ class TestWaczIndexing(unittest.TestCase):
     def test_warc_with_extra_pages_via_seeds(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             with open(os.path.join(tmpdir, "pages.jsonl"), "wt") as fh:
-                fh.write("""\
+                fh.write(
+                    """\
 {"url": "https://example.com/", "seed": true}
 {"url": "https://www.iana.org/about"}
 {"url": "https://www.iana.org/protocols"}\
-""")
+"""
+                )
 
             self.assertEqual(
                 main(
@@ -207,8 +211,6 @@ class TestWaczIndexing(unittest.TestCase):
                 with zf.open("pages/pages.jsonl", "r") as fh:
                     data = fh.read()
                     self.assertTrue(b"https://example.com/" in data)
-
-
 
     def test_warc_resource_record(self):
         with tempfile.TemporaryDirectory() as tmpdir:
