@@ -26,6 +26,7 @@ class WACZIndexer(CDXJIndexer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.pages = {}
+        self.extra_pages = {}
         self.extra_page_lists = {}
         self.title = ""
         self.desc = ""
@@ -39,6 +40,7 @@ class WACZIndexer(CDXJIndexer):
             self.hash_type = "sha256"
 
         self.passed_pages_dict = kwargs.pop("passed_pages_dict", {})
+        self.split_seeds = kwargs.pop("split_seeds", False)
 
         if self.main_url != None and self.main_url != "":
             self.main_url_flag = False
@@ -182,23 +184,27 @@ class WACZIndexer(CDXJIndexer):
         matched_id = ""
         # Check for both a matching url/ts and url entry
 
-        if id_ in self.passed_pages_dict:
-            matched_id = id_
+        # if id_ in self.passed_pages_dict:
+        #    matched_id = id_
 
-        if check_http_and_https(url, self.passed_pages_dict):
-            matched_id = url
+        matched_id = check_http_and_https(url, ts, self.passed_pages_dict)
         # If we find a match build a record
-        if matched_id != "":
-            self.pages[matched_id] = {"timestamp": ts, "url": url, "title": url}
+        if matched_id:
+            new_page = {"timestamp": ts, "url": url, "title": url}
+            input_page = self.passed_pages_dict[matched_id]
+
             # Add title and text if they've been provided
-            if "title" in self.passed_pages_dict[matched_id]:
-                self.pages[matched_id]["title"] = self.passed_pages_dict[matched_id][
-                    "title"
-                ]
+            if "title" in input_page:
+                new_page["title"] = input_page["title"]
             if "text" in self.passed_pages_dict[matched_id]:
-                self.pages[matched_id]["text"] = self.passed_pages_dict[matched_id][
-                    "text"
-                ]
+                new_page["text"] = input_page["text"]
+
+            if self.split_seeds and not input_page.get("seed"):
+                self.extra_pages[matched_id] = new_page
+                print("EXTRA", url)
+            else:
+                self.pages[matched_id] = new_page
+
             # Delete the entry from our pages_dict so we can't match it again
             del self.passed_pages_dict[matched_id]
 
