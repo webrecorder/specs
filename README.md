@@ -6,9 +6,13 @@ Feedback on this proposal is *strongly encouraged!*.
 
 Please open GitHub issues with any thoughts/suggestions/comments.
 
-## Tools for creating WACZ
+## Tools for creating and using WACZ
 
-The [py-wacz](./py-wacz) subdirectory contains a proof-of-concept Python tool for creating a WACZ file from existing WARCs.
+* The [py-wacz](https://github.com/webrecorder/py-wacz) repository contains the main reference Python library for creating a WACZ file from existing WARCs. The library can also be installed via `pip install wacz`
+
+* The [wabac.js](https://github.com/webrecorder/wabac.js) contains support for reading WACZ files in the browser.
+
+* The [archiveweb.page](https://github.com/webrecorder/archiveweb.page) extension contains support for creating WACZ files in the browser, and uses wabac.js for importing existing WACZ files.
 
 
 # Motivation
