@@ -10,7 +10,7 @@
    version="1.0"
    id="svg2"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="Origami_box_type1_done.svg"
+   sodipodi:docname="wacz.svg"
    x="0px"
    y="0px"
    width="140px"
@@ -36,9 +36,9 @@
    inkscape:pageopacity="0"
    inkscape:window-maximized="1"
    guidetolerance="10"
-   inkscape:cy="16.632829"
+   inkscape:cy="18.591001"
    gridtolerance="10"
-   inkscape:cx="103.72822"
+   inkscape:cx="101.49031"
    objecttolerance="10"
    inkscape:zoom="4.1881165"
    borderopacity="1"
@@ -370,12 +370,18 @@
 <text
    xml:space="preserve"
    style="font-size:16px;line-height:1.25;font-family:sans-serif"
-   x="41.097572"
-   y="97.806259"
+   x="35.720539"
+   y="103.95275"
    id="text232"
-   transform="rotate(-23.929479)"><tspan
+   transform="rotate(-27.864579)"><tspan
      sodipodi:role="line"
      id="tspan230"
-     x="41.097572"
-     y="97.806259"
-     style="font-style:italic;font-weight:bold;font-size:16px">WACZ</tspan></text></svg>
+     x="35.720539"
+     y="103.95275"
+     style="font-style:italic;font-weight:bold;font-size:16px">W<tspan
+   style="font-size:15.6094px"
+   id="tspan182">A</tspan><tspan
+   style="font-size:15.2315px"
+   id="tspan186">C</tspan><tspan
+   style="font-size:14.8535px"
+   id="tspan190">Z</tspan></tspan></text></svg>
