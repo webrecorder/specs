@@ -7,18 +7,18 @@ assignees: ''
 
 ---
 
-**Title: Example**
+## Title: Example
 
-As a *\<type of user\>*
+As a {type of user}
 
-I want to *\<perform some task\>*
+I want to {perform some task}
 
-So that I can *\<achieve some goal\>*
+So that I can {achieve some goal}
 
-**Acceptance Criteria**
+## Acceptance Criteria (Optional)
 
-Given *\<some context\>*
+Given {some context}
 
-When *\<some action is carried out\>*
+When {some action is carried out}
 
-Then *\<a set of observable outcomes should be occur\>*
+Then {a set of observable outcomes should occur}
