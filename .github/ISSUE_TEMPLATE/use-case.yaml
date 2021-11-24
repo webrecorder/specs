@@ -1,4 +1,4 @@
-name: WACZ Use Case
+name: WACZ Format use case for self-contained, portable web archives
 description: Describe a particular use case for creating a web archive using the WACZ format
 title: "[Use Case]: "
 labels: ["use-case"]
