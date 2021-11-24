@@ -1,0 +1,62 @@
+name: WACZ Use Case
+description: Describe a particular use case for creating a web archive using the WACZ format
+title: "[Use Case]: "
+labels: ["use-case"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use the form below to describe a use case for creating and using web archives and packaging them in the WACZ format.
+        
+        Optionally, you can specify additional needs/aspects of the use case to help us better understand the requirements.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe a use case for WACZ format.
+      description: Please mention who is using it and any motivations and reasons for creating web archives.
+      placeholder: Describe this use case.
+      value: As a {type of user} I want to {perform some task} So that I can {achieve some goal}.
+    validations:
+      required: true
+      
+  - type: markdown
+    attributes:
+      value: The following sections are optional and will help us categorize this use case. Feel free to leave these blank if you are not sure or don't have time.
+
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: Additional Requirements
+      description: Check any additional requirements below that may be relevant to have for this use case.
+      options:
+        - label: List of entry pages to start browsing from
+        - label: Full-text search index
+        - label: Technical metadata about the web archive
+        - label: User-defined descriptive metadata
+        - label: Screenshots of key pages
+        - label: Encryption of data
+        - label: Proof of Authenticity (Signing and Verification)
+        - label: Fast access to multiple WACZ files in aggregate
+        - label: Crawl or capture logs 
+        
+  - type: checkboxes
+    id: creation
+    attributes:
+       label: How will web archives be created for this use case?
+       description: The WACZ spec will support both manual (user-curated) web archives, created through the browser, as well as larger web archives, created through automated crawling.
+       options:
+         - label: Manually, using a browser to capture exact content as directed by the user.
+         - label: Automatically, using a crawler to crawl desired content, either once or on a specified schedule.
+         
+  - type: checkboxes
+    id: sensitive
+    attributes:
+       label: Sensitive private content and access
+       description: Does this use case involve archiving of sensitive/private data that should not be made public, or requires extra care for storage.
+       options:
+         - label: No, this use case focuses on archiving publicly accessible data only, and web archive can be made public.
+         - label: No, this use case focuses on archiving publicly data only, but web archive is not inteded to be public.
+         - label: Yes, this use case involves archiving data that is not public, and the web archive should not be made public.
+         
+    
