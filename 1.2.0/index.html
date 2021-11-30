@@ -125,7 +125,10 @@ Please open GitHub issues with any thoughts/suggestions/comments.
 ## Tools for creating WACZ
 
 The [py-wacz](./py-wacz) subdirectory contains a proof-of-concept Python tool for creating a WACZ file from existing WARCs.
+    </section>
 
+
+    <section data-format="markdown">
 
 # Motivation
 
@@ -160,8 +163,11 @@ This is done by leveraging the ZIP format's built-in index, inclusion of an effi
 The spec is not designed to replace any other format, but to set up a convention-based format to bundle all necessary data together,
 following a certain directory and naming convention, into a standard ZIP (or ZIP64) file.
 
+    </section>
 
-# WACZ 1.1.0
+    <section data-format="markdown">
+
+# Specification 
 
 The spec currently consists of the following:
 
@@ -175,7 +181,6 @@ experimental ideas, and possible future extensions.
 See the [CHANGES.md](CHANGES.md) file for a list of changes to WACZ spec and py-wacz tool.
 
 ## Currently Supported
-
 
 #### Directory Layout
 
@@ -351,7 +356,11 @@ A ZIP file that follows this Web Archive Collection format spec should use the e
 
 Such a file can be referred to as a WACZ file or a WACZ.
 
-<hr>
+    </section>
+
+    <section data-format="markdown">
+
+# Appendices
 
 ## Appendix A: Use Case: Random-Access to Web Archives in ZIP
 
@@ -378,8 +387,6 @@ This approach is being used by https://replayweb.page/.
 The implementation is in https://github.com/webrecorder/wabac.js/blob/develop/src/ziparchive.js
 
 and is based on: https://github.com/Rob--W/zipinfo.js/blob/master/zipinfo.js
-
-
 
 ## Appendix B: Formats Referenced
 
