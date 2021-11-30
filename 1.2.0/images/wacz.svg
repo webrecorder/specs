@@ -10,7 +10,7 @@
    version="1.0"
    id="svg2"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="wacz.svg"
+   sodipodi:docname="wacz-www.svg"
    x="0px"
    y="0px"
    width="140px"
@@ -23,7 +23,7 @@
    inkscape:export-ydpi="695.52002"><metadata
    id="metadata228"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
    id="defs226" />
 <sodipodi:namedview
    id="namedview31"
@@ -36,11 +36,11 @@
    inkscape:pageopacity="0"
    inkscape:window-maximized="1"
    guidetolerance="10"
-   inkscape:cy="18.591001"
+   inkscape:cy="61.950767"
    gridtolerance="10"
    inkscape:cx="101.49031"
    objecttolerance="10"
-   inkscape:zoom="4.1881165"
+   inkscape:zoom="2.0940583"
    borderopacity="1"
    showgrid="false"
    bordercolor="#666666"
@@ -384,4 +384,21 @@
    style="font-size:15.2315px"
    id="tspan186">C</tspan><tspan
    style="font-size:14.8535px"
-   id="tspan190">Z</tspan></tspan></text></svg>
+   id="tspan190">Z</tspan></tspan></text><g
+   id="g268"
+   transform="matrix(0.08298986,0,0,0.08298986,48.483282,4.9014332)"><path
+     fill="#00844a"
+     stroke="#000000"
+     stroke-width="5.021"
+     d="m 92.865,2.532 85.05,-0.014 70.041,260.922 89.44,-260.855 51.745,-0.026 84.8,260.678 79.3,-260.723 44.872,-0.004 -122.066,356.475 -50.175,0.057 -83.407,-256.351 -92.39,256.279 -50.174,0.03 z"
+     id="path251" /><path
+     fill="#cee7ce"
+     stroke="#000000"
+     stroke-width="5.021"
+     d="m 47.777,42.748 85.05,-0.013 70.041,260.922 89.44,-260.855 51.745,-0.027 84.8,260.679 79.3,-260.723 44.872,-0.004 -122.066,356.475 -50.175,0.057 -83.407,-256.352 -92.39,256.28 -50.174,0.03 z"
+     id="path253" /><path
+     fill="#ffffff"
+     stroke="#000000"
+     stroke-width="5.021"
+     d="m 2.51,82.885 85.05,-0.014 70.042,260.923 89.44,-260.856 51.744,-0.026 84.8,260.679 79.3,-260.723 44.872,-0.004 -122.066,356.474 -50.175,0.058 -83.407,-256.352 -92.39,256.279 -50.174,0.03 z"
+     id="path255" /></g></svg>
