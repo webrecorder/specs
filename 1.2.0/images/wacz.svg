@@ -10,7 +10,7 @@
    version="1.0"
    id="svg2"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="wacz-www.svg"
+   sodipodi:docname="wacz.svg"
    x="0px"
    y="0px"
    width="140px"
@@ -18,7 +18,7 @@
    viewBox="0 0 140 100"
    enable-background="new 0 0 140 100"
    xml:space="preserve"
-   inkscape:export-filename="/home/ed/wacz.png"
+   inkscape:export-filename="/home/ed/Projects/wacz-spec/1.2.0/images/wacz-www.png"
    inkscape:export-xdpi="695.52002"
    inkscape:export-ydpi="695.52002"><metadata
    id="metadata228"><rdf:RDF><cc:Work
@@ -36,11 +36,11 @@
    inkscape:pageopacity="0"
    inkscape:window-maximized="1"
    guidetolerance="10"
-   inkscape:cy="61.950767"
+   inkscape:cy="40.131136"
    gridtolerance="10"
    inkscape:cx="101.49031"
    objecttolerance="10"
-   inkscape:zoom="2.0940583"
+   inkscape:zoom="4.1881165"
    borderopacity="1"
    showgrid="false"
    bordercolor="#666666"
@@ -52,7 +52,9 @@
    inkscape:connector-curvature="0"
    d="M-69.369,325.423" />
 <g
-   id="g223">
+   id="g223"
+   inkscape:export-xdpi="695.52002"
+   inkscape:export-ydpi="695.52002">
 	
 		<linearGradient
    id="path2222_1_"
@@ -370,14 +372,14 @@
 <text
    xml:space="preserve"
    style="font-size:16px;line-height:1.25;font-family:sans-serif"
-   x="35.720539"
-   y="103.95275"
+   x="41.019642"
+   y="100.38931"
    id="text232"
-   transform="rotate(-27.864579)"><tspan
+   transform="rotate(-24.724473)"><tspan
      sodipodi:role="line"
      id="tspan230"
-     x="35.720539"
-     y="103.95275"
+     x="41.019642"
+     y="100.38931"
      style="font-style:italic;font-weight:bold;font-size:16px">W<tspan
    style="font-size:15.6094px"
    id="tspan182">A</tspan><tspan
