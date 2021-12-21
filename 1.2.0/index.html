@@ -114,7 +114,28 @@
 
     <section data-format="markdown">
 
-# Web Archive Collection Zipped (WACZ) Format
+# Conformance
+
+**TODO: add details about what is normative and what is non-normative in the
+specification.**
+
+The key words MAY, MUST, MUST NOT, SHOULD, and SHOULD NOT in this document are
+to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only
+when, they appear in all capitals, as shown here. 
+
+    </section>
+
+    <section data-format="markdown">
+
+# Terminology
+
+**TODO: Provide a list of term definitions that are used in the specification.**
+
+    </section>
+
+    <section data-format="markdown">
+
+# Introduction
 
 This document is working draft/proposal for a directory structure + ZIP format specification for sharing and distributing web archives. ZIP files using this format can be referred to as WACZ (Web Archive Collection Zipped).
 
@@ -122,26 +143,18 @@ Feedback on this proposal is *strongly encouraged!*.
 
 Please open GitHub issues with any thoughts/suggestions/comments.
 
-## Tools for creating WACZ
+## Motivation
 
-The [py-wacz](./py-wacz) subdirectory contains a proof-of-concept Python tool for creating a WACZ file from existing WARCs.
-    </section>
-
-
-    <section data-format="markdown">
-
-# Motivation
-
-The goal of this spec is to provide a portable format for web archives, to address key social and technical issues:
+The goal of this specification is to provide a portable format for web archives, to address key social and technical issues:
 
 - Social: to provide an interoperable way to share web archive *collections*, including any data necessary to make web archives useful to humans.
 - Technical: to provide an efficient way to load *small amounts of data* from a remotely hosted web archive on static storage, without downloading the entire collection.
 
-Parts of the spec are currently implemented and in use by [wabac.js](https://github.com/webrecorder/wabac.js) and [ReplayWeb.page](https://replayweb.page)
+### Social: Making web archives more human friendly
 
-## Social: Making web archives more human friendly
-To make sense and use a web archive, it is necessary to have more than just the raw HTTP request/response data,
-yet no standardized format exists to include all the data that is needed.
+To make sense and use a web archive, it is necessary to have more than just the
+raw HTTP request/response data, yet no standardized format exists to include all
+the data that is needed.
 
 In particular, a web archive collection should have:
 - A random-access index of all raw data (preferably accessible with minimal seek)
@@ -150,7 +163,7 @@ In particular, a web archive collection should have:
 
 All of this data can be bundled together into a single file, using the standard ZIP format.
 
-## Technical: Lowering the barrier to hosting large web archives
+### Technical: Lowering the barrier to hosting large web archives
 
 Hosting web archives currently requires complex server infrastructure, a 'wayback machine' to serve data in a way that can be viewed in the browser.
 
@@ -163,15 +176,26 @@ This is done by leveraging the ZIP format's built-in index, inclusion of an effi
 The spec is not designed to replace any other format, but to set up a convention-based format to bundle all necessary data together,
 following a certain directory and naming convention, into a standard ZIP (or ZIP64) file.
 
+## Existing Tools 
+
+The [py-wacz](https://github.com/webrecorder/py-wacz) repository contains a
+reference implementation for creating WACZ files from existing WARC files, and
+validating them.
+
+Parts of the specification are also implemented and in use by
+[wabac.js](https://github.com/webrecorder/wabac.js) and
+[ReplayWeb.page](https://replayweb.page).
+
+
     </section>
 
     <section data-format="markdown">
 
-# Specification 
+# WACZ Object 
 
 The spec currently consists of the following:
 
-1) A [frictionless data](https://frictionlessdata.io/) datapackage.json file for recording metadata.
+1) A [frictionless data](https://frictionlessdata.io/) `datapackage.json` file for recording metadata.
 2) A extensible directory and naming convention for web archive data
 3) A specification for bundling the directory layout in a ZIP file.
 
@@ -180,9 +204,8 @@ experimental ideas, and possible future extensions.
 
 See the [CHANGES.md](CHANGES.md) file for a list of changes to WACZ spec and py-wacz tool.
 
-## Currently Supported
 
-#### Directory Layout
+## Directory Layout
 
 The spec is to designate a mostly flat directory structure which can contain different types of web archive collection data while conforming to the frictionless data standards.
 Currently supported:
@@ -195,33 +218,41 @@ Currently supported:
 - datapackage-digest.json
 ```
 
-### Directories and Files
+## Directories and Files
 
+### archive/
 
-#### 1) `archive/`
-
-The archives directory can contain raw web archive data.
+The `archive` directory can contain raw web archive data.
 
 Currently supported formats:
 - WARC (.warc, .warc.gz)
 
-#### 2) `indexes/`
+### indexes/
 
- The indexes directory should include various indexes into the raw data stored in `archives/`
+**TODO: standardize on CDXJ and decide whether to specify it here or in a
+separate document.**
+
+ The `indexes` directory should include various indexes into the raw data stored in `archive/`
 
  Currently possible index formats include:
  - CDX (.cdx, .cdxj) for raw text-based binary sorted indices
  - Compressed CDX (.cdx.gz and .idx) indices
 
-#### 3) `name/pages.jsonl`
+ **TODO: require CDXJ provide specification here, or refer to later section?**
 
-pages is a list of 'Page' objects, each containing at least the following fields:
+### pages.jsonl
+
+The `pages/pages.jsonl` file is a list of 'Page' objects as line-oriented JSON, 
+each containing at least the following fields:
+
+**TODO: reference JSONL definition or define in Terminology section?**
 
 - `url` - a valid URL (or URI/URN?)
 - `ts` - a valid ISO 8601 Date string
 - `title` - any string or omitted
 - `id` - any string or omitted.
 - `text` - an optional extraction of the text of the page,
+- `size` - an optional number of bytes for all the page resources
 
 Ex:
 ```jsonl
@@ -237,14 +268,13 @@ For example, py-wacz supports specifying an 'extra' pages list, loaded from `ext
 A common use case is to include only the main pages in the `pages.jsonl`, while including additional pages, such as those discovered automatically
 via a crawl in an `extraPages.jsonl`.
 
+### datapackage.json
 
-#### 4) `datapackage.json`
-
-This file serves as the manifest for the web archive and is compliant with the Frictionless [Data Package Specification](https://specs.frictionlessdata.io/data-package/)
+The `datapackage.json` file serves as the manifest for the web archive and is compliant with the Frictionless [Data Package Specification](https://specs.frictionlessdata.io/data-package/)
 
 The file contains the following keys:
 
-- `profile`: Set to `data_package` in accordance with the Frictionless Data Package spec.
+- `profile`: Set to `data-package` in accordance with the Frictionless Data Package spec.
 
 - `resources` is a list containing the contents of the WACZ, in accordance with the Frictionless Data Package spec.
 
@@ -275,35 +305,40 @@ WACZ data packages can also include optional data package fields, in particular:
 
 - `created`: ISO date string for when the WACZ file was created.
 
-
-#### WACZ Specific fields
+- `modified`: ISO date tring for when the WACZ file was last modified.
 
 The following fields are not part of the standard data package specification and are additional fields used with WACZ:
 
 - `wacz_version`: Should be set to `1.0.1` (or current version of WACZ). This field is required to identify the package as a WACZ.
 
-- `mainPageURL`: An optional URL of the main or starting page in the collection, if any, to be used for initial replay.
+- `mainPageURL`: An optional URL of the main or starting page in the collection,
+if any, to be used for initial replay.
 
 - `mainPageDate`: An optional ISO-formatted date of the main or starting page in the collection, if any, to be used for initial replay. Specified only if `mainPageURL` is specified.
 
-#### 5) `datapackage-digest.json` and Signed WACZ
+- "software": A description of what software was used to create the WACZ file
+
+### datapackage-digest.json 
 
 With WACZ 1.1, there is now also support for a special *datapackage-digest.json*, which makes it possible to verify the *datapackage.json* manifest
 with a hash, and an optional signature, and thus for the entire contents of the WACZ.
 
 The `hash` and `path` keys are required, while `signature` and `publicKey` are optional.
 
+**TODO: align with current archiveweb.page implementation?**
+
 Ex:
   ```json
   {
     "hash": "sha256:...",
     "path": "datapackage.json",
+    "signedData": {
     "signature": "...",
     "publicKey": "..."
   }
   ```
 
-#### WACZ 1.1 Record Digests
+## Record Digests
 
 With WACZ 1.1, index entries for each individual WARC record in the index (CDX) includes a digest of the WARC record.
 
@@ -311,15 +346,10 @@ When a compressed CDX with a secondary index is used, each entry in the secondar
 
 This makes it possible to also verify each URL as it is loaded via random access, without downloading the entire WACZ file.
 
+## Custom Derivatives
 
-## Possible Support in the future
-
-#### Archive formats besides WARC
-
-It is possible that other formats, such as HAR, Web Bundle, ZIM be supported
-in the `archive/` directory. (See Appendix for these formats).
-
-#### Custom Derivatives and a general-purposes `derivatives/` directory.
+**TODO: clearly describe how new directories may be added and impact on
+WACZ validators.**
 
 Other derived data, such as screenshots, could be placed into a general-purpose
 `derivatives/` directory.
@@ -334,6 +364,26 @@ Perhaps extension need not be specified explicitly, as others can add directorie
 *Feedback wanted on this section, see https://github.com/webrecorder/web-archive-collection-format/issues/1*
 
 Other possible ideas were suggested in this issue: https://github.com/webrecorder/pywb/issues/319
+
+## Alternatives to WARC
+
+**TODO: consider simplifying specification by requiring WARC?**
+
+It is possible that other formats, such as HAR, Web Bundle, ZIM be supported
+in the `archive/` directory. (See Appendix for these formats).
+
+
+    </section>
+
+    <section data-format="markdown">
+
+# CDXJ
+
+**TODO: Define the CDXJ format here?** 
+
+    </section>
+
+    <section data-format="markdown">
 
 ## Zip Format
 
@@ -350,7 +400,7 @@ Already compressed files should not be compressed again to allow for random acce
 - All `index/*.cdx.gz` files should be stored in ZIP with 'STORE' mode.
 - All files (`*.jsonl`, `*.json`, `*.idx`, `*.cdx`, `*.cdxj`) can be stored in the ZIP with either 'DEFLATE' or 'STORE' mode.
 
-### Zip Format File Extension - `.wacz`
+### Zip Format File Extension
 
 A ZIP file that follows this Web Archive Collection format spec should use the extension `.wacz`.
 
