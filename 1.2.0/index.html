@@ -205,42 +205,43 @@ Zipped).
 
 ## Motivation
 
-The goal of this specification is to provide a portable format for 
-<a>web archives</a> in order to achieve two broad goals for web archives:
+This specification describes a portable web friendly format for 
+<a>web archives</a> that achieves two broad goals:
 
 1. *Social*: to provide an interoperable way of sharing web archive
-<a>collections</a> that includes the <a>contextual information</a> needed 
+   <a>collections</a> that includes the <a>contextual information</a> needed 
    for users to interpret and meaningfully interact with them.
 
 2. *Technical*: to provide an efficient way to dynamically load 
-   *small amounts of data* from a remotely hosted file  
-   on static storage, without requiring the entire file 
+   *small amounts of data* from a web archive that is stored 
+   remotely as a static file, without requiring the entire file 
    to be downloaded, or for the intervention of specialized 
    server side applications.
 
 To use and make sense of a web archive collection, it is necessary to have the
-archived web content as well as <a>contextual information</a> that describes what the
-collection contains as well as when and how it was created. The collection also
-requires a set of entry points or <a>pages</a> to use for browsing the collection.
+archived web content as well as <a>contextual information</a> that describes
+what the collection contains as well as when and how it was created. The
+collection also requires a set of entry points or <a>pages</a> to use for
+browsing the collection.
 
-All of this data needs to be <a>packaged</a> together so that the various pieces can be
-easily copied and transferred without accidentally separating them. This data
-package needs to to be easily transported from one storage system to another, 
-sent as an attachment in an email, placed on a thumb drive, and hosted by simply
-serving it up at a given URL as a static document, possibly from cloud object
-storage, or a CDN.
+All of this data needs to be <a>packaged</a> together so that the various pieces
+can be easily copied and transferred without accidentally separating them. This
+data package needs to to be easily transported from one storage system to
+another, and hosted by serving it up at a given URL as a static document,
+possibly from cloud object storage, or a CDN.
 
 Hosting web archives currently requires complex server infrastructure (e.g. a
 <a>Wayback Machine</a>) to serve <a>WARC</a> data in such a way that can be
 viewed in the browser. The <a>WACZ</a> format provides a storage approach
-optimized for efficient random-access to <a>packaged</a> up WARC data that allows 
-the browser to render a page by fetching only what is needed for that
+optimized for efficient random-access to <a>packaged</a> up WARC data that
+allows the browser to render a page by fetching only what is needed for that
 particular page. This is done by leveraging the <a>ZIP</a> format's built-in
 index to locate the contents of the web archive and its constituent metadata.
 
 WACZ is not designed to replace other web archiving formats. Rather it
-establishes a file <a>packaging</a> convention for all the data needed by a browser for
-efficient rendering of a web archive collection, and its contextualization.
+establishes a file <a>packaging</a> convention for all the data needed by a
+browser for efficient rendering of a web archive collection, and its
+contextualization.
 
 ## Existing Tools 
 
