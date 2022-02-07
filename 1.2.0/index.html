@@ -83,6 +83,7 @@
         "WEBRECORDER-CDX": {
           title: "Webrecorder CDX Index Format",
           publisher: "Webrecorder",
+          url: "https://github.com/webrecorder/pywb/wiki/CDX-Index-Format",
           rawDate: "2015-03-25"
         }
       }
@@ -393,9 +394,10 @@ If present the `home` object MUST include the following properties:
 ## CDXJ
 
 The CDXJ format provides a standardized way of representing the files in
-`/indexes` which point to the content WARC present in the WACZ's `/archive`
+`/indexes` which point to the content WARC data present in the WACZ's `/archive`
 directory. CDXJ files can be generated automatically by reading the archived
-WARC data. A reference implementation can be found in the
+WARC data. A reference implementation for generating CDXJ index files from WARC
+files can be found in the 
 [py-wacz](https://github.com/webrecorder/py-wacz) project.
 
 <p class="note">
