@@ -80,11 +80,10 @@
       	}
       ],
       localBiblio: {
-        "OPENWAYBACK-CDXJ": {
-          title: "OpenWayback CDXJ File Format 1.0",
-          href: "https://iipc.github.io/warc-specifications/specifications/cdx-format/openwayback-cdxj/",
-          publisher: "International Internet Preservation Consortium",
-          rawDate: "2016-06-06"
+        "WEBRECORDER-CDX": {
+          title: "Webrecorder CDX Index Format",
+          publisher: "Webrecorder",
+          rawDate: "2015-03-25"
         }
       }
     };
@@ -343,7 +342,6 @@ serves as the manifest for the web archive and is compliant with the
 [[FRICTIONLESS-DATA-PACKAGE]] specification. It MUST contain the following
 keys:
 
-- `wacz_version`: The version of WACZ being used. (e.g. 1.2.0)
 - `profile`: Set to `data-package`
 - `resources`: a list of file names, paths, sizes and fixity for all files
    contained in the WACZ.
@@ -403,9 +401,9 @@ WARC data. A reference implementation can be found in the
 <p class="note">
 CDXJ's name name and semantics partly derive from an earlier index format
 developed as part of the Internet Archive's <a>Wayback Machine</a>, where CDX
-may have been an acronym for Crawl (or Capture) inDeX. WACZ's implementation of
-CDXJ also draws on a proposed, but never implemented, WARC index format for the
-OpenWayback project [[OPENWAYBACK-CDXJ]]. 
+may have been an acronym for Crawl (or Capture) inDeX. The CDXJ format used in
+WACZ was mostly drawn from an earlier implementation in the Webrecorder
+application [[WEBRECORDER-CDX]].
 </p>
 
 A CDXJ file is a sorted, line oriented plain-text file (optionally GZIP
@@ -439,8 +437,8 @@ represented as this Searchable URL ```org,example,www)/index.html```
 
 ### Integer Timestamp
 
-The Integer Timestamp is an integer representation of the date and time (UTC) when the
-web archive snapshot was created. It is composed of:
+The Integer Timestamp is an integer representation of the date and time (UTC)
+when the web archive snapshot was created. It is composed of:
 
 - 4 digit year (e.g. 2022)
 - 2 digit month (e.g. 02)
@@ -448,7 +446,7 @@ web archive snapshot was created. It is composed of:
 - 2 digit hour in 24 hour format (e.g. 23)
 - 2 digit minute (e.g. 13)
 - 2 digit second (e.g. 59)
-- 3 digit milliseconds (e.g. 032)
+- 3 digit milliseconds MAY be included (e.g. 032)
 
 This example date would get serialized as the Integer Timestamp
 `20220205231359032`.
