@@ -486,7 +486,7 @@ org,example)/index.html 20220106150849300 {"url":"https://example.org/index.html
 
 Other files and directories MAY be present in a WACZ as long as they do 
 not interfere with specified files and directories that are used by WACZ.
-
+Specifically, custom files and directories MUST NOT be added to the existing WACZ directories, `archive`, `indexes` and `pages`. Additional files MUST be listed in the resources section of `datapackage.json` to ensure conformance with [[FRICTIONLESS-DATA-PACKAGE]]
 ## Zip Format
 
 The entire directory structure MUST be stored in a standard [[ZIP]] file.
