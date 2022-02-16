@@ -85,6 +85,12 @@
           publisher: "Webrecorder",
           href: "https://github.com/webrecorder/pywb/wiki/CDX-Index-Format",
           rawDate: "2015-03-25"
+        },
+        "WACZ-SIGNING": {
+          title: "WACZ Signing/Verification Specification",
+          publisher: "Webrecorder",
+          href: "https://github.com/webrecorder/wacz-auth-spec/blob/main/spec.md",
+          rawDate: "2022-01-25"
         }
       }
     };
@@ -205,43 +211,42 @@ Zipped).
 
 ## Motivation
 
-This specification describes a portable web friendly format for 
-<a>web archives</a> that achieves two broad goals:
+The goal of this specification is to provide a portable format for 
+<a>web archives</a> in order to achieve two broad goals for web archives:
 
 1. *Social*: to provide an interoperable way of sharing web archive
-   <a>collections</a> that includes the <a>contextual information</a> needed 
+<a>collections</a> that includes the <a>contextual information</a> needed 
    for users to interpret and meaningfully interact with them.
 
 2. *Technical*: to provide an efficient way to dynamically load 
-   *small amounts of data* from a web archive that is stored 
-   remotely as a static file, without requiring the entire file 
+   *small amounts of data* from a remotely hosted file  
+   on static storage, without requiring the entire file 
    to be downloaded, or for the intervention of specialized 
    server side applications.
 
 To use and make sense of a web archive collection, it is necessary to have the
-archived web content as well as <a>contextual information</a> that describes
-what the collection contains as well as when and how it was created. The
-collection also requires a set of entry points or <a>pages</a> to use for
-browsing the collection.
+archived web content as well as <a>contextual information</a> that describes what the
+collection contains as well as when and how it was created. The collection also
+requires a set of entry points or <a>pages</a> to use for browsing the collection.
 
-All of this data needs to be <a>packaged</a> together so that the various pieces
-can be easily copied and transferred without accidentally separating them. This
-data package needs to to be easily transported from one storage system to
-another, and hosted by serving it up at a given URL as a static document,
-possibly from cloud object storage, or a CDN.
+All of this data needs to be <a>packaged</a> together so that the various pieces can be
+easily copied and transferred without accidentally separating them. This data
+package needs to to be easily transported from one storage system to another, 
+sent as an attachment in an email, placed on a thumb drive, and hosted by simply
+serving it up at a given URL as a static document, possibly from cloud object
+storage, or a CDN.
 
 Hosting web archives currently requires complex server infrastructure (e.g. a
 <a>Wayback Machine</a>) to serve <a>WARC</a> data in such a way that can be
 viewed in the browser. The <a>WACZ</a> format provides a storage approach
-optimized for efficient random-access to <a>packaged</a> up WARC data that
-allows the browser to render a page by fetching only what is needed for that
+optimized for efficient random-access to <a>packaged</a> up WARC data that allows 
+the browser to render a page by fetching only what is needed for that
 particular page. This is done by leveraging the <a>ZIP</a> format's built-in
 index to locate the contents of the web archive and its constituent metadata.
 
 WACZ is not designed to replace other web archiving formats. Rather it
-establishes a file <a>packaging</a> convention for all the data needed by a
-browser for efficient rendering of a web archive collection, and its
-contextualization.
+establishes a file <a>packaging</a> convention for all the data needed by a browser for
+efficient rendering of a web archive collection, and its contextualization.
 
 ## Existing Tools 
 
@@ -275,7 +280,6 @@ specification. This directory structure looks like:
 <pre class="example">
 ├── archive
 │   └── data.warc.gz
-├── datapackage-digest.json
 ├── datapackage.json
 ├── indexes
 │   └── index.cdx
@@ -395,10 +399,9 @@ If present the `home` object MUST include the following properties:
 ## CDXJ
 
 The CDXJ format provides a standardized way of representing the files in
-`/indexes` which point to the content WARC data present in the WACZ's `/archive`
+`/indexes` which point to the content WARC present in the WACZ's `/archive`
 directory. CDXJ files can be generated automatically by reading the archived
-WARC data. A reference implementation for generating CDXJ index files from WARC
-files can be found in the 
+WARC data. A reference implementation can be found in the
 [py-wacz](https://github.com/webrecorder/py-wacz) project.
 
 <p class="note">
@@ -431,11 +434,11 @@ The steps for creating a Searchable URL from a URL are:
 1. lowercasing the URL
 2. removing the protocol portion (HTTP or HTTPS)
 3. replacing the host name portion of the URL with a reversed, comma separated
-equivalent: `www.example.org` becomes `org,example,www`
+equivalent: `www.example.org becomes `org,example,www`
 4. adding a `)` separator
 5. adding the remaining portion of the URL (path and query)
 
-For example the URL ```https://www.example.org/index.html``` would be
+For exapmle the URL ```https://www.example.org/index.html``` would be
 represented as this Searchable URL ```org,example,www)/index.html```
 
 ### Integer Timestamp
@@ -483,11 +486,24 @@ The following is an example of a complete line from a CDXJ file:
 org,example)/index.html 20220106150849300 {"url":"https://example.org/index.html","digest":"sha-256:a8c5ac6f47aa34c5c5183daedc6ebbc7ca1e53fd2ec7db5e98d71bffb163b2ce","mime":"image/png","offset":283,"length":2269,"recordDigest":"sha256:e520b333999144ff38f593f6d76f5333d24895701953b2ea0507ed041d20ca2c","status":200,"filename":"data.warc.gz"}
 ```
 
+## Signing and Verification
+
+While a WACZ is not required to be signed it MAY include additional files to
+support the cryptographic signing of archived web content. An example of this is
+the [[?WACZ-SIGNING]] extension that adds a `datapackage-digest.json` file to
+the root of the WACZ, which in turn contains a hash of the `datapackage.json`
+file, a public key, and a signature. This information can then be used by tools
+to determine who created the WACZ and to verify that the contents of the archive
+have not changed. The WACZ specification does not currently specify or require a
+particular trust model for archived web content in order to encourage practice
+and experimentation.
+
 ## Other files and directories
 
 Other files and directories MAY be present in a WACZ as long as they do 
 not interfere with specified files and directories that are used by WACZ.
 Specifically, custom files and directories MUST NOT be added to the existing WACZ directories, `archive`, `indexes` and `pages`. Additional files MUST be listed in the resources section of `datapackage.json` to ensure conformance with [[FRICTIONLESS-DATA-PACKAGE]]
+
 ## Zip Format
 
 The entire directory structure MUST be stored in a standard [[ZIP]] file.
