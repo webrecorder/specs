@@ -41,10 +41,6 @@
           company: "New Design Congress",
           companyURL: "https://newdesigncongress.org/"
         },
-        /*
-
-        Need to ask these folks if it's ok to include them here.
-
         {
           name: "Nicholas Taylor",
           url: "https://nullhandle.org/",
@@ -55,9 +51,6 @@
           name: "Sua Yoo",
           url: "https://suayoo.online/"
         }
-
-        */
-
       ],
       group: {
         name: "WACZ Editors",
@@ -123,17 +116,30 @@
 
 ## Motivation
 
-The goal of this specification is to provide a portable format for web archives.
+<p class="ednote" title="TODO">
+This section will include a few paragraphs about what we mean by
+decentralized web archives and why web archives and their decentralization are
+are important. It is also probably important to delimit the scope: archives of
+HTTP transactions, not new protocols IPFS. But leave open possibility of
+interactions between HTTP and other protocols?
+</p>
+
+The goal of this specification is to provide a portable format for web
+archives...
 
 ## Existing Work
 
-- HAR
-- Web Bundle
-- ZIM
-- SinglePage
-- wpack
+<p class="ednote" title="TODO">
+This section will provide a sketch of related web packaging work. This should
+include other approaches to storing HTTP transactions such as: HAR, Web Bundle,
+ZIM, SinglePage, wpack.
+</p>
 
 ## Concepts of Distributed Web Archives
+
+<p class="ednote" title="TODO">
+Glossary of terms that are useful for understanding the use cases.
+</p>
 
     </section>
 
@@ -141,42 +147,149 @@ The goal of this specification is to provide a portable format for web archives.
 
 # Use Cases
 
-## Researcher saves an article for later use
+<p class="ednote" title="TODO">
+Distinguish between uses and threats here. Give some background on how the use
+cases were collected.
+</p>
+
+## Researcher Saves an Article 
+
+A researcher wants to save an interactive article they're using browsing for
+later use in their research. They’ve bookmarked the page, but want to ensure
+they have a copy in case it disappears, changes or becomes paywalled. They use
+the browser to create a web archive (saved in the browser as well) and then
+download a local copy of the article as a file just in case. They do not intend
+to share this article with anyone else.
+
+**Requirements:** [= Manual =], [= Public =]
 
 ## Social media user preserves and deletes account
 
+A social media user wants to use their browser to archive their public profile, and make it available on their personal website, before canceling their account.
+
+**Requirements:** [= Description =], [= Aggregated =], [= Manual =], [= Public
+=], [= Published =]
+
 ## Curator preserves application in an institutional repository
 
-## Preserving organizational social media accounts in institional
-repository
+An creatorr of a digital humanities project no longer has resources to maintain an aging web application. They use an automated crawler to produce a high fidelity web archive, and host the web archive in their digital repository system without any additional costs, providing replayweb.page as the access.
+
+**Requirements:** [= List =], [= Search =], [= Description =], [= Automatic =],
+[= Public =], [= Published =]
+
+## Preserving organizational social media accounts in institional repository
+
+A librarian at a university needs to archive their organizations' social media pages. The librarian uses the browser to archive their social media manually, or uses a service to automate the process. The resulting files are deposited into their institutional repository, along with other digital artifacts.
+
+**Requirements:** [= List =], [= Search =], [= Technical =], [= Description =],
+[= Aggregated =], [= Logs =], [= Manual =], [= Automatic =], [= Public =], [=
+Published =]
 
 ## Resources for investigative journalism
 
+A journalist uses the browser to create archives of primary source material, documenting sources which may be sensitive and may be deleted in the future, including social media posts. They ensure the data is archived and store the file in encrypted storage.
+
+**Requirements:** [= Technical =], [= Description =], [= Encryption =], [=
+Authenticity =], [= Private =], [= Share =]
+
 ## Curate art works for transfer to museum
+
+A net artist meticulously browses their interactive art piece to fully archive
+their work, which includes an old Flash piece. The resulting archive is then donated to a museum for preservation.
+
+**Requirements:** [= List =], [= Description =], [= Authenticity =], [=
+Aggregated =], [= Manual =], [= Public =], [= Share =]
 
 ## Aggregate access to routine automated crawls
 
+A crawling service runs repeated crawls of a list of seeds, producing a weekly
+crawl. Each crawl is stored as its own file. The entire collection of crawls is
+available for access together, or each crawl at a time as a file. Users can
+download their archive files at any time.
+
+**Requirements:** [= List =], [= Search =], [= Technical =], [= Description =],
+[= Aggregated =], [= Logs =], [= Automatic =], [= Public =], [= Published =]
+
 ## Author copies of work published elsewhere on the web
+
+A data journalist uses the browser to archive their previous work, to ensure they have their own copies, in case their publisher goes out of business.
+
+**Requirements:** [= List =], [= Search =], [= Description =], [= Manual =], [=
+Automatic =], [= Public =], [= Published =]
 
 ## Locally hosted copies of at risk video to guard against link rot
 
+A news site uses the browser to create an archive of a tweet that contains a video they would like to use in a news story, downloading the file and embedding it into their page instead of the live tweet, which may be deleted. The news site hosts the file in their CMS along with other content.
+
+**Requirements:** [= Authenticity =], [= Manual =], [= Public =], [= Published
+=]
+
 ## Extract collection from larger archive for research
+
+A researcher requests web archive data for a specific domain from a larger
+national archive, which has been crawling the site for years. The archive has
+the data in WARCs, indexes in a different system, and metadata in its own custom
+database, and full text search in Solr. The web archive extracts just requested
+data from its multi-PB archive, and offers it to the researcher as a file
+so that they may easily browse the archive using a standard viewer.
+
+**Requirements:** [= Technical =], [= Description =], [= Authenticity =], [=
+Aggregated =], [= Automatic =]
 
 ## Requesting materials during electronic discovery
 
-## Documenting disinformation campaigns
+A lawyer requests web archive data or archives web material as part of an
+ongoing civil or criminal case. Whether building a defense for the defendant or
+a case for the plaintiff, the archive must support efficient traversal after the
+capture process, and support exporting in multiple formats (including paper
+formats) to be entered as evidence. Additional chain of custody and/or forgery
+defenses potentially may also be beneficial.
+
+**Requirements:** [= List =], [= Search =], [= Technical =], [= Description =],
+[= Authenticity =], [= Logs =], [= Manual =], [= Automatic =]
 
 ## Manuscript publication
 
+A disinformation platform deploys web archives to help informants produce
+evidence of coordinated international propaganda campaigns. Web archives are
+provided as one of many options for “tip submission,” and may be submitted
+alongside any other form of evidence (screenshot, photograph, text description,
+blobs shared between apps, etc).
+
+**Requirements:** [= Search =], [= Technical =], [= Description =], [=
+Screenshots =], [= Manual =]
+
 ## Reconstructing local archive of lost website 
+
+A website owner retrieves lost website content from one or more web archives and assembles this into a local, consolidated archive (e.g., like Warrick, except saving to a more robust archival format). Ideally, this operation would leverage Memento, both for the best possible coverage but also to assemble the most temporally coherent archive.
+
+**Requirements:** [= List =], [= Automatic =], [= Public =], [= Published =]
 
 ## Extracting web pages from web archive for local full text search
 
+A user wants to retrieve a bundle of webpages from a web archive (e.g., via batch downloading URLs identified and filtered using the Wayback CDX Server API) so that full-text search can be more easily performed upon the corpus (i.e., and where full-text search isn't otherwise offered by the web archive platform).
+
+**Requirements:** [= Search =], [= Automatic =], [= Public =], [= Published =]
+
 ## Court staff archive open web resources cited in opinions
+
+Court staff archive open web resources cited in opinions issued by that court. The citations in the published opinions link to the archived versions rather than the live web resources. This mitigates content drift and ensures that the court continues to point to the versions of the cited resources that it considers to be canonical for the purposes of the opinion.
+
+**Requirements:** [= Authenticity =], [= Manual =], [= Public =], [= Published
+=]
 
 ## Offline first curriculum materials
 
+Students are given laptops with WACZ versions of web-based curriculum materials and a replay tool preinstalled. Instructors can update materials as needed by using a self-directed archiving tool.
+
+**Requirements:** [= List =], [= Manual =], [= Automatic =], [= Public =], [=
+Published =]
+
 ## Evaluate trust in the creator of a web archive
+
+As someone looking at a web archive in the context of a web post (e.g. blog or entry on CMS) I want to evaluate whether I want to see who created the archive (not just who is publishing it) to establish if I trust them or not. It would also be useful to see who else trusts the creator as well.
+
+**Requirements:** [= Authenticity =], [= Manual =], [= Automatic =] 
 
     </section>
 
@@ -186,15 +299,68 @@ repository
 
 ## Archived web content as evidentiary weapon
 
+A member of a harassment community collects the output of a targeted individual. Here, the goal is to develop a richly detailed database of said individuals -- both of their own output, but also material related to them (online criminal records, sensitive photos, previous aliases, abandoned online presences, etc).
+
+**Requirements:** [= Search =], [= Aggregated =]
+
 ## Web archive for delivering trojan attack
 
+A state actor is aware of a team of investigative reporters using web archives, and seeks to leverage the format as an unusual vector for deploying web-based attack payloads.
+
+**Requirements:** 
+
 ## Surveillance and disinformation campaigns
+
+A political operative continually monitors the material produced by their
+opponents as a form of surveillance. Working solo or as part of a larger
+organization, they store large collections of material to recall, publish,
+manipulate or doctor later. Here, metadata and data integrity may not be
+important; instead they will use the web archive to hit their targets based
+solely on the content of the media or its potential with minor changes. They may
+even produce a customised web archive-supporting tool to simplify this process.
+
+**Requirements:** [= List =], [= Aggregated =], [= Public =], [= Share =]
 
     </section>
 
     <section id="requirements" data-format="markdown">
 
 # Requirements
+
+<ol>
+
+  <li><dfn>Manual</dfn>: The web archive is created manually by a user selecting
+    content in their browser.</li>
+
+  <li><dfn>Automatic</dfn>: The web archive is created automatically by a crawler.</li>
+
+  <li><dfn>Public</dfn>: Use is focused on archiving publicly avilable web content.</li>
+
+  <li><dfn>Private</dfn>: Use is focused on archiving web content that is not publicly available.</li>
+
+  <li><dfn>Published</dfn>: The web archive is made public on the web.</li>
+
+  <li><dfn>Share</dfn>: The web archive is shared with a discrete set of users.</li>
+
+  <li><dfn>List</dfn>: List of entry pages to start browsing from.</li>
+
+  <li><dfn>Search</dfn>: Full-text search index.</li>
+
+  <li><dfn>Technical</dfn>: Technical metadata about the web archive.</li>
+
+  <li><dfn>Description</dfn>: User-defined descriptive metadata about the archived web content.</li>
+
+  <li><dfn>Screenshots</dfn>: Screenshots of key pages.</li>
+
+  <li><dfn>Encryption</dfn>: Encryption of data.</li>
+
+  <li><dfn>Authenticity</dfn>: Proof of Authenticity (Signing and Verification).</li>
+
+  <li><dfn>Aggregated</dfn>: Fast access to multiple archives in aggregate.</li>
+
+  <li><dfn>Logs</dfn>: Crawl or capture logs.</li>
+
+</ol>
 
     </section>
 
