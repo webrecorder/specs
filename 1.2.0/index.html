@@ -523,11 +523,6 @@ A ZIP file that follows this Web Archive Collection format spec MUST use the ext
 
 Such a file can be referred to as a WACZ file or a WACZ.
 
-### Media Type
-
-WACZ files SHOULD be served via HTTP using the `application/wacz`
-<a>media type</a>.
-
     </section>
 
     <section data-format="markdown">
@@ -536,8 +531,8 @@ WACZ files SHOULD be served via HTTP using the `application/wacz`
 
 The [[ZIP]] file format provides efficient random access, which means archived
 web pages can be retrieved efficiently even from large web archive collections
-without requiring the entire WACZ to be transferred. WACZ files can be stored
-as web accessible static files and read on-demand using HTTP RANGE requests
+without requiring the entire WACZ to be transferred. To achieve this WACZ
+clients can read portions of the ZIP file on-demand using HTTP RANGE requests
 [[RFC7233]].
 
 The processing model works as follows. Given a ZIP file, a client can quickly:
@@ -556,6 +551,74 @@ To lookup a given URL the client needs to:
 This approach is being used by [ReplayWeb.page](https://replayweb.page)
 
     </section>
+
+    <section data-format="markdown">
+
+# Publishing
+
+Because they are ZIP files WACZ can be hosted on the web as static files. This
+allows web archives to be easily maintained over time without relying on complex
+server side software, apart from widely available, open source, and well tested
+web server applications. If desirable WACZ files can be managed and made
+accessibile using HTTP object stores available from cloud hosting providers, and
+content deliver networks that geographically position web-archives closer to
+their users. However there are certain considerations to make when publishing
+WACZ files.
+
+## Content-Length
+
+WACZ clients need to know how large an entire WACZ file is in order to
+download it prior to rendering, or to read it dynamically. To support this HTTP
+responses for WACZ files MUST use the `Content-Length` HTTP header.
+
+## Partial Requests
+
+Clients that render WACZ files typically need to be able to fetch content from
+the WACZ file on demand. For example when displaying archived content for a
+given URL that URL needs to be looked up in the CDXJ index, and the byte offsets
+from the index entry are then used to retrieve a portion of a given WARC file
+that is enclosed in the WACZ.
+
+In order for clients to be able to perform this dynamic retrieval web servers
+that publish WACZ files MUST support HTTP range requests [[RFC7233]]. HTTP
+responses for WACZ HTTP requests SHOULD server WACZ files using the
+`Accept-Ranges` HTTP header.
+
+## CORS
+
+WACZ files and the their clients MAY be served from the same host name. However
+it can be useful to view the web archive from a host name that is distinct from
+the host name that is publishing the WACZ file. For example this is the
+case when publishing WACZ files using a cloud provider's HTTP object storage
+(e.g. `s3.amazonaws.com`) and making it viewable at another domain (`e.g.
+example.org`). It also is the case when WACZ publishers want to allow their web
+archives to circulate on the web, and be viewable in multiple locations.
+
+For security reasons browsers restrict access to files hosted on a
+different domain than the websites that is trying to load them. In order to
+support loading from different domains WACZ files SHOULD be made available using
+the `access-control-allow-origin` [[CORS]] HTTP header.
+
+## Media Type
+
+WACZ HTTP responses for WACZ files SHOULD be published with the
+`application/wacz` media type.
+
+## Example Response
+
+Given these requirements a minimal HTTP response for a WACZ could look
+like:
+
+<pre class="example">
+HTTP/2 200
+Content-Type: application/wacz
+Content-Length: 20961755
+Accept-Ranges: bytes
+Access-Control-Allow-Origin: *
+</pre>
+
+  </section>
+
 
   </body>
 
