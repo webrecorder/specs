@@ -348,7 +348,7 @@ serves as the manifest for the web archive and is compliant with the
 [[FRICTIONLESS-DATA-PACKAGE]] specification. It MUST contain the following
 keys:
 
-- `profile`: Set to `data-package`
+- `profile`: Set to `wacz`
 - `resources`: a list of file names, paths, sizes and fixity for all files
    contained in the WACZ.
 
@@ -374,8 +374,8 @@ The `datapackage.json` MUST be a valid [[JSON]] object and include properties
 that allow rendering applications to present the user with <a>contextual
 information</a> about the web archive:
 
-- `profile`: the string "wacz/1.2.0"
-- `title`: a string or one sentence description for the collection
+- `profile`: the string "data-package/wacz"
+- `title`: a string or one sentence description for the web archive
 - `description`: a longer description of the archive's contents 
    which MUST be Markdown formatted (plain text is valid Markdown)
    [[RFC7763].
@@ -395,6 +395,41 @@ If present the `home` object MUST include the following properties:
 
 - `url`: The URL of the collection's home page
 - `ts`: An [[RFC3339]] date for when the snapshot of URL was made
+
+## Aggregations
+
+Due to file size limitations, technical workflow details, and the need to
+thematically group web archives into collections it can be useful to provide an
+*aggregated* view of multiple WACZ files. To support these use cases the
+`resources` list in a WACZ's `datapackage.json` MAY contain links to WACZ files
+instead of WARC files. The metadata in the WACZ's `datapackage.json` refers to 
+the aggregation, and in addition:
+
+* `profile`: MUST be set to "data-package/wacz-aggregation"
+* `resources`: each resource MUST contain a `path` that points to a URL for the specified WACZ
+
+Other metadata in the `datapackage.json` refers to the aggregation. If desired
+additional properties MAY be included for each listed `resource`.
+
+<pre class="example">
+"profile": "WACZ-Aggregation",
+"title": "My Collection",
+"resources": [
+   {
+     "name": "Website Archive 1",
+     "path": "https://example.org/web-archive-1.wacz",
+     "hash": "sha256:8a7fc0d302700bed02294404a627ddbbf0e35487565b1c6181c729dff8d2fff6",
+     "bytes": 75293838
+   },
+   {
+     "name": "Website Archive 2",
+     "path": "https://example.org/web-archive-2.wacz",
+     "hash": "sha256:0e7101316ba5d4b66f86a371ee615fbd20f9d3f32d32563ed2c829db062f7714",
+     "bytes": 11469796
+   },
+   ...
+]
+</pre>
 
 ## CDXJ
 
