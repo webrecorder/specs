@@ -2,16 +2,14 @@
   <head>
   <meta charset="utf8">
   <title>Web Archive Collection Zipped (WACZ)</title>
-  <script src="../assets/js/respec-webrecorder.js" class="remove" defer ></script>
+  <script src="../../assets/js/respec-webrecorder.js" class="remove" defer ></script>
   <script class="remove">
     var respecConfig = {
-      specStatus: "REC",
-      publishDate: "2021-06-03",
+      specStatus: "DRAFT",
       license: "cc-by",
-      thisVersion: "https://webrecorder.github.io/wacz-spec/1.1.1/",
-      latestVersion: "https://webrecorder.github.io/wacz-spec/latest/",
+      thisVersion: "https://specs.webrecorder.net/wacz/1.2.0/",
+      latestVersion: "https://specs.webrecorder.net/wacz/latest/",
       shortName: "wacz",
-      group: "WACZ",
       lint: {
 	// turn off w3c-specific linting
 	"privsec-section": false,
@@ -38,28 +36,24 @@
         name: "WACZ Editors",
         url: "https://webrecorder.net"
       },
+      wgPublicList: "",
       otherLinks: [
 	{
 	  key: "Additional Documents",
 	  data: [
 	    {
 	      value: "Use Cases for Decentralized Web Archives",
-	      href: "https://webrecorder.github.io/wacz-spec/use-cases/",
+	      href: "https://specs.webrecorder.net/use-cases/latest/",
 	    }
 	  ]
 	},
 	{
-	  key: "Previous versions",
+	  key: "Previous version",
 	  data: [
 	      {
-		  value: "1.1.0",
-                  href: "https://github.com/webrecorder/wacz-spec/blob/2ec8e3e8ec8a491c8c2236fdb44a513cfbb2cb17/README.md"
-	      },
-
-              {
-                  value: "1.0.0",
-                  href: "https://github.com/webrecorder/wacz-spec/blob/1f511c67b1312ec9215cb8443387340d39c8783b/README.md"
-              }
+		  value: "1.1.1",
+		  href: "https://specs.webrecorder.net/wacz/1.1.1/"
+	      }
 	  ]
       	},
 	{
@@ -67,15 +61,15 @@
 	  data: [
 	    {
 	      value: "Github",
-	      href: "https://github.com/webrecorder/wacz-spec"
+	      href: "https://github.com/webrecorder/specs"
 	    },
 	    {
 	      value: "Issues",
-	      href: "https://github.com/webrecorder/wacz-spec/issues"
+	      href: "https://github.com/webrecorder/specs/issues"
 	    },
 	    {
 	      value: "Commits",
-	      href: "https://github.com/webrecorder/wacz-spec/commits"
+	      href: "https://github.com/webrecorder/specs/commits"
 	    }
 	  ]
       	}
@@ -89,12 +83,19 @@
       	}
       ],
       localBiblio: {
-        "PYWB-CDXJ": {
-          title: "pywb Indexing: CDXJ Format",
+        "WEBRECORDER-CDX": {
+          title: "Webrecorder CDX Index Format",
           publisher: "Webrecorder",
-          href: "https://pywb.readthedocs.io/en/latest/manual/indexing.html#cdxj-index",
+          href: "https://github.com/webrecorder/pywb/wiki/CDX-Index-Format",
+          rawDate: "2015-03-25"
+        },
+        "WACZ-SIGNING": {
+          title: "WACZ Signing/Verification Specification",
+          publisher: "Webrecorder",
+          href: "https://specs.webrecorder.net/wacz-auth/latest/",
+          rawDate: "2022-01-25"
         }
-      },
+      }
     };
   </script>
   </head>
@@ -103,10 +104,16 @@
 
     <section id="sotd" class="introductory">
       <h2>Status of this Document</h2>
-      This is a stable version of the WACZ standard and is in active use by
-      the Webrecorder project. Please open <a
-      href="https://github.com/webrecorder/wacz-spec/issues/">GitHub issues</a>
-      for questions and suggestions.
+      <p>
+        This document is a draft of a potential specification. It has no official
+        standing of any kind and does not represent the support or consensus of
+        any standards organization.
+      </p>
+      <p>
+        Feedback on this proposal is strongly encouraged. Please open 
+        <a href="https://github.com/webrecorder/specs/issues/">GitHub issues</a>
+        with any questions or to suggest use cases.
+      </p>
     </section>
 
     <section id="abstract">
@@ -132,6 +139,15 @@
           is included whenever they appear in this specification.
         </p>
         <dl class="termlist">
+
+          <dt><dfn id="dfn-cdx">CDX</dfn></dt>
+          <dd>A file format specification for representing an index to archived
+          web content. It is used by web replay tools to lookup if and when a
+          given URL has been archived in a set of <a>WARC</a> files.</dd>
+
+          <dt><dfn id="dfn-cdxj">CDXJ</dfn></dt>
+          <dd>A <a>CDX</a> file encoded using [[JSON]]. See the 
+            <a href="#cdxj">CDXJ section</a> below.</dd>
 
           <dt><dfn id="dfn-collection">Collection</dfn></dt>
           <dd>An arbitrary set of related archived web pages and metadata based on some
@@ -278,7 +294,7 @@ specification. This directory structure looks like:
 ├── datapackage.json
 ├── datapackage-digest.json
 ├── indexes
-│   └── index.cdx.gz
+│   └── index.cdx
 └── pages
     └── pages.jsonl
 </pre>
@@ -300,12 +316,12 @@ archive
 
 The `indexes` directory MUST include one or more indexes for the WARC data stored
 in `archive`. These index files allow clients to efficiently look up a URL to
-see if it is contained in the WACZ. Index files MUST contain CDXJ data
-and MAY be gzip compressed [[PYWB-CDXJ]].
+see if it is contained in the WACZ. Index files MUST contain <a>CDXJ</a> data
+and MAY be gzip compressed.
 
 <pre class="example">
 indexes
-└── index.cdx.gz
+└── index.cdx
 </pre>
 
 ### pages.jsonl
@@ -345,15 +361,14 @@ serves as the manifest for the web archive and is compliant with the
 [[FRICTIONLESS-DATA-PACKAGE]] specification. It MUST contain the following
 properties:
 
-- `profile`: the string `data-package`
+
+- `profile`: Set to `wacz`
 - `resources`: a list of file names, paths, sizes and fixity for all files
    contained in the WACZ.
-- `wacz_version`: the version of WACZ used, for example `1.1.1`
 
 <pre class="example">
 {
-  "profile": "data-package",
-  "wacz_version": "1.1.1",
+  "profile": "wacz",
   "resources": [
      {
        "name": "pages.jsonl",
@@ -381,10 +396,14 @@ web archive:
 - `created`: a [[RFC3339]] datetime for when the WACZ file was created
 - `modified`: a [[RFC3339]] datetime for when the WACZ file was last modified
 - `software`: A description of what software was used to create the WACZ file
-- `mainPageUrl`: An optional URL of the main or starting page in the collection
-  to be used for initial replay
-- `mainPageDate`: An optional ISO-formatted date of the main or startng page in 
-  the collection to be used for initial replay
+
+The `datapackage.json` SHOULD include a `home` object to assist 
+in initial replay of the web collection. This allows rendering software
+to choose what initial page to be displayed after opening a WACZ collection. 
+If present the `home` object MUST include the following properties:
+
+- `url`: The URL of the collection's home page
+- `ts`: An [[RFC3339]] date for when the snapshot of URL was made
 
 Other properties from the [[FRICTIONLESS-DATA-PACKAGE]] specification such as
 `licenses`, `version`, `organization`, `contributors`, `email` MAY be used. 
@@ -406,6 +425,105 @@ contents of the WACZ. If present the following properties MUST be included:
   "hash": "sha256:ec1f44ab13e2c94b0ddf66e9673d585ba4a77e6f8c9cc30d8665da434557e885"
 }
 </pre>
+
+## CDXJ
+
+The CDXJ format provides a standardized way of representing the files in
+`/indexes` which point to the content WARC present in the WACZ's `/archive`
+directory. CDXJ files can be generated automatically by reading the archived
+WARC data. A reference implementation can be found in the
+[py-wacz](https://github.com/webrecorder/py-wacz) project.
+
+<p class="note">
+CDXJ's name name and semantics partly derive from an earlier index format
+developed as part of the Internet Archive's <a>Wayback Machine</a>, where CDX
+may have been an acronym for Crawl (or Capture) inDeX. The CDXJ format used in
+WACZ was mostly drawn from an earlier implementation in the Webrecorder
+application [[WEBRECORDER-CDX]].
+</p>
+
+A CDXJ file is a sorted, line oriented plain-text file (optionally GZIP
+compressed) where each line represents information about a single capture in a
+web archive collection.
+
+Each line MUST have three components that are separated by single spaces (0x20):
+
+1. a Searchable URL
+2. an Integer Timestamp
+3. a JSON Block 
+
+### Searchable URL
+
+The Searchable URL is a normalized form of the archived URL that allows a
+CDXJ file to be sorted and efficiently scanned using a binary search algorithm.
+The Searchable URL is sometimes referred to as Sort-friendly URI Reordering
+Transform (SURT).
+
+The steps for creating a Searchable URL from a URL are:
+
+1. lowercasing the URL
+2. removing the protocol portion (HTTP or HTTPS)
+3. replacing the host name portion of the URL with a reversed, comma separated
+equivalent: `www.example.org becomes `org,example,www`
+4. adding a `)` separator
+5. adding the remaining portion of the URL (path and query)
+
+For example the URL ```https://www.example.org/index.html``` would be
+represented as this Searchable URL ```org,example,www)/index.html```
+
+### Integer Timestamp
+
+The Integer Timestamp is an integer representation of the date and time (UTC)
+when the web archive snapshot was created. It is composed of:
+
+- 4 digit year (e.g. 2022)
+- 2 digit month (e.g. 02)
+- 2 digit day (e.g. 05)
+- 2 digit hour in 24 hour format (e.g. 23)
+- 2 digit minute (e.g. 13)
+- 2 digit second (e.g. 59)
+- 3 digit milliseconds MAY be included (e.g. 032)
+
+This example date would get serialized as the Integer Timestamp
+`20220205231359032`.
+
+### JSON Block 
+
+The JSON Block contains a serialized [[JSON]] object with newlines escaped so
+that it fits completely on one line. The object MUST contain the following
+properties:
+
+- url: The URL that was archived
+- digest: A cryptographic hash for the HTTP response payload
+- mime: The <a>media type</a> for the response payload
+- filename: the WARC file `/archive` where the WARC record is located
+- offset: the byte offset for the WARC record
+- length: the length in bytes of the WARC record
+- status: the HTTP status code for the HTTP response
+
+### Sorting
+
+The lines in a CDXJ file MUST be sorted to allow a given URL (and timestamp) to
+be looked up efficiently using a simple binary search. The sorting should be
+done based on the native byte values of the characters. This is equivalent to
+using the GNU sort with the collation settings `LC_ALL=C`.
+
+### Example
+
+The following is an example of a complete line from a CDXJ file:
+
+```
+org,example)/index.html 20220106150849300 {"url":"https://example.org/index.html","digest":"sha-256:a8c5ac6f47aa34c5c5183daedc6ebbc7ca1e53fd2ec7db5e98d71bffb163b2ce","mime":"image/png","offset":283,"length":2269,"recordDigest":"sha256:e520b333999144ff38f593f6d76f5333d24895701953b2ea0507ed041d20ca2c","status":200,"filename":"data.warc.gz"}
+```
+
+## Signing and Verification
+
+While a WACZ is not required to be signed it MAY include additional files to
+support the cryptographic signing of archived web content. An example of this is
+the [[?WACZ-SIGNING]] extension that adds a signature information to the
+`datapackage-digest.json`. In order to encourage practice and experimentation
+the WACZ specification does not currently specify or require a particular trust
+model for archived web content.
 
 ## Other files and directories
 
@@ -526,8 +644,21 @@ Accept-Ranges: bytes
 Access-Control-Allow-Origin: *
 </pre>
 
-  </section>
+    </section>
 
+    <section data-format="markdown">
+
+# Changes
+
+The following changes were made in v1.2.0 with respect to v1.1.1:
+
+* Changed `profile` value in `datapackage.json` to `wacz`.
+* Removed `wacz_version` from the `datapackage.json`.
+* Removed `mainPageUrl` and `mainPageDate` from `datapackage.json`.
+* Added `home` to `datapackage.json`.
+* Added CDXJ section to specify the contents of index files.
+
+    </section>
 
   </body>
 
