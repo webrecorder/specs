@@ -9,4 +9,4 @@ This repository contains technical specifications used by the [Webrecorder] proj
 [Webrecorder]: https://webrecorder.net
 [Web Archive Collection Zipped (WACZ)]: https://specs.webrecorder.net/wacz/latest/
 [Use Cases for Decentralized Web Archives]: https://specs.webrecorder.net/use-cases/latest/
-[Signing and Verification]: https://specs.webrecorder.net/auth/latest/
+[WACZ Signing and Verification]: https://specs.webrecorder.net/auth/latest/
