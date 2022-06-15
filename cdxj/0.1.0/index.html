@@ -1,0 +1,239 @@
+<html>
+  <head>
+    <title>Crawl Index JSON (CDXJ)</title>
+    <script src="../../assets/js/respec-webrecorder.js" class="remove" defer ></script>
+  <script class="remove">
+    var respecConfig = {
+      specStatus: "REC",
+      publishDate: "2022-06-05",
+      license: "cc-by",
+      thisVersion: "https://specs.webrecorder.net/cdxj/0.1.0//",
+      latestVersion: "https://specs.webrecorder.net/cdxj/latest//",
+      shortName: "cdxj",
+      includePermalinks: true,
+      editors: [
+	{
+	  name: "Ilya Kreymer",
+	  url: "https://www.linkedin.com/in/ilya-kreymer-55110093/",
+	  company: "Webrecorder",
+	  companyURL: "https://webrecorder.net/"
+	},
+        {
+          name: "Ed Summers",
+          url: "https://www.linkedin.com/in/esummers/",
+          company: "Stanford University",
+          companyURL: "https://stanford.edu"
+        }
+       ],
+      authors: [],
+      wgPublicList: "",
+      otherLinks: [
+	{
+	  key: "Repository",
+	  data: [
+	    {
+	      value: "Github",
+	      href: "https://github.com/webrecorder/specs/"
+	    },
+	    {
+	      value: "Issues",
+	      href: "https://github.com/webrecorder/specs/issues/"
+	    },
+	    {
+	      value: "Commits",
+	      href: "https://github.com/webrecorder/specs/commits/"
+	    },
+	  ]
+      	}
+      ],
+      maxTocLevel: 3,
+      logos: [
+	{
+	  src: "../../assets/images/webrecorder.svg",
+	  alt: "Webrecorder Logo",
+	  height: 100 
+      	}
+      ],
+      localBiblio: {
+        "WEBRECORDER-CDX": {
+          title: "Webrecorder CDX Index Format",
+          publisher: "Webrecorder",
+          href: "https://github.com/webrecorder/pywb/wiki/CDX-Index-Format",
+          rawDate: "2015-03-25"
+        },
+       }
+    };
+  </script>
+  </head>
+
+  <body>
+
+    <section id="abstract" data-format="markdown">
+      This specification details the CDXJ format for representing web archive
+      indexes that are used to locate relevant records in WARC data. Each CDXJ
+      entry can be looked up by URL, and contains a JSON payload that can be
+      used for representing information about that URL. It is used
+      in the WACZ specification, but is specified here for potential use in
+      other contexts and applications.
+    </section>
+
+    <section id="sotd" data-format="markdown">
+    This document was published by the [Webrecorder Project](https://webrecorder.net) as part of a [grant](https://github.com/webrecorder/devgrants/blob/browser-based-web-archiving/open-grants/open-proposal-browser-based-web-archiving.md) from the [FileCoin Foundation](https://fil.org/). It is being actively developed and feedback on new use cases is encouraged using [GitHub Issues](https://github.com/webrecorder/specs/issues/).
+    </section>
+
+    <section id="conformance"></section>
+
+    <section id="terminology">
+      <h2>Terminology</h2>
+
+      <p>
+        This section defines the terms used in this specification and
+        throughout web archives infrastructure. A link to these terms
+        is included whenever they appear in this specification.
+      </p>
+      <dl class="termlist">
+
+        <dt><dfn id="dfn-mediatype">Media Type</dfn></dt>
+        <dd>A two-part identifier  for file formats that are transferred on the
+          World Wide Web and the underlying Internet. [[IANA-MEDIA-TYPES]].
+        </dd>
+
+        <dt><dfn id="dfn-webpage" data-lt="pages">Page</dfn></dt>
+        <dd>A web document as viewed in a web browser that is viewing a
+          specific URL. Sometimes referred to as a <em>web page</em>.</dd>
+
+        <dt><dfn id="dfn-wacz" data-lt="web archive collection">WACZ</dfn></dt>
+        <dd>Web Archive Collection Zipped. A file that conforms to this specification 
+          which is used to package up <a>WARC</a> data and metadata into a
+          [[ZIP]] file for distribution and replay on the web</dd>
+
+        <dt><dfn id="dfn-warc">WARC</dfn></dt>
+        <dd>A file containing concatenated representations of web resources conforming 
+          to the [[WARC]] specification.</dd>
+
+        <dt><dfn id="dfn-web-archive">Web Archive</dfn></dt>
+        <dd>A collection of files that preserve representations of web
+          resources in the WARC format. A web archive may also include
+          derivative files such as CDX indexes for accessing records within
+          the archive.</dd>
+
+      </dl>
+    </section>
+
+    <section id="introduction" data-format="markdown">
+
+## Introduction
+
+Crawl Index JSON or CDXJ provides a standardized way of representing an index to
+one or more <a>WARC</a> files. It allows applications to quickly locate a given
+<a>page</a> in a set of archived web content, as well as metadata associated
+with that page. A reference implementation can be
+found in the [cdxj-indexer](https://github.com/webrecorder/cdxj-indexer) project. 
+
+CDXJ's name and semantics partly derive from an earlier index format
+developed as part of the Internet Archive's Wayback Machine, where CDX
+may have been an acronym for Crawl (or Capture) inDeX. The CDXJ format used in
+WACZ was mostly drawn from an earlier implementation in the Webrecorder
+application [[WEBRECORDER-CDX]].
+
+A CDXJ file is a sorted, line oriented plain-text file (optionally GZIP
+compressed) where each line represents information about a single capture in a
+web archive collection.
+
+Each line MUST have three components that are separated by single spaces (0x20):
+
+1. a Searchable URL
+2. an Integer Timestamp
+3. a JSON Block 
+
+    </section>
+
+    <section id="searchable-url" data-format="markdown">
+
+## Searchable URL
+
+The Searchable URL is a normalized form of the archived URL that allows a
+CDXJ file to be sorted and efficiently scanned using a binary search algorithm.
+The Searchable URL is sometimes referred to as Sort-friendly URI Reordering
+Transform (SURT).
+
+The steps for creating a Searchable URL from a URL are:
+
+1. lowercasing the URL
+2. removing the protocol portion (HTTP or HTTPS)
+3. replacing the host name portion of the URL with a reversed, comma separated
+equivalent: `www.example.org becomes `org,example,www`
+4. adding a `)` separator
+5. adding the remaining portion of the URL (path and query)
+
+For example the URL ```https://www.example.org/index.html``` would be
+represented as this Searchable URL ```org,example,www)/index.html```
+
+  </section>
+
+  <section id="timestamp" data-format="markdown">
+
+## Integer Timestamp
+
+The Integer Timestamp is an integer representation of the date and time (UTC)
+when the web archive snapshot was created. It is composed of:
+
+- 4 digit year (e.g. 2022)
+- 2 digit month (e.g. 02)
+- 2 digit day (e.g. 05)
+- 2 digit hour in 24 hour format (e.g. 23)
+- 2 digit minute (e.g. 13)
+- 2 digit second (e.g. 59)
+- 3 digit milliseconds MAY be included (e.g. 032)
+
+This example date would get serialized as the Integer Timestamp
+`20220205231359032`.
+
+    </section>
+
+    <section id="json-block" data-format="markdown">
+
+## JSON Block 
+
+The JSON Block contains a serialized [[JSON]] object with newlines escaped so
+that it fits completely on one line. The object MUST contain the following
+properties:
+
+- url: The URL that was archived
+- digest: A cryptographic hash for the HTTP response payload
+- mime: The <a>media type</a> for the response payload
+- filename: the WARC file where the WARC record is located
+- offset: the byte offset for the WARC record
+- length: the length in bytes of the WARC record
+- status: the HTTP status code for the HTTP response
+
+    </section>
+
+    <section id="sorting" data-format="markdown">
+
+## Sorting
+
+The lines in a CDXJ file MUST be sorted to allow a given URL (and timestamp) to
+be looked up efficiently using a simple binary search. The sorting should be
+done based on the native byte values of the characters. This is equivalent to
+using the GNU sort with the collation settings `LC_ALL=C`.
+
+    </section>
+
+    <section id="example" data-format="markdown">
+
+## Example
+
+The following is an example of a complete line from a CDXJ file:
+
+```
+org,example)/index.html 20220106150849300 {"url":"https://example.org/index.html","digest":"sha-256:a8c5ac6f47aa34c5c5183daedc6ebbc7ca1e53fd2ec7db5e98d71bffb163b2ce","mime":"image/png","offset":283,"length":2269,"recordDigest":"sha256:e520b333999144ff38f593f6d76f5333d24895701953b2ea0507ed041d20ca2c","status":200,"filename":"data.warc.gz"}
+```
+
+A typical CDXJ file will contain many such lines.
+
+    </section>
+
+  </body>
+
+</html>

@@ -89,6 +89,12 @@
           href: "https://github.com/webrecorder/pywb/wiki/CDX-Index-Format",
           rawDate: "2015-03-25"
         },
+        "CDXJ": {
+          title: "Crawl Index JSON (CDXJ)",
+          publisher: "Webrecorder",
+          href: "https://specs.webrecorder.net/cdxj/latest/",
+          rawDate: "2022-06-05"
+        },
         "WACZ-SIGNING": {
           title: "WACZ Signing/Verification Specification",
           publisher: "Webrecorder",
@@ -428,93 +434,11 @@ contents of the WACZ. If present the following properties MUST be included:
 
 ## CDXJ
 
-The CDXJ format provides a standardized way of representing the files in
-`/indexes` which point to the content WARC present in the WACZ's `/archive`
-directory. CDXJ files can be generated automatically by reading the archived
-WARC data. A reference implementation can be found in the
-[py-wacz](https://github.com/webrecorder/py-wacz) project.
-
-<p class="note">
-CDXJ's name and semantics partly derive from an earlier index format
-developed as part of the Internet Archive's <a>Wayback Machine</a>, where CDX
-may have been an acronym for Crawl (or Capture) inDeX. The CDXJ format used in
-WACZ was mostly drawn from an earlier implementation in the Webrecorder
-application [[WEBRECORDER-CDX]].
-</p>
-
-A CDXJ file is a sorted, line oriented plain-text file (optionally GZIP
-compressed) where each line represents information about a single capture in a
-web archive collection.
-
-Each line MUST have three components that are separated by single spaces (0x20):
-
-1. a Searchable URL
-2. an Integer Timestamp
-3. a JSON Block 
-
-### Searchable URL
-
-The Searchable URL is a normalized form of the archived URL that allows a
-CDXJ file to be sorted and efficiently scanned using a binary search algorithm.
-The Searchable URL is sometimes referred to as Sort-friendly URI Reordering
-Transform (SURT).
-
-The steps for creating a Searchable URL from a URL are:
-
-1. lowercasing the URL
-2. removing the protocol portion (HTTP or HTTPS)
-3. replacing the host name portion of the URL with a reversed, comma separated
-equivalent: `www.example.org becomes `org,example,www`
-4. adding a `)` separator
-5. adding the remaining portion of the URL (path and query)
-
-For example the URL ```https://www.example.org/index.html``` would be
-represented as this Searchable URL ```org,example,www)/index.html```
-
-### Integer Timestamp
-
-The Integer Timestamp is an integer representation of the date and time (UTC)
-when the web archive snapshot was created. It is composed of:
-
-- 4 digit year (e.g. 2022)
-- 2 digit month (e.g. 02)
-- 2 digit day (e.g. 05)
-- 2 digit hour in 24 hour format (e.g. 23)
-- 2 digit minute (e.g. 13)
-- 2 digit second (e.g. 59)
-- 3 digit milliseconds MAY be included (e.g. 032)
-
-This example date would get serialized as the Integer Timestamp
-`20220205231359032`.
-
-### JSON Block 
-
-The JSON Block contains a serialized [[JSON]] object with newlines escaped so
-that it fits completely on one line. The object MUST contain the following
-properties:
-
-- url: The URL that was archived
-- digest: A cryptographic hash for the HTTP response payload
-- mime: The <a>media type</a> for the response payload
-- filename: the WARC file `/archive` where the WARC record is located
-- offset: the byte offset for the WARC record
-- length: the length in bytes of the WARC record
-- status: the HTTP status code for the HTTP response
-
-### Sorting
-
-The lines in a CDXJ file MUST be sorted to allow a given URL (and timestamp) to
-be looked up efficiently using a simple binary search. The sorting should be
-done based on the native byte values of the characters. This is equivalent to
-using the GNU sort with the collation settings `LC_ALL=C`.
-
-### Example
-
-The following is an example of a complete line from a CDXJ file:
-
-```
-org,example)/index.html 20220106150849300 {"url":"https://example.org/index.html","digest":"sha-256:a8c5ac6f47aa34c5c5183daedc6ebbc7ca1e53fd2ec7db5e98d71bffb163b2ce","mime":"image/png","offset":283,"length":2269,"recordDigest":"sha256:e520b333999144ff38f593f6d76f5333d24895701953b2ea0507ed041d20ca2c","status":200,"filename":"data.warc.gz"}
-```
+CDXJ is a file based data format for representing an index to WARC data. One or
+more CDXJ files are stored in a WACZ's `indexes` directory, and can be used to
+quickly look up a given URL to see if HTTP representations of that URL are
+available in the WARC content found in the `archives` directory. The format for
+CDXJ files is specified in the [[?CDXJ]] specification.
 
 ## Signing and Verification
 
