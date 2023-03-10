@@ -87,48 +87,54 @@ This spec uses shorthands for referencing the UnixFS spec, and implementers shou
 Shorthands are also used when referring to the ZIP file structure such as parsing out headers or the final directory block.
 This spec relies on the existence of a blockstore to `put()` blocks of data into and get back the `cid` for the data.
 This could be an on-disk or in-memory repo, or a streaming CAR file generation library.
+This spec also relies on the existence of a `concat(root, ...files)`  which takes a set of IPFS `UnixFS.File` objects, takes their sizes and CIDs and adds them to an existing `IPFS.File` object.
+As well, we assume that there is a way to `makeFile(bytes): UnixFS.File` which will take a stream of bytes and generate a UnixFS.File, either as a rawleaf block a file with a `data` property set to the file bytes, or a file with multiple `links` in it to subdags.
+Your library should use the default chunking strategy from IPFS for `makeFile` and should have this configuration shared among your whole archive dataset to take advantage of deduplication.
+One recommendation is to make use of `identity CIDs` for small chunks of data less than 32 bytes to reduce the number of DAG nodes by inlining the data within the CID itself.
+Finally, we expect to have a `getByteSize(UnixFS.File)` function which will yield the size of the UnixFS.File's content.
 
-- Create a root UnixFS.File entity representing the entire archive
-- Create a UnixFS.Dir entity representing the ZIP root `zip`
-- Iterate through each entry in the zip file
-	- Get the buffer for the headers
-	- Create a UnixFS.File (`headerFile`) and write the header buffer to it's `data` property
-	- Encode the `headerFile` entry into Dag-PB
-	- `put()` the `headerFile`  into the blockstore and get back the `cid` and `block size`.
-	- Get the `file name` from the header
-	- Append a new `link` to the `zip` Dir with the `cid` and `block size` (Make sure the `blocksizes` property gets updated)
-	- Get the  and `cid` of the headers file and append it to the `zip` UnixFS.Dir
-	- // TODO: Account for subdirectories in the UnixFS DAG
-	- If the `file name` ends in `.warc`
-		- TODO: WARC-Specific Chunking
-		- Generate a root `UnixFS.File` for the `warc` file
-		- Generate a `UnixFS.File` (`recocrdFile`)
-		- Iterate through each record
-			- Create a new `UnixFS.File` for the `record`
-			- Add bytes up until the first `Response` record
-			- Turn response reocordd data into its own `UnixFS.File` (`responseDataFile`) (note that applications should decide on a consistent chunking size here)
-			- `put()` `responseDataFile` and add it's `cid` and `file size` to the `reocrd`
-			- Add rest of the bytes in the record (if they exist)
-			- `put()` the record and append it to the `warc` file with it's size.
-  - Else
-  	- Create a new UnixFS.File (`file`)
-  	- Parse the `last modified time / date` from the header
-  	- Write the rest of the entry data to the `file` (Note that applications should decide on a consistent chunking size here)
-  	- Encode the `file` and `put()` it into the blockstore to get back the `cid` and `block size`.
-  	- Also get the overall `file size`
-  	- Append a new `link` to the `zip` dir with the `cid` and `file size`
-- Get the overall `file size` from the `zip` dir
-- Create a UnixFS.File entries for the following contents within the ZIP file:
- - `pages/pages.jsonl'
- - `indexes.cdx` or `indexes/index.cdz.gz` and `indexes/index.idx`
-- Create a UnixFS.File for the WARC file
-- While iterating through the WARC file records
-  - Load the data warc contents into the file and get it's CID
-  - Append the CID to the `Links` for the WARC file
-- Append the `archive/data.warc` file with the CID of the WARC file
+
+TODO: Specify how to get a substream from the main zip file or whether to do paralellism
+
+### `uploadWACZ(stream): UnixFS.File`
+
+This method generates an IPFS UnixFS.File DAG from a stream representing a WACZ zip file.
+Individual files in the ZIP get chunked as though they were standalone files and we use special chunking for WARC files.
+
+- Create a `UnixFS.File` `zip` root.
+- Iterate through each `zipChunk` of files in the ZIP file up until the `directory` at the end
+  - Read just the `headers` from the chunk
+  - `concat(zip, makeFile(headers))`
+  - If the header identifies the file as something other than a `.warc` file
+    - Get a stream for the actual `chunkFileContents`
+    - `concat(zip, makeFile(chunkFileContents))`
+  - Else if it is a `.warc` file
+    - Get a stream for the actual `chunkFileContents`
+    - `concat(zip, uploadWARC(chunkFileContents))`
+- Take the entire `directory` at the end of the ZIP file as a byte stream
+ - `concat(zip, makeFile(directory))`
+- Return the new `ZIP` for it to be `put()` into a blockstore to get the root CID.
+
+### `uploadWARC(stream) : UnixFS.File
+
+This method generates an IPFS UnixFS.FIle DAG from a stream representing a WARC file.
+Individual records get split into their own sub DAGs to be remixed and response bodies get split into their own sub DAGs to deduplicate them accross archives and responses.
+
+- Create a `UnixFS.File` `warc` root
+- Iterate through each WARC `recordChunk` as streams of bytes
+	- Create a `UnixFS.File` `record`
+	- Iterate through the request/response `headers`
+	- If the `headers` are a `Response`, split out the `body` and the `header` prefix and the `suffix`
+	  - `concat(record, makeFile(header), makeFile(body), makeFile(suffix))`
+	- Else take the entire `header`
+	  - `concat(record, makeFile(header)`
+	- `concat(warc, record)`
+- Return the `warc` to be either added to a WACZ file or to be uploaded on its own via `put()`
 
 ## Implementations
 
 https://github.com/webrecorder/ipfs-composite-files#in-place-zip
 
 https://github.com/webrecorder/awp-sw/blob/ed11bcecef16180236c752075011907ff88e40e1/src/ipfsutils.js#L463
+
+Example implementation of UnixFS concat: https://github.com/anjor/unixfs-cat/blob/main/unixfs_cat.go#L12
