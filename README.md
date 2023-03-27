@@ -12,3 +12,10 @@ This repository contains technical specifications used by the [Webrecorder] proj
 [Use Cases for Decentralized Web Archives]: https://specs.webrecorder.net/use-cases/latest/
 [WACZ Signing and Verification]: https://specs.webrecorder.net/wacz-auth/latest/
 [Crawl Index JSON (CDXJ)]: https://specs.webrecorder.net/cdxj/latest/
+
+## Viewing Locally
+
+Webrecorder's spec website is built with [ReSpec](https://respec.org/).  The only requirement is that you run a web server locally to view the site as you develop it.
+
+1. Download a simple web server like [http-server](https://github.com/http-party/http-server).
+2. Run the web server in the repo root directory.
