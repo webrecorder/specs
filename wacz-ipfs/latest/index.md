@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This specification details how WACZ/WARC files can be uploaded to IPFS using custom content-aware chunking strategies and the UnixFS standard. We do this by inspecting the boundries inside a WACZ file for the individual archived pages and use that to form a UnixFS DAG when uploading an archive to IPFS.
+This specification details how WACZ/WARC files can be uploaded to IPFS using custom content-aware chunking strategies and the UnixFS standard. We do this by inspecting the boundaries inside a WACZ file for the individual archived pages and use that to form a UnixFS DAG when uploading an archive to IPFS.
 
 ## Conformance
 
@@ -23,13 +23,13 @@ The key words MAY and MUST in this document are to be interpreted as described i
 
 ### Motivation
 
-Web archiving is important for preserving cultural information and in order to add even more resilence to archives, they can be uploaded to peer to peer protocols (P2P) in order to make backup and retrieval more seamless.
-Along with uploading content to be shared, P2P protocols enable us to interact with the data itself in new ways by chaging the way archive files are stored on disk and transmitted accross a network.
+Web archiving is important for preserving cultural information and in order to add additional resilience to archives, they can be uploaded to peer to peer protocols (P2P) in order to make backup and retrieval more seamless.
+Along with uploading content to be shared, P2P protocols enable us to interact with the data itself in new ways by changing the way archive files are stored on disk and transmitted across a network.
 This specification formalizes what we learned and goes over the benefits of doing so.
 
 ### Deduplication
 
-One of the advantages of using content addressible systems like IPFS is that datasets which contain the same data will de-duplicate storage for that data when within a larger dataset.
+One of the advantages of using content addressable systems like IPFS is that datasets which contain the same data will de-duplicate storage for that data when within a larger dataset.
 A lot of web content is ripe for deduplication where JavaScript files, Fonts, Images, and Videos might be embedded within different pages.
 Typically, when storing archival datasets without content addressing, all of these resources will be doubled up on disk.
 
@@ -39,21 +39,21 @@ The [UnixFS specification](https://github.com/ipfs/specs/blob/main/UNIXFS.md) al
 
 Readers of UnixFS files will automatically detect when a file has been chunked in this way, and will convert the UnixFS DAG to a representation where all the contents are treated as one continuous stream which can be randomly accessed at any index.
 
-The interesting property here is that we can artifically create these chunked DAGs by concatenating preexisting UnixFS file nodes into one.
+The interesting property here is that we can artificially create these chunked DAGs by concatenating preexisting UnixFS file nodes into one.
 
 This enables us to stitch together files while preserving their individual DAGs and being able to deduplicate content in the same way as if those files were uploaded on their own.
 
-TODO: Make examples of UnixFS DAGs with meta code on how they connect
+![title](../../assets/images/diagrams/ipfs-chunking-dag.svg)
 
-The process involes uploading your raw files to their own UnixFS DAGs, getting the sizes of the individual files as well as the Content IDs (CID) for the data and then combining them in a UnixFS file via it's `Links` using the DAG-PB codec.
+The process involves uploading your raw files to their own UnixFS DAGs, getting the sizes of the individual files as well as the Content IDs (CID) for the data and then combining them in a UnixFS file via it's `Links` using the DAG-PB codec.
 
 ## ZIP File Chunking
 
 The [ZIP file format](https://www.loc.gov/preservation/digital/formats/fdd/fdd000354.shtml) is used to create a single file which can contain several files within a directory structure. It allows files to be stored compressed and in their raw uncompressed form as continuous segments of the file.
 
-We can combine this with our custom chunking code in order to chunk a ZIP file at it's file boundries and generate regular UnixFS file nodes for the file chunks in the same way that they would be generated on their own.
+We can combine this with our custom chunking code in order to chunk a ZIP file at it's file boundaries and generate regular UnixFS file nodes for the file chunks in the same way that they would be generated on their own.
 
-TODO: Diagram showing file boundries in a zip file, and chunk boundries in a UnixFS Dag
+TODO: Diagram showing file boundaries in a zip file, and chunk boundaries in a UnixFS Dag
 
 ## WARC File Chunking
 
@@ -63,7 +63,7 @@ We group these records into individual UnixFS File DAGs so that they can more ea
 
 TODO: Diagram of file with deliniation for records. The 'type' of record can be seen and the request and response records are grouped together (outline with a box?)
 
-As well, we make sure to split out the response body into its own DAG node so that its contents may be deduplicated accross all archives and IPFS content.
+As well, we make sure to split out the response body into its own DAG node so that its contents may be deduplicated across all archives and IPFS content.
 
 ## WACZ File Chunking
 
@@ -71,11 +71,11 @@ The WACZ file format is based on the ZIP file format with the addition of a WARC
 
 TODO: Diagram of directory structure within WACZ with the files usually added by WebRecorder tools
 
-We take advantage of this by reading the metadata from the WACZ and WARC files and creating additional chunking boundries at the boundries of individual files within the WARC file.
+We take advantage of this by reading the metadata from the WACZ and WARC files and creating additional chunking boundaries at the boundaries of individual files within the WARC file.
 
-TODO: Diagram of WACZ IPLD structure. Show ranges of zip files and the end directory structure, make boxes around IPLD boundries with labels.
+TODO: Diagram of WACZ IPLD structure. Show ranges of zip files and the end directory structure, make boxes around IPLD boundaries with labels.
 
-Due to how UnixFS file DAGs can be nested indefinately, we can build up the merkle DAG for the WARC file separately and embed it into the DAG of the ZIP file itself.
+Due to how UnixFS file DAGs can be nested indefinitely, we can build up the Merkle DAG for the WARC file separately and embed it into the DAG of the ZIP file itself.
 
 Once a file has been chunked, any resources that have the same data within the archive or within other archives will get deduplicated at the storage / loading layer.
 
@@ -94,7 +94,7 @@ One recommendation is to make use of `identity CIDs` for small chunks of data le
 Finally, we expect to have a `getByteSize(UnixFS.File)` function which will yield the size of the UnixFS.File's content.
 
 
-TODO: Specify how to get a substream from the main zip file or whether to do paralellism
+TODO: Specify how to get a substream from the main zip file or whether to do parallelism
 
 ### `uploadWACZ(stream): UnixFS.File`
 
@@ -118,7 +118,7 @@ Individual files in the ZIP get chunked as though they were standalone files and
 ### `uploadWARC(stream) : UnixFS.File
 
 This method generates an IPFS UnixFS.FIle DAG from a stream representing a WARC file.
-Individual records get split into their own sub DAGs to be remixed and response bodies get split into their own sub DAGs to deduplicate them accross archives and responses.
+Individual records get split into their own sub DAGs to be remixed and response bodies get split into their own sub DAGs to deduplicate them across archives and responses.
 
 - Create a `UnixFS.File` `warc` root
 - Iterate through each WARC `recordChunk` as streams of bytes
