@@ -56,12 +56,12 @@
 }
 ]]></style>
 	</defs>
-	<g transform="translate(-550 -396)" style="fill:#fff">
+	<g transform="translate(-550 -396)">
 		<text class="text-on-bg" x="1059.3574" y="747.60907" xml:space="preserve"><tspan x="1059.3574" y="747.60907">A WARC record pair </tspan><tspan x="1059.3574" y="762.57605">with no payload.</tspan></text>
 		<text class="text-on-bg" x="1059.3574" y="528.0791" xml:space="preserve"><tspan x="1059.3574" y="528.0791">A WARC record pair </tspan><tspan x="1059.3574" y="543.04608">with a payload.</tspan><tspan x="1059.3574" y="558.01312"/><tspan x="1059.3574" y="572.9801">The payload contents </tspan><tspan x="1059.3574" y="587.94708">(headers not included) are </tspan><tspan x="1059.3574" y="602.91412">written into their own CID </tspan><tspan x="1059.3574" y="617.8811">and can be served by </tspan><tspan x="1059.3574" y="632.84808">anyone with a copy, even </tspan><tspan x="1059.3574" y="647.81512">if they don't have the </tspan><tspan x="1059.3574" y="662.7821">full WARC file.</tspan></text>
 		<text class="text-on-bg" x="1056.9144" y="449.36389" xml:space="preserve"><tspan x="1056.9144" y="449.36389"><tspan>A WARC record, </tspan></tspan><tspan x="1056.9144" y="464.3309"><tspan>not part of a pair.</tspan></tspan></text>
 		<path d="m953 473v284" style="stroke-dasharray:6;stroke-miterlimit:2;stroke-width:3;stroke:#000"/>
-		<g transform="translate(541 311)" style="fill:#fff">
+		<g transform="translate(541 311)">
 			<g>
 				<rect class="chunk-outlines" x="324" y="446" width="176" height="32"/>
 				<rect x="324" y="446" width="176" height="32" style="fill:#757c39;"/>
@@ -74,12 +74,12 @@
 			</g>
 		</g>
 		<g>
-			<g transform="translate(289 43.2)" style="fill:#fff">
+			<g transform="translate(289 43.2)">
 				<rect class="chunk-outlines" x="577" y="600" width="176" height="32"/>
 				<rect x="577" y="600" width="176" height="32" style="fill:#757c39;"/>
 				<text class="chunk-whitetext" x="581.88147" y="619.37689" xml:space="preserve"><tspan>WARC-Type: request</tspan></text>
 			</g>
-			<g transform="translate(289 39.2)" style="fill:#fff">
+			<g transform="translate(289 39.2)">
 				<rect class="chunk-outlines" x="577" y="570" width="176" height="20"/>
 				<rect x="577" y="570" width="176" height="20" style="fill:#008873;"/>
 				<text class="chunk-whitetext" x="581.84546" y="584.99554" xml:space="preserve"><tspan>2× Newlines</tspan></text>
@@ -91,12 +91,12 @@
 				<text class="chunk-whitetext" x="581.84546" y="488.99484" xml:space="preserve"><tspan>WARC-Type: response</tspan></text>
 			</g>
 		</g>
-		<g transform="translate(692 35)" style="fill:#fff">
+		<g transform="translate(692 35)">
 			<rect class="chunk-outlines" x="174" y="403" width="176" height="32"/>
 			<rect x="174" y="403" width="176" height="32" style="fill:#2e7cab;"/>
 			<text class="chunk-whitetext" x="179.19279" y="421.62576" xml:space="preserve"><tspan>WARC-Type: warcinfo</tspan></text>
 		</g>
-		<g style="fill:#fff">
+		<g>
 			<path class="arrows" d="m706 751h-24.5v-298h23.7" style="marker-end:url(#arrowhead);marker-start:url(#arrowhead)"/>
 			<path class="arrows" d="m792 588 24.9-0.234"/>
 			<path class="arrows" d="m839 575h-22.3" style="marker-start:url(#arrowhead);"/>
@@ -107,22 +107,22 @@
 			<path class="arrows" d="m793 454 46.6-0.234" style="marker-end:url(#arrowhead);"/>
 			<path class="arrows" d="m658 588 47.4-0.234" style="marker-end:url(#arrowhead);"/>
 		</g>
-		<g transform="matrix(0 -1.04 .945 0 560 932)" style="fill:#fff">
+		<g transform="matrix(0 -1.04 .945 0 560 932)">
 			<rect class="chunk-outlines" x="444" y="182" width="30.6" height="61.8" ry="2.73"/>
 			<rect x="444" y="182" width="30.6" height="61.5" ry="2.73" style="fill:#d9d9d9;"/>
 			<text class="dag-text" transform="matrix(0 1.07 -.936 0 0 0)" x="199.35643" y="-493.87869" xml:space="preserve"><tspan x="199.35643" y="-493.87869"><tspan>Record</tspan></tspan><tspan x="199.35643" y="-478.79556"><tspan>CID</tspan></tspan></text>
 		</g>
-		<g transform="matrix(0 -1.04 .945 0 560 1008)" style="fill:#fff">
+		<g transform="matrix(0 -1.04 .945 0 560 1008)">
 			<rect class="chunk-outlines" x="319" y="181" width="161" height="61.8" ry="2.73"/>
 			<rect x="319" y="181" width="161" height="61.4" ry="3.17" style="fill:#d9d9d9;"/>
 			<text class="dag-text" transform="matrix(0 1.07 -.936 0 0 0)" x="199.35641" y="-435.71136" xml:space="preserve"><tspan x="199.35641" y="-435.71136"><tspan>Record</tspan></tspan><tspan x="199.35641" y="-420.62823"><tspan>CID</tspan></tspan></text>
 		</g>
-		<g transform="matrix(0 -1.04 .945 0 560 1138)" style="fill:#fff">
+		<g transform="matrix(0 -1.04 .945 0 560 1138)">
 			<rect class="chunk-outlines" x="336" y="182" width="71.8" height="61.8" ry="2.73"/>
 			<rect x="336" y="182" width="71.8" height="61.5" ry="2.73" style="fill:#d9d9d9;"/>
 			<text class="dag-text" transform="matrix(0 1.07 -.936 0 0 0)" x="199.35641" y="-400.06689" xml:space="preserve"><tspan x="199.35641" y="-400.06689"><tspan>Record</tspan></tspan><tspan x="199.35641" y="-384.98376"><tspan>CID</tspan></tspan></text>
 		</g>
-		<g transform="matrix(0 -1.04 .945 0 427 932)" style="fill:#fff">
+		<g transform="matrix(0 -1.04 .945 0 427 932)">
 			<rect class="chunk-outlines" x="138" y="182" width="337" height="61.8" ry="3.17"/>
 			<rect x="138" y="182" width="337" height="61.5" ry="3.17" style="fill:#d9d9d9;"/>
 			<text class="dag-text" transform="matrix(0 1.07 -.936 0 0 0)" x="199.20644" y="-355.35452" xml:space="preserve"><tspan x="199.20644" y="-355.35452"><tspan>WARC</tspan></tspan><tspan x="199.20644" y="-340.27139"><tspan>CID</tspan></tspan></text>
