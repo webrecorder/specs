@@ -2,15 +2,16 @@
 
 ## Abstract
 
-This specification presents a specialized content-aware approach for WACZ/WARC archive files to be split up and ingested into to IPFS in a way that produces standard IPFS files (via the UnixFS standard primitives) while adding data in a way that maintains the original file format while taking advantage of content-addressable deduplication.
+This specification presents a specialized content-aware chunking strategy for adding composite web archive files (WARC and WACZ) to IPFS in a way that maximizes content-based deduplication and optimized for range-based access while producing a standard IPFS (UnixFS) file object.
+
 The approach employs a 'bottom-up' approach of splitting existing file formats into smaller, semantically significant
 chunks, then concatenating to form a standard UnixFS file DAG which maintains certain additional properties
-beneficial for access and deduplication, and preserving the integrity of the files involved when read from the root CID.
+beneficial for access and deduplication, and preserving the integrity of the files involved when read from the root file identifier.
 
 ## Conformance
 
 As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.
-The key words MAY and MUST in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here.
+The key words MAY and MUST in this document are to be interpreted as described in BCP 14 [RFC2119][1] [RFC8174][2] when, and only when, they appear in all capitals, as shown here.
 
 ## Terminology
 
@@ -26,22 +27,23 @@ The key words MAY and MUST in this document are to be interpreted as described i
 
 ### Motivation
 
-Web archiving is important for preserving cultural information and in order to add additional resilience to archives, they can be uploaded to peer to peer protocols (P2P) in order to make backup and retrieval more seamless.
-Along with uploading content to be shared, P2P protocols enable us to interact with the data itself in new ways by changing the way archive files are stored on disk and transmitted across a network.
+Web archiving data often stored in specialized formats, which include a full record of the HTTP network traffic
+as well as additional metadata. The archived data is often accessed via random-access, loading the appropriate
+chunk of data based on URL requests, etc..
 
-This specification works with two key existing file formats:
+This specification is designed to describe how to store two key file formats used for web archives:
 
 - WARC - a widely used [ISO standard](http://iipc.github.io/warc-specifications/) used by many institutions around the world for storing web archive data.
 
 - WACZ - A new format [developed by Webrecorder](https://specs.webrecorder.net/wacz/latest/) for packaging WARCs with other web archive data.
 
-Both formats are 'composite formats', which contain small primitive data formats.
+Both formats are 'composite' formats, containing smaller amounts of data interspersed with metadata.
 In the case of WARC, the format consists of concatenated records which are appended one after the other, eg.
 `cat A.warc B.warc > C.warc`. The WARCs may or may not be gzipped, in which case the result is a multi-member gzip.
 For this spec, such WARC files will be ungzipped as part of the process.
 
-The WACZ format is a ZIP format which contains a specialized file and directory layout. The ZIP format also contains
-concatenated raw data as well as header data.
+The WACZ format is a ZIP format which contains a specialized file and directory layout. The ZIP format is also a composite format, containing the raw (sometimes compressed) data as well as header data for how to find
+files and directories within the ZIP
 
 
 ### Deduplication
@@ -58,10 +60,12 @@ Unfortunately, this approach is not ideal for composite files, which make contai
 For example, two WARC files may contain
 the same HTTP payload, but stored at different offsets. Using the 'naive' IPFS chunking strategy, this data will most likely be added multiple times and not deduplicated.
 
+The strategy proposed here is to add the contents of the WARC and WACZ files as individual IPFS (UnixFS) files, then concatenate them together to a form a larger file.
+
 ## UnixFS File Chunking
 
 To take advantage of deduplication in IPFS, data needs to be added in exactly the same way. When adding large datasets,
-IPFS split into smaller chunks, per the UnixFS specification, using equal sized chunks by default. 
+IPFS split into smaller chunks, using equal sized chunks by default. 
 
 The [UnixFS specification](https://github.com/ipfs/specs/blob/main/UNIXFS.md) allows for individual files to be "chunked" by separating continuous segments of the file's data into individual nodes in a Merkle DAG. These intermediate nodes are themselves encoded as UnixFS files.
 
@@ -86,7 +90,7 @@ TODO: Diagram showing file boundaries in a zip file
 
 ### Splitting WARC Files Into Component Parts
 
-WARC files are segmented into a series of "Records", the basic components of the file format.  The WARC specification defines [eight different types of records](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/#warc-record-types): 
+WARC files are composed of concatenated series of WARC "records", the basic components of the file format.  The WARC specification defines [eight different types of records](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/#warc-record-types): 
 1. warcinfo
 2. response
 3. resource
@@ -195,3 +199,8 @@ https://github.com/webrecorder/ipfs-composite-files#in-place-zip
 https://github.com/webrecorder/awp-sw/blob/ed11bcecef16180236c752075011907ff88e40e1/src/ipfsutils.js#L463
 
 Example implementation of UnixFS concat: https://github.com/anjor/unixfs-cat/blob/main/unixfs_cat.go#L12
+
+
+[1]: https://www.rfc-editor.org/rfc/rfc2119
+[2]: https://www.rfc-editor.org/rfc/rfc8174
+
