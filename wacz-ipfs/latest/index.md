@@ -98,8 +98,7 @@ WARC files are segmented into a series of "Records", the basic components of the
 
 (Note: continuation records are rarely used and are not yet considered as part of this spec)
 
-WARC files are often individually gzip-ed when stored on disk. To take advantage of this deduplication strategy, we store the WARC records
-must be ungzipped, relying on the compression at the IPFS storage level.
+WARC files are often individually gzip-ed when stored on disk. To take advantage of this deduplication strategy, the WARC records must be ungzipped, relying on the compression at the IPFS storage level.
 
 ![WARC Record Types & Chunk Boundaries](../../assets/images/diagrams/warc-records.svg)
 
