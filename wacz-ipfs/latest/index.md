@@ -67,7 +67,7 @@ The [UnixFS specification](https://github.com/ipfs/specs/blob/main/UNIXFS.md) al
 
 By default, a large file is added to IPFS by splitting it into smaller, equal-sized chunks.
 
-### Custom Chunking and IPFS Cat
+### Custom Chunking
 
 Unfortunately, this approach is not ideal for composite files, which make contain the same data at different positions with a composite file.
 
@@ -81,7 +81,7 @@ The interesting property of UnixFS is that larger files can be created by simply
 On a regular disk, running `cat A.warc B.warc > C.warc` will copy the data in A.warc and B.warc and store it into
 a new file, C.warc. The storage of `A.warc` adn `B.warc` is duplicated to store `C.warc`.
 
-### IPFS Cat
+#### IPFS Cat
 
 With IPFS, we can introduce a new operation, `ipfs.cat` which can produce the equivalent of concatenated
 file without copying or duplicating the storage. If file `A.warc` and `B.warc` are both added to IPFS
@@ -92,11 +92,15 @@ Readers of UnixFS files will automatically detect process UnixFS DAG, and a way 
 
 This enables us to stitch together files while preserving their individual DAGs and being able to deduplicate content in the same way as if those files were uploaded on their own.
 
-The process involves splitting WARC and WACZ data at appropriate boundaries to their own UnixFS DAGs, getting the sizes of the individual files as well as the Content IDs (CID) for the data and then combining them in a UnixFS file via it's `Links` using the DAG-PB codec.
+The process involves:
+- Splitting WACZ files, and WARC inside of them in a custom way, and adding each segment via `ipfs.add`
+- Concatenating WARC files at appropriate boundaries via `ipfs.cat`
+- Ensuring the ZIP file contains all files necessary for WACZ conformance, including WARC
+- Concatenating ZIP files from at appropriate boundaries to form the final ZIP file.
 
 ## ZIP File Chunking
 
-The WACZ format is simply a ZIP file with a custom directory layout. The custom chunking for WACZ therefore
+Since the WACZ format is simply a ZIP file with a custom directory layout. The custom chunking for WACZ therefore
 presents a more generic approach for ZIP file chunking.
 
 The [ZIP file format](https://www.loc.gov/preservation/digital/formats/fdd/fdd000354.shtml) is used to create a single file which can contain several files within a directory structure. It allows files to be stored compressed and in their raw uncompressed form as continuous segments of the file.
@@ -147,9 +151,9 @@ In this diagram each colored box represents a WARC record type, lines within the
 
 ## WACZ File Chunking
 
-The WACZ file format is based on the ZIP file format with the addition of a WARC file for archival data, and some extra files for viewing the data.
+The WACZ file format is simply a ZIP file format which contains WARC file for archival data, and some extra files for viewing the data.
 
-TODO: Diagram of directory structure within WACZ with the files usually added by WebRecorder tools
+TODO: Diagram of directory structure within WACZ with the files usually added by Webrecorder tools
 
 We take advantage of this by reading the metadata from the WACZ and WARC files and creating additional chunking boundaries at the boundaries of individual files within the WARC file.
 
