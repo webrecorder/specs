@@ -43,8 +43,6 @@ The interesting property here is that we can artificially create these chunked D
 
 This enables us to stitch together files while preserving their individual DAGs and being able to deduplicate content in the same way as if those files were uploaded on their own.
 
-![title](../../assets/images/diagrams/ipfs-chunking-dag.svg)
-
 The process involves uploading your raw files to their own UnixFS DAGs, getting the sizes of the individual files as well as the Content IDs (CID) for the data and then combining them in a UnixFS file via it's `Links` using the DAG-PB codec.
 
 ## ZIP File Chunking
@@ -53,17 +51,45 @@ The [ZIP file format](https://www.loc.gov/preservation/digital/formats/fdd/fdd00
 
 We can combine this with our custom chunking code in order to chunk a ZIP file at it's file boundaries and generate regular UnixFS file nodes for the file chunks in the same way that they would be generated on their own.
 
-TODO: Diagram showing file boundaries in a zip file, and chunk boundaries in a UnixFS Dag
+TODO: Diagram showing file boundaries in a zip file
 
 ## WARC File Chunking
 
-WARC files contain a series of "Records" for loaded resources.
+### Splitting WARC Files Into Component Parts
 
-We group these records into individual UnixFS File DAGs so that they can more easily be recombined between archives at the UnixFS level.
+WARC files are segmented into a series of "Records", the basic components of the file format.  The WARC specification defines [eight different types of records](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/#warc-record-types): 
+1. warcinfo
+2. response
+3. resource
+4. request
+5. metadata
+6. revisit
+7. conversion
+8. continuation.
 
-TODO: Diagram of file with deliniation for records. The 'type' of record can be seen and the request and response records are grouped together (outline with a box?)
+Continuation records are rarely used and are not yet a part of this spec.
 
-As well, we make sure to split out the response body into its own DAG node so that its contents may be deduplicated across all archives and IPFS content.
+![WARC Record Types & Chunk Boundaries](../../assets/images/diagrams/warc-records.svg)
+
+This diagram represents the seven different types of records with specific chunking instructions.  Each colored box represents a WARC record type, lines within these boxes represent the chunk boundaries.
+
+<!-- ^ Should be a figcaption ^ -->
+
+The following example is a response record for example.com.  The WARC record data and HTTP header are located in the first chunk, followed by the response payload, and the two newlines that signify the end of the record.  Resource and conversion records must also follow this format.
+
+![response-record](../../assets/images/diagrams/response-record.svg)
+
+### WARC Chunking and the DAG
+
+In addition to chunking the records according to their makeup, they are also grouped into individual UnixFS File DAGs so that they can effectively be recombined across archives at the UnixFS level.
+
+The payloads are specifically split into their own DAG nodes so that their contents may be deduplicated across all archives and IPFS content.
+
+![Chunked WARC Records in an Example DAG](../../assets/images/diagrams/ipfs-chunking-dag.svg)
+
+In this diagram each colored box represents a WARC record type, lines within these boxes represent the chunk boundaries.  CIDs are assigned to pairs of related records or individual records depending on the record type.
+
+<!-- ^ Should be a figcaption ^ -->
 
 ## WACZ File Chunking
 
