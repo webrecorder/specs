@@ -1,4 +1,4 @@
-# WACZ/WARC on IPFS Spec
+# IPFS Custom File Chunking for WARC and WACZ Formats
 
 ## Abstract
 
@@ -18,14 +18,13 @@ The key words MAY and MUST in this document are to be interpreted as described i
 - IPFS
 - UnixFS
 - Content Addressing
-- Peer to Peer Networks: Software protocols for connecting people's computers directly together without a server acting as an intermediary.
 - Chunking
 - WACZ
 - WARC
 
 ## Introduction
 
-### Motivation
+### Web Archive Formats (WARC and WACZ)
 
 Web archiving data often stored in specialized formats, which include a full record of the HTTP network traffic
 as well as additional metadata. The archived data is often accessed via random-access, loading the appropriate
@@ -33,9 +32,9 @@ chunk of data based on URL requests, etc..
 
 This specification is designed to describe how to store two key file formats used for web archives:
 
-- WARC - a widely used [ISO standard](http://iipc.github.io/warc-specifications/) used by many institutions around the world for storing web archive data.
+- WARC - a widely used [ISO standard](3) used by many institutions around the world for storing web archive data.
 
-- WACZ - A new format [developed by Webrecorder](https://specs.webrecorder.net/wacz/latest/) for packaging WARCs with other web archive data.
+- WACZ - A new format [developed by Webrecorder](4) for packaging WARCs with other web archive data.
 
 Both formats are 'composite' formats, containing smaller amounts of data interspersed with metadata.
 In the case of WARC, the format consists of concatenated records which are appended one after the other, eg.
@@ -45,40 +44,60 @@ For this spec, such WARC files will be ungzipped as part of the process.
 The WACZ format is a ZIP format which contains a specialized file and directory layout. The ZIP format is also a composite format, containing the raw (sometimes compressed) data as well as header data for how to find
 files and directories within the ZIP
 
-
 ### Deduplication
 
 One of the many challenges of web archiving is the vast amount of data that can be obtained when crawling the web.
-For a variety of reasons, this results in potentially duplicate data, which ideally, would not need to be stored multiple
-times. Often, formats like WARC employ a custom approach for storing duplicate which require manual, out-of-band bookkeeping (via an external index)
+A lot of web content is ripe for deduplication where JavaScript files, Fonts, Images, and Videos might be embedded within different pages. For a variety of reasons, this results in potentially duplicate data, which ideally, would not need to be stored multiple
+times. Both the WARC and WACZ format can store duplicate data, but deduplication must be done via manual bookking of duplicate content by digest.
 
-One of the advantages of using content addressable systems like IPFS is that datasets which contain the same data can automatically be de-duplicated. When adding the same exact data to IPFS multiple times, the data can automatically
-be deduplicated.
-A lot of web content is ripe for deduplication where JavaScript files, Fonts, Images, and Videos might be embedded within different pages.
 
-Unfortunately, this approach is not ideal for composite files, which make contain the same data at different positions in a file.
-For example, two WARC files may contain
-the same HTTP payload, but stored at different offsets. Using the 'naive' IPFS chunking strategy, this data will most likely be added multiple times and not deduplicated.
+### Content-Addressable Storage
 
-The strategy proposed here is to add the contents of the WARC and WACZ files as individual IPFS (UnixFS) files, then concatenate them together to a form a larger file.
+IPFS provides [Content-Addressable Storage]() which can automatically handle duplicate data - if the same data is added multiple times, it will be stored only once on each IPFS node.
 
-## UnixFS File Chunking
+To benefit from deduplication, the data must be added the same way. IPFS deals with large data sets by chunking
+or splitting files into smaller blocks, using the UnixFS schema.
+
+### UnixFS File Chunking
 
 To take advantage of deduplication in IPFS, data needs to be added in exactly the same way. When adding large datasets,
 IPFS split into smaller chunks, using equal sized chunks by default. 
 
 The [UnixFS specification](https://github.com/ipfs/specs/blob/main/UNIXFS.md) allows for individual files to be "chunked" by separating continuous segments of the file's data into individual nodes in a Merkle DAG. These intermediate nodes are themselves encoded as UnixFS files.
 
-Readers of UnixFS files will automatically detect when a file has been chunked in this way, and will convert the UnixFS DAG to a representation where all the contents are treated as one continuous stream which can be randomly accessed at any index.
+By default, a large file is added to IPFS by splitting it into smaller, equal-sized chunks.
 
-The interesting property here is that we can artificially create these chunked DAGs by concatenating preexisting UnixFS file nodes into one. To do this, we introduce a primitive operation called `ipfs.concat` which works on the output of the 
-standard `ipfs.add` to create a new IPFS UnixFS DAG.
+### Custom Chunking and IPFS Cat
+
+Unfortunately, this approach is not ideal for composite files, which make contain the same data at different positions with a composite file.
+
+For example, two WARC files may contain the same HTTP payload, but stored at different offsets. Using the 'naive' IPFS chunking strategy, this data will most likely be added multiple times and not deduplicated.
+
+The strategy proposed here is to add the contents of the WARC and WACZ files as individual IPFS (UnixFS) files, then concatenate them together to a form a larger file.
+
+
+The interesting property of UnixFS is that larger files can be created by simply concatenating smaller files, without having to store the data multiple times, by creating a new link in the Merkle DAG. 
+
+On a regular disk, running `cat A.warc B.warc > C.warc` will copy the data in A.warc and B.warc and store it into
+a new file, C.warc. The storage of `A.warc` adn `B.warc` is duplicated to store `C.warc`.
+
+### IPFS Cat
+
+With IPFS, we can introduce a new operation, `ipfs.cat` which can produce the equivalent of concatenated
+file without copying or duplicating the storage. If file `A.warc` and `B.warc` are both added to IPFS
+via standard `ipfs.add` operation, 
+creating the equivalent of `C.warc` involve creating a new UnixFS intermediate DAG node.
+
+Readers of UnixFS files will automatically detect process UnixFS DAG, and a way to read the data as one continuous stream (which can be randomly accessed by offset).
 
 This enables us to stitch together files while preserving their individual DAGs and being able to deduplicate content in the same way as if those files were uploaded on their own.
 
-The process involves uploading your raw files to their own UnixFS DAGs, getting the sizes of the individual files as well as the Content IDs (CID) for the data and then combining them in a UnixFS file via it's `Links` using the DAG-PB codec.
+The process involves splitting WARC and WACZ data at appropriate boundaries to their own UnixFS DAGs, getting the sizes of the individual files as well as the Content IDs (CID) for the data and then combining them in a UnixFS file via it's `Links` using the DAG-PB codec.
 
 ## ZIP File Chunking
+
+The WACZ format is simply a ZIP file with a custom directory layout. The custom chunking for WACZ therefore
+presents a more generic approach for ZIP file chunking.
 
 The [ZIP file format](https://www.loc.gov/preservation/digital/formats/fdd/fdd000354.shtml) is used to create a single file which can contain several files within a directory structure. It allows files to be stored compressed and in their raw uncompressed form as continuous segments of the file.
 
@@ -203,4 +222,6 @@ Example implementation of UnixFS concat: https://github.com/anjor/unixfs-cat/blo
 
 [1]: https://www.rfc-editor.org/rfc/rfc2119
 [2]: https://www.rfc-editor.org/rfc/rfc8174
+[3]: https://iipc.github.io/warc-specifications/
+[4]: https://specs.webrecorder.net/wacz/latest/
 
