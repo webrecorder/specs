@@ -98,17 +98,6 @@ The process involves:
 - Ensuring the ZIP file contains all files necessary for WACZ conformance, including WARC
 - Concatenating ZIP files from at appropriate boundaries to form the final ZIP file.
 
-## ZIP File Chunking
-
-Since the WACZ format is simply a ZIP file with a custom directory layout. The custom chunking for WACZ therefore
-presents a more generic approach for ZIP file chunking.
-
-The [ZIP file format](https://www.loc.gov/preservation/digital/formats/fdd/fdd000354.shtml) is used to create a single file which can contain several files within a directory structure. It allows files to be stored compressed and in their raw uncompressed form as continuous segments of the file.
-
-We can combine this with our custom chunking code in order to chunk a ZIP file at it's file boundaries and generate regular UnixFS file nodes for the file chunks in the same way that they would be generated on their own.
-
-TODO: Diagram showing file boundaries in a zip file
-
 ## WARC File Chunking
 
 ### Splitting WARC Files Into Component Parts
@@ -130,7 +119,6 @@ WARC files are often individually gzip-ed when stored on disk. To take advantage
 ![WARC Record Types & Chunk Boundaries](../../assets/images/diagrams/warc-records.svg)
 
 This diagram represents the seven different types of records with specific chunking instructions.  Each colored box represents a WARC record type, lines within these boxes represent the chunk boundaries.
-
 <!-- ^ Should be a figcaption ^ -->
 
 The following example is a response record for example.com.  The WARC record data and HTTP header are located in the first chunk, followed by the response payload, and the two newlines that signify the end of the record.  Resource and conversion records must also follow this format.
@@ -146,22 +134,22 @@ The payloads are specifically split into their own DAG nodes so that their conte
 ![Chunked WARC Records in an Example DAG](../../assets/images/diagrams/ipfs-chunking-dag.svg)
 
 In this diagram each colored box represents a WARC record type, lines within these boxes represent the chunk boundaries.  CIDs are assigned to pairs of related records or individual records depending on the record type.
-
 <!-- ^ Should be a figcaption ^ -->
 
 ## WACZ File Chunking
 
-The WACZ file format is simply a ZIP file format which contains WARC file for archival data, and some extra files for viewing the data.
+The [ZIP file format](https://www.loc.gov/preservation/digital/formats/fdd/fdd000354.shtml) is used to create a single file which can contain several files within a directory structure. This allows files to be stored with compression, and in their raw uncompressed form as continuous segments of the file.
 
-TODO: Diagram of directory structure within WACZ with the files usually added by Webrecorder tools
+The WACZ file format is simply a ZIP file which contains WARC file for archival data, alongside extra files that aid in viewing the data. WACZ therefore uses a more generic approach to ZIP file chunking, generating regular UnixFS file nodes for the file chunks in the same way that they would be generated for any other file.
 
-We take advantage of this by reading the metadata from the WACZ and WARC files and creating additional chunking boundaries at the boundaries of individual files within the WARC file.
+![WACZ File Breakdown](../../assets/images/diagrams/warc-records.svg)
 
-TODO: Diagram of WACZ IPLD structure. Show ranges of zip files and the end directory structure, make boxes around IPLD boundaries with labels.
+This diagram showcases a standard WACZ file's contents, separated by ZIP headers, and followed by the ZIP's Central Directory Record.  The WARC file that contains the web archive data is chunked as described in the previous section.
+<!-- ^ Should be a figcaption ^ -->
 
-Due to how UnixFS file DAGs can be nested indefinitely, we can build up the Merkle DAG for the WARC file separately and embed it into the DAG of the ZIP file itself.
+Because UnixFS file DAGs can be nested indefinitely, the Merkle DAG for the WARC file is built up separately and embeded into the DAG of the ZIP file itself.
 
-Once a file has been chunked, any resources that have the same data within the archive or within other archives will get deduplicated at the storage / loading layer.
+Once a WACZ file has been chunked, any resources that contain the same data within the archive (or within other archives) will get deduplicated at the storage / loading layer.
 
 ## Algorithm
 
