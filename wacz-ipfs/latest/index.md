@@ -142,7 +142,7 @@ The [ZIP file format](https://www.loc.gov/preservation/digital/formats/fdd/fdd00
 
 The WACZ file format is simply a ZIP file which contains WARC file for archival data, alongside extra files that aid in viewing the data. WACZ therefore uses a more generic approach to ZIP file chunking, generating regular UnixFS file nodes for the file chunks in the same way that they would be generated for any other file.
 
-![WACZ File Breakdown](../../assets/images/diagrams/warc-records.svg)
+![WACZ File Breakdown](../../assets/images/diagrams/wacz-file-dag.svg)
 
 This diagram showcases a standard WACZ file's contents, separated by ZIP headers, and followed by the ZIP's Central Directory Record.  The WARC file that contains the web archive data is chunked as described in the previous section.
 <!-- ^ Should be a figcaption ^ -->
