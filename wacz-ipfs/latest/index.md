@@ -95,7 +95,9 @@ The WARC file that contains the web archive data will chunked as described in th
 
 ### ZIP and Non-ZIP Directory
 
-With this approach, it is also possible to add all the files in the ZIP to a regular UnixFS directory in a separate DAG which links to the same chunks that are in the ZIP, such that the files are both in a ZIP and not-in-a-ZIP. This is possible if the files are stored in the WACZ without compression, which the WACZ spec requires for at least the WARC. Or, the files could first be added to a directory, and then 'turned into a ZIP' by simply creating a new DAG that intersperses them together with the ZIP headers and central directory record.
+With this approach, it is also possible to add all the files in a ZIP to a regular UnixFS directory in a separate DAG which links to the same chunks that are in the ZIP, such that the files are both in a ZIP and not-in-a-ZIP. This is possible if the files are stored in a WACZ without compression, which the WACZ spec requires, at least for WARC files. The files could alternatively be added to a directory first, and then 'turned into a ZIP' by simply creating a new DAG that intersperses them together with the ZIP headers and central directory record.
+
+![ipfs-composite-zip](../../assets/images/diagrams/ipfs-composite-zip.svg)
 
 ## WARC File Chunking
 
