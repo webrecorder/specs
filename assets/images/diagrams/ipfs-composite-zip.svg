@@ -65,11 +65,11 @@
 		<g transform="translate(6,2)">
 			<g>
 				<path d="m860 70.6 0.174 282" style="fill:none;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;stop-color:#000;stroke-dasharray:3;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:3;stroke:#000"/>
-				<g transform="translate(290,198)">
+				<g transform="translate(290,180)">
 					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#9a6700"/>
 					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#fff" xml:space="preserve"><tspan x="570.17401" y="154.62">Central Directory Record</tspan></text>
 				</g>
-				<rect class="cid-backgrounds" x="771" y="305" width="177" height="13.1" rx="2.82" ry="2.82" style="fill:#e4a435"/>
+				<!-- <rect class="cid-backgrounds" x="771" y="305" width="177" height="13.1" rx="2.82" ry="2.82" style="fill:#e4a435"/> -->
 				<g transform="translate(290 126)">
 					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
 					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file3.ext</tspan></text>
