@@ -126,14 +126,14 @@
 				</g>
 			</g>
 		</g>
-		<text class="bg-text" x="530.20758" y="227.89" xml:space="preserve"><tspan x="530.20758" y="227.89">ipfs-composite-files</tspan></text>
+		<text class="bg-text" x="530.20758" y="225" xml:space="preserve"><tspan x="530.20758" y="225">Convert to ZIP</tspan></text>
 	</g>
 	<metadata>
 		<rdf:RDF>
 			<cc:Work rdf:about="">
 				<dc:title>Directory to Composite Zip File</dc:title>
 				<cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
-				<dc:description>A diagram showcasing how a directory of three files with a CID can be concatinated into a single ZIP file while maintaining the CIDs assigned previously.  After the directory and its files are run through ipfs-composite-files, the three files retain the same CIDs and can be accessed in the ZIP file like any other file would be.</dc:description>
+				<dc:description>A diagram showcasing how a directory of three files with a CID can be concatinated into a single ZIP file while maintaining the CIDs assigned previously.  After the directory and its files are converted to a zip file, the three files retain the same CIDs and can be accessed in the ZIP file like any other file would be.</dc:description>
 			</cc:Work>
 			<cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
 				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
