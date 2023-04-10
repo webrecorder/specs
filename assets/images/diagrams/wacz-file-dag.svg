@@ -59,16 +59,16 @@
 ]]></style>
 	</defs>
 	<g transform="translate(-8.47)">
-		<g transform="matrix(3.78 0 0 3.78 -265 315)">
+		<g transform="matrix(3.78 0 0 3.78 -265 294)">
 			<rect class="dag-objects" x="81.2" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#9a6700"/>
 			<text class="dag-labels" x="104.56509" y="32.935547" style="fill:#ffffff" xml:space="preserve"><tspan x="104.56509" y="32.935547" style="fill:#ffffff;">Central Directory Record</tspan></text>
 		</g>
-		<g transform="matrix(3.78 0 0 3.78 -23.5 2.28e-5)">
+		<g transform="matrix(3.78 0 0 3.75 -23.5 -70)">
 			<text class="bg-text" x="99.866234" y="106.75567" xml:space="preserve"><tspan x="99.866234" y="106.75567">Zip Header Records</tspan></text>
 			<path class="arrows" d="m80.1 106h-10.6"/>
 		</g>
-		<rect class="zip-headers" transform="rotate(90)" x="393" y="-219" width="13" height="177" rx="3" ry="3"/>
-		<g transform="matrix(3.78 0 0 3.78 -443 243)">
+		<!-- <rect class="zip-headers" transform="rotate(90)" x="393" y="-219" width="13" height="177" rx="3" ry="3"/> -->
+		<g transform="matrix(3.78 0 0 3.78 -442 243)">
 			<rect class="dag-objects" x="128" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
 			<text class="dag-labels" x="151.82646" y="32.856174" xml:space="preserve"><tspan x="151.82646" y="32.856174">datapackage-digest.json</tspan></text>
 		</g>
