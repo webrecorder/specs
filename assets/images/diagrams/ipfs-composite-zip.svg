@@ -69,7 +69,6 @@
 					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#9a6700"/>
 					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#fff" xml:space="preserve"><tspan x="570.17401" y="154.62">Central Directory Record</tspan></text>
 				</g>
-				<!-- <rect class="cid-backgrounds" x="771" y="305" width="177" height="13.1" rx="2.82" ry="2.82" style="fill:#e4a435"/> -->
 				<g transform="translate(290 126)">
 					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
 					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file3.ext</tspan></text>
@@ -84,10 +83,15 @@
 					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
 					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file1.ext</tspan></text>
 				</g>
-				<rect class="cid-backgrounds" x="771" y="89.4" width="177" height="13.1" rx="2.82" ry="2.82" style="fill:#e4a435"/>
+				
+				
 				<g transform="translate(290,-102)">
 					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
 					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">ZIP File CID</tspan></text>
+				</g>
+				<g transform="translate(290,-50)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="24" rx="2.82" ry="2.82" style="fill:#e4a435"/>
+					<text class="cid-labels" x="570.17401" y="143" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="143">ZIP Local File Header</tspan></text>
 				</g>
 			</g>
 			<g>
