@@ -175,7 +175,7 @@ Individual files in the ZIP get chunked as though they were standalone files and
  - `concat(zip, makeFile(directory))`
 - Return the new `ZIP` for it to be `put()` into a blockstore to get the root CID.
 
-### `uploadWARC(stream) : UnixFS.File
+### uploadWARC(stream) : UnixFS.File
 
 This method generates an IPFS UnixFS.FIle DAG from a stream representing a WARC file.
 Individual records get split into their own sub DAGs to be remixed and response bodies get split into their own sub DAGs to deduplicate them across archives and responses.
