@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 238 158" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<title>Compressed vs Uncompressed WARC Chunking</title>
+	<defs>
+		<marker id="TriangleStart" style="overflow:visible" markerWidth="2.595" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 5.3244081 6.1553851">
+			<path transform="scale(.5)" d="m5.77 0-8.65 5v-10z" style="fill-rule:evenodd;fill:context-stroke;stroke-width:1pt;stroke:context-stroke"/>
+		</marker>
+		<marker id="TriangleStart-7" style="overflow:visible" markerWidth="2.595" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 5.3244081 6.1553851">
+			<path transform="scale(.5)" d="m5.77 0-8.65 5v-10z" style="fill-rule:evenodd;fill:context-stroke;stroke-width:1pt;stroke:context-stroke"/>
+		</marker>
+		<style><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CRSV,MONO@500..600,0,1&display=swap');
+.bg-text {
+  fill:#000000;
+  font-family:Recursive;
+  font-size:3.175px;
+  line-height:1.3;
+  stop-color:#000000;
+  stroke-miterlimit:2;
+  stroke-width:0.79375;
+}
+]]></style>
+	</defs>
+	<g transform="translate(8 8)">
+		<path d="m150 37.8-4e-5 44.4" style="fill:none;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dasharray:1.5875;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m71.6 37.8-5e-5 44.4" style="fill:none;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dasharray:1.5875;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<g transform="matrix(.265 0 0 .265 -97.9 -113)" style="fill:#fff">
+			<g transform="translate(-23.6 106)">
+				<rect class="chunk-outlines" x="577" y="600" width="176" height="32" style="fill:none;stop-color:#000000;stroke-miterlimit:2;stroke-width:6;stroke:#000"/>
+				<rect x="577" y="600" width="176" height="32" style="fill:#757c39;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000"/>
+				<text class="chunk-whitetext whitetext" x="581.88147" y="619.37689" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan style="font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">WARC-Type: request</tspan></text>
+			</g>
+			<g transform="translate(-23.6 102)">
+				<rect class="chunk-outlines" x="577" y="570" width="176" height="20" style="fill:none;stop-color:#000000;stroke-miterlimit:2;stroke-width:6;stroke:#000"/>
+				<rect x="577" y="570" width="176" height="20" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000"/>
+				<text class="chunk-whitetext whitetext" x="581.84546" y="584.99554" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">2× Newlines</tspan></text>
+				<rect class="chunk-outlines" x="577" y="503" width="176" height="64" style="fill:none;stop-color:#000000;stroke-miterlimit:2;stroke-width:6;stroke:#000"/>
+				<rect x="577" y="503" width="176" height="64" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000"/>
+				<text class="chunk-whitetext whitetext" x="581.84546" y="523.99487" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan x="581.84546" y="523.99487" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">HTTP payload</tspan><tspan x="581.84546" y="538.99487" style="fill:#003c32"/><tspan x="581.84546" y="553.99487" style="fill:#003c32">index.html</tspan></text>
+				<rect class="chunk-outlines" x="577" y="468" width="176" height="32" style="fill:none;stop-color:#000000;stroke-miterlimit:2;stroke-width:6;stroke:#000"/>
+				<rect x="577" y="468" width="176" height="32" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000"/>
+				<text class="chunk-whitetext whitetext" x="581.84546" y="488.99484" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">WARC-Type: response</tspan></text>
+			</g>
+		</g>
+		<g transform="translate(1.85)">
+			<g transform="matrix(.265 0 0 .265 -27.5 -86.1)" style="fill:#fff">
+				<rect class="chunk-outlines" x="577" y="468" width="176" height="122" style="fill:none;stop-color:#000000;stroke-miterlimit:2;stroke-width:6;stroke:#000"/>
+				<rect x="577" y="468" width="176" height="122" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000"/>
+				<text class="chunk-whitetext whitetext" x="581.84546" y="584.99554" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">2× Newlines</tspan></text>
+				<text class="chunk-whitetext whitetext" x="581.84546" y="523.99487" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan x="581.84546" y="523.99487" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">HTTP payload</tspan><tspan x="581.84546" y="538.99487" style="fill:#003c32"/><tspan x="581.84546" y="553.99487" style="fill:#003c32">index.html</tspan></text>
+				<text class="chunk-whitetext whitetext" x="581.84546" y="488.99484" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">WARC-Type: response</tspan></text>
+			</g>
+			<g transform="matrix(.265 0 0 .265 -27.5 -85.1)" style="fill:#fff">
+				<rect class="chunk-outlines" x="577" y="600" width="176" height="32" style="fill:none;stop-color:#000000;stroke-miterlimit:2;stroke-width:6;stroke:#000"/>
+				<rect x="577" y="600" width="176" height="32" style="fill:#757c39;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000"/>
+				<text class="chunk-whitetext whitetext" x="581.88147" y="619.37689" style="fill:#ffffff;font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan style="font-family:Recursive;font-size:12px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'MONO' 0.51, 'wght' 500">WARC-Type: request</tspan></text>
+			</g>
+		</g>
+		<g>
+			<rect x="185" y="22" width="29.9" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text x="200.27789" y="27.422417" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="200.27789" y="27.422417" style="stroke-width:.794;text-align:center;text-anchor:middle">Record CID B</tspan></text>
+		</g>
+		<text class="bg-text" x="21.633335" y="43.572056" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="21.633335" y="43.572056" style="stroke-width:.794;text-align:center;text-anchor:middle">CID H</tspan></text>
+		<text class="bg-text" x="21.633335" y="56.621307" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="21.633335" y="56.621307" style="stroke-width:.794;text-align:center;text-anchor:middle">CID P</tspan></text>
+		<text class="bg-text" x="21.633335" y="68.52774" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="21.633335" y="68.52774" style="stroke-width:.794;text-align:center;text-anchor:middle">CID N</tspan></text>
+		<text class="bg-text" x="21.633335" y="79.07962" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="21.633335" y="79.07962" style="stroke-width:.794;text-align:center;text-anchor:middle">CID R</tspan></text>
+		<path class="dashedlines" d="m75.6 87.4h-7.94" style="fill:none;font-variation-settings:'MONO' 0.51, 'wght' 500;stop-color:#000000;stroke-dasharray:1.5875;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path class="dashedlines" d="m75.6 33.9h-7.94" style="fill:none;font-variation-settings:'MONO' 0.51, 'wght' 500;stop-color:#000000;stroke-dasharray:1.5875;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path class="dashedlines" d="m155 87.4h-7.94" style="fill:none;font-variation-settings:'MONO' 0.51, 'wght' 500;stop-color:#000000;stroke-dasharray:1.5875;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path class="dashedlines" d="m155 33.9h-7.94" style="fill:none;font-variation-settings:'MONO' 0.51, 'wght' 500;stop-color:#000000;stroke-dasharray:1.5875;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<text class="bg-text" x="200.22867" y="55.033802" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="200.22867" y="55.033802" style="stroke-width:.794;text-align:center;text-anchor:middle">CID Resp</tspan></text>
+		<text class="bg-text" x="200.22867" y="79.110886" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="200.22867" y="79.110886" style="stroke-width:.794;text-align:center;text-anchor:middle">CID R</tspan></text>
+		<path d="m21.6 30.5v9" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m21.6 45.3v7.41" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m21.6 58.3v6.09" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m21.6 70.4v4.5" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m29.4 42.5h14.2" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m29.4 55.5h14.2" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m29.4 67.4h14.2" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m29.4 78h14.2" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m200 30.5v19.8" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m200 57.5v17.5" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;stop-color:#000000;stroke-dashoffset:1.59;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m189 53.9h-10.5" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart-7);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m192 78h-13.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart-7);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<text class="bg-text" x="71.630058" y="27.136667" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="71.630058" y="27.136667" style="font-family:Recursive;font-size:3.18px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stroke-width:.794;text-align:center;text-anchor:middle">Uncompressed WARC</tspan></text>
+		<text class="bg-text" x="150.60822" y="27.136667" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="150.60822" y="27.136667" style="font-family:Recursive;font-size:3.18px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stroke-width:.794;text-align:center;text-anchor:middle">Compressed WARC</tspan></text>
+		<text class="bg-text" x="49.752705" y="96.351006" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500" xml:space="preserve"><tspan x="49.752705" y="96.351006" style="stroke-width:.794">Uncompressed WARC files</tspan><tspan x="49.752705" y="100.47851" style="stroke-width:.794">can be split by their</tspan><tspan x="49.752705" y="104.606" style="stroke-width:.794">component chunks, and</tspan><tspan x="49.752705" y="108.73351" style="stroke-width:.794">along record boundaries</tspan></text>
+		<text class="bg-text" x="128.73087" y="96.351006" style="font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500" xml:space="preserve"><tspan x="128.73087" y="96.351006" style="stroke-width:.794">Compressed WARC files</tspan><tspan x="128.73087" y="100.47851" style="stroke-width:.794">can only be split by their</tspan><tspan x="128.73087" y="104.606" style="stroke-width:.794">record boundaries.</tspan></text>
+		<g transform="translate(-179)">
+			<rect x="185" y="22" width="29.9" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text x="200.27789" y="27.422417" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="200.27789" y="27.422417" style="stroke-width:.794;text-align:center;text-anchor:middle">Record CID A</tspan></text>
+		</g>
+	</g>
+	<metadata>
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<dc:title>Compressed vs Uncompressed WARC Chunking</dc:title>
+				<dc:description>An uncompressed WARC record pair chunked at both the record boundaries and at the component chunk level next to a compressed WARC record pair that is only able to be chunked by its record boundaries</dc:description>
+				<cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+			</cc:Work>
+			<cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+			</cc:License>
+		</rdf:RDF>
+	</metadata>
+</svg>
