@@ -3,7 +3,7 @@
   "respec_js": "../../assets/js/respec-webrecorder.js",
   "publishDate": "2023-05-03",
   "license": "cc-by",
-  "thisVersion": "https://specs.webrecorder.net/wacz-ipfs/1.0.0/",
+  "thisVersion": "https://specs.webrecorder.net/wacz-ipfs/latest/",
   "latestVersion": "https://specs.webrecorder.net/wacz-ipfs/latest/",
   "shortName": "wacz-ipfs",
   "group": "WACZ",
