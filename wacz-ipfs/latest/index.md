@@ -1,4 +1,4 @@
-# IPFS Custom File Chunking for WARC and WACZ Formats Proposal (Draft)
+# IPFS Custom File Chunking for WARC and WACZ
 
 ## Abstract
 

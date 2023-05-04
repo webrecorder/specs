@@ -1,0 +1,65 @@
+{
+  "specStatus": "DRAFT",
+  "respec_js": "../../assets/js/respec-webrecorder.js",
+  "publishDate": "2023-05-03",
+  "license": "cc-by",
+  "thisVersion": "https://specs.webrecorder.net/wacz-ipfs/1.0.0/",
+  "latestVersion": "https://specs.webrecorder.net/wacz-ipfs/latest/",
+  "shortName": "wacz-ipfs",
+  "group": "WACZ",
+  "includePermalinks": true,
+  "authors": [],
+  "editors": [
+    {
+      "name": "Mauve Signweaver",
+      "url": "https://ranger.mauve.moe/"
+    },
+    {
+      "name": "Henry Wilkinson",
+      "url": "https://wilkinson.graphics/"
+    }
+  ],
+  "group": {
+    "name": "WACZ Editors",
+    "url": "https://webrecorder.net"
+  },
+  "otherLinks": [
+    {
+      "key": "Repository",
+      "data": [
+        {
+          "value": "Github",
+          "href": "https://github.com/webrecorder/specs"
+        },
+        {
+          "value": "Issues",
+          "href": "https://github.com/webrecorder/specs/issues"
+        },
+        {
+          "value": "Commits",
+          "href": "https://github.com/webrecorder/specs/commits"
+        }
+      ]
+    }
+  ],
+  "maxTocLevel": 3,
+  "logos": [
+    {
+      "src": "../../assets/images/webrecorder.svg",
+      "alt": "Webrecorder Logo",
+      "height": 100
+    }
+  ],
+  "localBiblio": {
+    "PYWB-CDXJ": {
+      "title": "pywb Indexing: CDXJ Format",
+      "publisher": "Webrecorder",
+      "href": "https://pywb.readthedocs.io/en/latest/manual/indexing.html#cdxj-index"
+    }
+  },
+  "lint": {
+    "privsec-section": false,
+    "no-http-props": false,
+    "no-headingless-sections": false
+  }
+}
