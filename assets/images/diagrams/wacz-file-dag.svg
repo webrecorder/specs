@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 460 492" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<title>WACZ File Breakdown</title>
+	<defs>
+		<marker id="TriangleStart" style="overflow:visible" markerHeight="3.468" markerWidth="3" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 5.324 6.155">
+			<path transform="scale(.5)" d="m5.77 0-8.65 5v-10z" style="fill-rule:evenodd;fill:context-stroke;stroke-width:1pt;stroke:context-stroke"/>
+		</marker>
+		<style><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CRSV,MONO@500,0,0.51&display=swap');
+.zip-headers { 
+    stroke-width:3;
+    stroke-opacity:1;
+    stroke-dasharray:none;
+    stroke:#000;
+    fill-opacity:1;
+    fill:#e3a335;
+}
+.dag-objects {
+  stroke:#000;
+  stroke-width:0.794;
+}
+.warc-object-outlines {
+  fill-opacity:1;
+  stroke:#000;
+  stroke-dasharray:none;
+  stroke-opacity:1;
+  stroke-width:0.794;
+}
+.arrows {
+  fill-opacity:1;
+  marker-end:url(#TriangleStart);
+  stroke:#000;
+  stroke-dasharray:none;
+  stroke-opacity:1;
+  stroke-width:0.794;
+}
+.bg-text {
+  fill:#000;
+  fill-opacity:1;
+  font-family:Recursive, monospace;
+  font-size:3.175px;
+  font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;
+  font-weight:normal;
+  line-height:1.3;
+  text-align:center;
+  text-anchor:middle;
+}
+.dag-labels {
+  fill-opacity:1;
+  font-family:Recursive, monospace;
+  font-size:3.175px;
+  font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;
+  font-weight:normal;
+  line-height:1.3;
+  text-align:center;
+  text-anchor:middle;
+  fill:#000;
+}
+]]></style>
+	</defs>
+	<g transform="translate(-8.47)">
+		<g transform="matrix(3.78 0 0 3.78 -265 295)">
+			<rect class="dag-objects" x="81.2" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#9a6700"/>
+			<text class="dag-labels" x="104.56509" y="32.935547" style="fill:#ffffff" xml:space="preserve"><tspan x="104.56509" y="32.935547" style="fill:#ffffff;">Central Directory Record</tspan></text>
+		</g>
+		<g transform="matrix(3.78 0 0 3.75 -23.5 -70)">
+			<text class="bg-text" x="99.866234" y="106.75567" xml:space="preserve"><tspan x="99.866234" y="106.75567">ZIP Local File Header</tspan></text>
+			<path class="arrows" d="m80.1 106h-10.6"/>
+		</g>
+		<g transform="matrix(3.78 0 0 3.78 -442 243)">
+			<rect class="dag-objects" x="128" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+			<text class="dag-labels" x="151.82646" y="32.856174" xml:space="preserve"><tspan x="151.82646" y="32.856174">datapackage-digest.json</tspan></text>
+		</g>
+		<rect class="zip-headers" transform="rotate(90)" x="321" y="-219" width="13" height="177" rx="3" ry="3"/>
+		<g transform="matrix(3.78 0 0 3.78 -252 171)">
+			<rect class="dag-objects" x="77.9" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+			<text class="dag-labels" x="101.33611" y="32.856174" xml:space="preserve"><tspan x="101.33611" y="32.856174">datapackage.json</tspan></text>
+		</g>
+		<rect class="zip-headers" transform="rotate(90)" x="249" y="-219" width="13" height="177" rx="3" ry="3"/>
+		<g transform="matrix(3.78 0 0 3.78 -277 99)">
+			<rect class="dag-objects" x="84.3" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+			<text class="dag-labels" x="107.74357" y="33.235584" xml:space="preserve"><tspan x="107.74357" y="33.235584">index.cdx</tspan></text>
+		</g>
+		<rect class="zip-headers" transform="rotate(90)" x="177" y="-219" width="13" height="177" rx="3" ry="3"/>
+		<g transform="matrix(3.78 0 0 3.78 -272 27)">
+			<g transform="matrix(1 0 0 1 62 19)">
+				<g transform="translate(3.77 -47.2)">
+					<rect class="warc-object-outlines" x="109" y="74.8" width="12.4" height="3.44" style="fill:#8e63ce;"/>
+					<rect class="warc-object-outlines" x="109" y="80.1" width="12.4" height="3.44" style="fill:#757c39;"/>
+				</g>
+				<rect class="dag-objects" x="84.3" y="26.1" width="21.4" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+				<text class="dag-labels" x="95.119759" y="31.108341" xml:space="preserve"><tspan x="95.119759" y="31.108341">Record</tspan><tspan x="95.119759" y="35.23584">CID</tspan></text>
+			</g>
+			<g transform="matrix(1 0 0 1 62 -.00187)">
+				<g transform="translate(3.77 -19.3)">
+					<rect class="warc-object-outlines" x="109" y="41.7" width="12.4" height="14" style="fill:#008873;"/>
+					<rect class="warc-object-outlines" x="109" y="57.5" width="12.4" height="3.44" style="fill:#757c39;"/>
+					<path class="warc-object-outlines" d="m109 45.1h12.4" style="fill:#9a6700;"/>
+					<path class="warc-object-outlines" d="m109 53.1h12.4" style="fill:#9a6700;"/>
+				</g>
+				<rect class="dag-objects" x="84.3" y="26.1" width="21.4" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+				<text class="dag-labels" x="95.119759" y="31.108341" xml:space="preserve"><tspan x="95.119759" y="31.108341">Record</tspan><tspan x="95.119759" y="35.23584">CID</tspan></text>
+			</g>
+			<g transform="matrix(1 0 0 1 62 -19)">
+				<rect class="warc-object-outlines" transform="translate(3.77 11.9)" x="109" y="18.4" width="12.4" height="3.44" style="fill:#2e7cab;"/>
+				<rect class="dag-objects" x="84.3" y="26.1" width="21.4" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+				<text class="dag-labels" x="95.119759" y="31.108341" xml:space="preserve"><tspan x="95.119759" y="31.108341">Record</tspan><tspan x="95.119759" y="35.23584">CID</tspan></text>
+			</g>
+			<g transform="matrix(1 0 0 1 65.8 -7.15)">
+				<path class="arrows" d="m75.3 58.2h-5.69v-38.1h5.69" style="fill:none;marker-start:url(#TriangleStart);"/>
+				<path class="arrows" d="m64.2 39.2 11.3-2e-3"/>
+			</g>
+			<rect class="dag-objects" x="83.1" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+			<text class="dag-labels" x="106.54976" y="33.186375" xml:space="preserve"><tspan x="106.54976" y="33.186375">data.warc</tspan></text>
+		</g>
+		<rect class="zip-headers" transform="rotate(90)" x="105" y="-219" width="13" height="177" rx="3" ry="3"/>
+		<g transform="matrix(3.78 0 0 3.78 -267 -45)">
+			<rect class="dag-objects" x="81.9" y="26.1" width="46.8" height="11.9" rx=".794" ry=".794" style="fill:#d9d9d9"/>
+			<text class="dag-labels" x="105.21941" y="32.857342" xml:space="preserve"><tspan x="105.21941" y="32.857342">pages.jsonl</tspan></text>
+		</g>
+		<rect class="zip-headers" transform="rotate(90)" x="33.5" y="-219" width="13" height="177" rx="3" ry="3"/>
+	</g>
+	<metadata>
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+				<dc:title>WACZ File Breakdown</dc:title>
+				<dc:description>A diagram of a WACZ file containing a chunked WARC file.  The WACZ file is composed of a pages.jsonl, data.warc, index.cdx, datapackage.json, datapackage-digest.json, and a central directory record with all of these portions of the file seperated by header records.  The data.warc file is composed of three records, each with their own CID and chunked segments.</dc:description>
+			</cc:Work>
+			<cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+			</cc:License>
+		</rdf:RDF>
+	</metadata>
+</svg>

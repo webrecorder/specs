@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 307 147" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<title>WARC Record Deduplication</title>
+	<defs>
+		<marker id="TriangleStart" style="overflow:visible" markerWidth="2.595" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 5.3244081 6.1553851">
+			<path transform="scale(.5)" d="m5.77 0-8.65 5v-10z" style="fill-rule:evenodd;fill:context-stroke;stroke-width:1pt;stroke:context-stroke"/>
+		</marker>
+		<style><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CRSV,MONO@500,0,1&display=swap');
+.line-numbers {
+  -inkscape-font-specification:'Recursive, @CRSV=0.00,MONO=1.00,wght=500';
+  display:inline;
+  fill:#003c32;
+  fill-opacity:1;
+  font-family:Recursive;
+  font-size:3.175px;
+  font-stretch:normal;
+  font-style:normal;
+  font-variant:normal;
+  font-variant-caps:normal;
+  font-variant-east-asian:normal;
+  font-variant-ligatures:normal;
+  font-variant-numeric:normal;
+  font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;
+  font-weight:normal;
+  stroke:none;
+  stroke-dasharray:none;
+  stroke-opacity:1;
+  stroke-width:0.264583;
+}
+]]></style>
+	</defs>
+	<g transform="translate(8 11.7)">
+		<path d="m92.5 50.3v52.8" style="fill:none;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dasharray:1.5875;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<path d="m201 50.3v52.8" style="fill:none;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dasharray:1.5875;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		<g>
+			<rect x="45.3" y="99.5" width="203" height="17" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text class="chunk-whitetext line-numbers" x="55.96357" y="107.16816" xml:space="preserve"><tspan x="55.96357" y="107.16816" style="fill:#003c32;text-align:end;text-anchor:end">76.</tspan><tspan x="55.96357" y="111.13691" style="fill:#003c32;text-align:end;text-anchor:end">77.</tspan></text>
+			<g transform="translate(-128 104)">
+				<rect x="342" y="-.724" width="29.9" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+				<text x="357.4404" y="4.6682506" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="357.4404" y="4.6682506" style="stroke-width:.794;text-align:center;text-anchor:middle">2× Newlines</tspan></text>
+			</g>
+		</g>
+		<g>
+			<rect x="45.3" y="58.3" width="203" height="33.2" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text class="chunk-whitetext" x="59.464546" y="65.980194" style="fill:#ffffff;font-family:Recursive;font-size:3.18px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stroke-width:.265" xml:space="preserve"><tspan x="59.464546" y="65.980194">&lt;!doctype html&gt;</tspan><tspan x="59.464546" y="69.948944">&lt;html&gt;</tspan><tspan x="59.464546" y="73.917694">&lt;head&gt;</tspan><tspan x="59.464546" y="77.886444">    &lt;title&gt;Example Domain&lt;/title&gt;</tspan><tspan x="59.464546" y="81.855194">...</tspan><tspan x="59.464546" y="85.823944">&lt;/html&gt;</tspan><tspan x="59.464546" y="89.792694"/><tspan x="59.464546" y="93.761444"/><tspan x="59.464546" y="97.730194"/><tspan x="59.464546" y="101.69894"/><tspan x="59.464546" y="105.66769"/></text>
+			<text class="chunk-whitetext line-numbers" x="55.96357" y="65.980194" xml:space="preserve"><tspan x="55.96357" y="65.980194" style="fill:#003c32;text-align:end;text-anchor:end">28.</tspan><tspan x="55.96357" y="69.948944" style="fill:#003c32;text-align:end;text-anchor:end">29.</tspan><tspan x="55.96357" y="73.917694" style="fill:#003c32;text-align:end;text-anchor:end">30.</tspan><tspan x="55.96357" y="77.886444" style="fill:#003c32;text-align:end;text-anchor:end">31.</tspan><tspan x="55.96357" y="81.855194" style="fill:#003c32;text-align:end;text-anchor:end"/><tspan x="55.96357" y="85.823944" style="fill:#003c32;text-align:end;text-anchor:end">75.</tspan></text>
+			<g transform="translate(-128 62.5)">
+				<rect x="342" y="-.724" width="29.9" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+				<text x="357.4404" y="4.6682506" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="357.4404" y="4.6682506" style="stroke-width:.794;text-align:center;text-anchor:middle">HTTP Payload</tspan></text>
+			</g>
+		</g>
+		<g>
+			<rect x="153" y="4.08" width="94.5" height="46" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text class="chunk-whitetext" x="167.50928" y="21.216965" style="fill:#ffffff;font-family:Recursive;font-size:3.18px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stroke-width:.265" xml:space="preserve"><tspan x="167.50928" y="21.216965">WARC/1.1</tspan><tspan x="167.50928" y="25.185715">WARC-Record-ID: &lt;urn:uuid:2309e657...&gt;</tspan><tspan x="167.50928" y="29.154465">WARC-Page-ID: 5mjz6d72b1bn9y8rth7kgc</tspan><tspan x="167.50928" y="33.123215">WARC-JSON-Metadata: {"pixelRatio":2}</tspan><tspan x="167.50928" y="37.091965">WARC-Target-URI: http://example.com/</tspan><tspan x="167.50928" y="41.060715">WARC-Date: 2023-05-02T22:30:00.000Z</tspan><tspan x="167.50928" y="45.029465">...</tspan></text>
+			<text class="chunk-whitetext line-numbers" x="164.0083" y="21.216965" xml:space="preserve"><tspan x="164.0083" y="21.216965" style="fill:#003c32;text-align:end;text-anchor:end">1.</tspan><tspan x="164.0083" y="25.185715" style="fill:#003c32;text-align:end;text-anchor:end">2.</tspan><tspan x="164.0083" y="29.154465" style="fill:#003c32;text-align:end;text-anchor:end">3.</tspan><tspan x="164.0083" y="33.123215" style="fill:#003c32;text-align:end;text-anchor:end">4.</tspan><tspan x="164.0083" y="37.091965" style="fill:#003c32;text-align:end;text-anchor:end">5.</tspan><tspan x="164.0083" y="41.060715" style="fill:#003c32;text-align:end;text-anchor:end">6.</tspan><tspan x="164.0083" y="45.029465" style="fill:#003c32;text-align:end;text-anchor:end"/></text>
+			<g transform="translate(108 -.00265)">
+				<rect x="78" y="7.52" width="58.7" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+				<text x="107.21129" y="12.910436" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="107.21129" y="12.910436" style="stroke-width:.794;text-align:center;text-anchor:middle">WARC Record &amp; HTTP Header 2</tspan></text>
+			</g>
+		</g>
+		<g transform="translate(-200 13.2)">
+			<rect x="246" y="-9.09" width="94.5" height="46" style="fill:#008873;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 407;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text class="chunk-whitetext" x="259.73373" y="8.0502977" style="fill:#ffffff;font-family:Recursive;font-size:3.18px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stroke-width:.265" xml:space="preserve"><tspan x="259.73373" y="8.0502977">WARC/1.1</tspan><tspan x="259.73373" y="12.019048">WARC-Record-ID: &lt;urn:uuid:0a979ffc...&gt;</tspan><tspan x="259.73373" y="15.987798">WARC-Page-ID: 2ike7d03a4am5z9xwc5htg</tspan><tspan x="259.73373" y="19.956547">WARC-JSON-Metadata: {"pixelRatio":2}</tspan><tspan x="259.73373" y="23.925297">WARC-Target-URI: http://example.com/</tspan><tspan x="259.73373" y="27.894047">WARC-Date: 2023-03-11T02:08:50.619Z</tspan><tspan x="259.73373" y="31.862797">...</tspan></text>
+			<text class="chunk-whitetext line-numbers" x="256.23276" y="8.0502977" xml:space="preserve"><tspan x="256.23276" y="8.0502977" style="fill:#003c32;text-align:end;text-anchor:end">1.</tspan><tspan x="256.23276" y="12.019048" style="fill:#003c32;text-align:end;text-anchor:end">2.</tspan><tspan x="256.23276" y="15.987798" style="fill:#003c32;text-align:end;text-anchor:end">3.</tspan><tspan x="256.23276" y="19.956547" style="fill:#003c32;text-align:end;text-anchor:end">4.</tspan><tspan x="256.23276" y="23.925297" style="fill:#003c32;text-align:end;text-anchor:end">5.</tspan><tspan x="256.23276" y="27.894047" style="fill:#003c32;text-align:end;text-anchor:end">6.</tspan><tspan x="256.23276" y="31.862797" style="fill:#003c32;text-align:end;text-anchor:end"/></text>
+			<g transform="translate(200 -13.2)">
+				<rect x="78" y="7.52" width="58.7" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+				<text x="107.21129" y="12.910436" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="107.21129" y="12.910436" style="stroke-width:.794;text-align:center;text-anchor:middle">WARC Record &amp; HTTP Header 1</tspan></text>
+			</g>
+		</g>
+		<g>
+			<text transform="translate(-8 -11.7)" x="282.57184" y="44.723255" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="282.57184" y="44.723255" style="stroke-width:.794;text-align:center;text-anchor:middle">CID H2</tspan></text>
+			<text transform="translate(-8 -11.7)" x="282.57184" y="87.69577" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="282.57184" y="87.69577" style="stroke-width:.794;text-align:center;text-anchor:middle">CID P</tspan></text>
+			<text transform="translate(-8 -11.7)" x="282.57184" y="120.80018" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="282.57184" y="120.80018" style="stroke-width:.794;text-align:center;text-anchor:middle">CID N</tspan></text>
+			<text transform="translate(157 -22.8)" x="-138.68988" y="55.810707" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="-138.68988" y="55.810707" style="stroke-width:.794;text-align:center;text-anchor:middle">CID H1</tspan></text>
+			<text x="18.47263" y="76.02906" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="18.47263" y="76.02906" style="stroke-width:.794;text-align:center;text-anchor:middle">CID P</tspan></text>
+			<text x="18.47263" y="109.13347" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="18.47263" y="109.13347" style="stroke-width:.794;text-align:center;text-anchor:middle">CID N</tspan></text>
+			<path d="m275 7.74v20.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dashoffset:2.06;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m275 36.8v33.8" style="fill:#fff;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dashoffset:2.06;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m275 79.2v24" style="fill:#fff;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dashoffset:2.06;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m18.5 7.74v20.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dashoffset:2.06;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m18.5 36.8v33.8" style="fill:#fff;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dashoffset:2.06;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m18.5 79.2v24" style="fill:#fff;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 599;stop-color:#000000;stroke-dashoffset:2.06;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m27.9 31.9h13.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m27.9 74.9h13.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m27.9 108h13.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m264 31.9h-13.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m264 74.9h-13.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<path d="m264 108h-13.1" style="fill:#fff;font-variation-settings:'CRSV' 0, 'wght' 500;marker-end:url(#TriangleStart);stop-color:#000000;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+		</g>
+		<g transform="translate(-82.8)">
+			<rect x="342" y="-.724" width="29.9" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text x="357.4404" y="4.6682506" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="357.4404" y="4.6682506" style="stroke-width:.794;text-align:center;text-anchor:middle">Record CID C</tspan></text>
+		</g>
+		<g transform="translate(-182 -22.8)">
+			<rect x="185" y="22" width="29.9" height="8.47" rx=".794" ry=".794" style="fill:#d9d9d9;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;stroke:#000"/>
+			<text x="200.27789" y="27.422417" style="fill:#000000;font-family:Recursive;font-size:3.18px;font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;line-height:1.3;stop-color:#000000;stroke-miterlimit:2;stroke-width:.794;text-align:center;text-anchor:middle" xml:space="preserve"><tspan x="200.27789" y="27.422417" style="stroke-width:.794;text-align:center;text-anchor:middle">Record CID A</tspan></text>
+		</g>
+	</g>
+	<metadata>
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<dc:title>WARC Record Deduplication</dc:title>
+				<dc:description>A deduplicated response record with two different WARC record headers but the same payload and newlines chunks, shared across two record CIDs.</dc:description>
+				<cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+			</cc:Work>
+			<cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+			</cc:License>
+		</rdf:RDF>
+	</metadata>
+</svg>

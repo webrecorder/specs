@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 863 573" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>WARC Record Types &amp; Chunk Boundaries</title>
+	<defs>
+		<marker id="TriangleStart" style="overflow:visible" markerHeight="3.4679999" markerWidth="2.99982" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 5.3244081 6.1553851">
+			<path transform="scale(.5)" d="m5.77 0-8.65 5v-10z" style="fill-rule:evenodd;fill:context-stroke;stroke-width:1pt;stroke:context-stroke"/>
+		</marker>
+		<style><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CRSV,MONO@500,0,0.51&display=swap');
+.chunk-whitetext {
+  fill:#fff;
+  font-family:Recursive, monospace;
+  font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;
+  font-size:12px;
+  font-weight:normal;
+}
+.dashedlines {
+  fill:none;
+  fill-opacity:1;
+  stop-color:#000;
+  stroke:#000;
+  stroke-dasharray:6;
+  stroke-dashoffset:0;
+  stroke-miterlimit:2;
+  stroke-opacity:1;
+  stroke-width:3;
+}
+.text-on-bg {
+  fill:#000;
+  fill-opacity:1;
+  font-family:Recursive, monospace;
+  font-size:12px;
+  font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;
+  font-weight:normal;
+  text-align:center;
+  text-anchor:middle;
+}
+.chunk-outlines {
+  fill:none;
+  fill-opacity:1;
+  stop-color:#000;
+  stroke:#000;
+  stroke-width:6;
+  stroke-dasharray:none;
+  stroke-miterlimit:2;
+  stroke-opacity:1;
+}
+]]></style>
+	</defs>
+	<g transform="translate(-510 -380)" style="fill:#fff">
+		<text class="text-on-bg" x="1081.6199" y="828.9505" xml:space="preserve"><tspan x="1081.6199" y="828.9505">With the exception of</tspan><tspan x="1081.6199" y="843.97833">warcinfo records, WARC</tspan><tspan x="1081.6199" y="859.00616">files can contain any</tspan><tspan x="1081.6199" y="874.034">number of the record </tspan><tspan x="1081.6199" y="889.06183">types shown here.</tspan></text>
+		<path class="dashedlines" d="m1081 603v90" style="font-variation-settings:'MONO' 0.51, 'wght' 500"/>
+		<path class="dashedlines" d="m799 453v441h141v-447l141 1e-5 -2e-4 38.3" style="marker-end:url(#TriangleStart)"/>
+		<g transform="translate(417 192)" style="fill:#fff">
+			<rect class="chunk-outlines" x="577" y="570" width="176" height="20"/>
+			<rect x="577" y="570" width="176" height="20" style="fill:#b85d20;"/>
+			<text class="chunk-whitetext" x="581.84546" y="584.99487" xml:space="preserve"><tspan>2× Newlines</tspan></text>
+			<rect class="chunk-outlines" x="577" y="503" width="176" height="64"/>
+			<rect x="577" y="503" width="176" height="64" style="fill:#b85d20;"/>
+			<text class="chunk-whitetext" x="581.84546" y="523.99487" xml:space="preserve"><tspan x="581.84546" y="523.99487">converted format payload</tspan><tspan x="581.84546" y="538.99487"/><tspan x="581.84546" y="553.99487" style="fill:#632a00">index-plaintext.txt</tspan></text>
+			<rect class="chunk-outlines" x="577" y="468" width="176" height="32"/>
+			<rect x="577" y="468" width="176" height="32" style="fill:#b85d20;"/>
+			<text class="chunk-whitetext" x="581.84546" y="488.99484" xml:space="preserve"><tspan>WARC-Type: conversion</tspan></text>
+		</g>
+		<g transform="translate(417 32.2)" style="fill:#fff">
+			<rect class="chunk-outlines" x="577" y="570" width="176" height="20"/>
+			<rect x="577" y="570" width="176" height="20" style="fill:#b05d79;"/>
+			<text class="chunk-whitetext" x="581.84546" y="584.99585" xml:space="preserve"><tspan>2× Newlines</tspan></text>
+			<rect class="chunk-outlines" x="577" y="503" width="176" height="64"/>
+			<rect x="577" y="503" width="176" height="64" style="fill:#b05d79;"/>
+			<text class="chunk-whitetext" x="581.84546" y="523.99487" xml:space="preserve"><tspan x="581.84546" y="523.99487">octet-stream payload</tspan><tspan x="581.84546" y="538.99487"/><tspan x="581.84546" y="553.99487" style="fill:#4e2131">image.jpg</tspan></text>
+			<rect class="chunk-outlines" x="577" y="468" width="176" height="32"/>
+			<rect x="577" y="468" width="176" height="32" style="fill:#b05d79;"/>
+			<text class="chunk-whitetext" x="581.84546" y="488.99484" xml:space="preserve"><tspan>WARC-Type: resource</tspan></text>
+		</g>
+		<g transform="translate(388 374)" style="fill:#fff">
+			<rect class="chunk-outlines" x="324" y="446" width="176" height="32"/>
+			<rect x="324" y="446" width="176" height="32" style="fill:#757c39;"/>
+			<text class="chunk-whitetext" x="329.82245" y="465.11169" xml:space="preserve"><tspan>WARC-Type: request</tspan></text>
+			<rect class="chunk-outlines" x="324" y="403" width="176" height="32"/>
+			<rect x="324" y="403" width="176" height="32" style="fill:#8e63ce;"/>
+			<text class="chunk-whitetext" x="329.82245" y="421.6261" style="font-variation-settings:'MONO' 0.51, 'wght' 500" xml:space="preserve"><tspan>WARC-Type: revisit</tspan></text>
+		</g>
+		<g>
+			<g transform="translate(136 106)">
+				<rect class="chunk-outlines" x="577" y="600" width="176" height="32"/>
+				<rect x="577" y="600" width="176" height="32" style="fill:#757c39;"/>
+				<text class="chunk-whitetext" x="581.88147" y="619.37689" xml:space="preserve"><tspan>WARC-Type: request</tspan></text>
+			</g>
+			<g transform="translate(136 102)">
+				<rect class="chunk-outlines" x="577" y="570" width="176" height="20"/>
+				<rect x="577" y="570" width="176" height="20" style="fill:#008873;"/>
+				<text class="chunk-whitetext" x="581.84546" y="584.99554" xml:space="preserve"><tspan>2× Newlines</tspan></text>
+				<rect class="chunk-outlines" x="577" y="503" width="176" height="64"/>
+				<rect x="577" y="503" width="176" height="64" style="fill:#008873;"/>
+				<text class="chunk-whitetext" x="581.84546" y="523.99487" xml:space="preserve"><tspan x="581.84546" y="523.99487">HTTP payload</tspan><tspan x="581.84546" y="538.99487" style="fill:#003c32"/><tspan x="581.84546" y="553.99487" style="fill:#003c32">index.html</tspan></text>
+				<rect class="chunk-outlines" x="577" y="468" width="176" height="32"/>
+				<rect x="577" y="468" width="176" height="32" style="fill:#008873;"/>
+				<text class="chunk-whitetext" x="581.84546" y="488.99484" xml:space="preserve"><tspan>WARC-Type: response</tspan></text>
+			</g>
+		</g>
+		<g transform="translate(136 -99.8)" style="fill:#fff">
+			<rect class="chunk-outlines" x="577" y="600" width="176" height="32"/>
+			<rect x="577" y="600" width="176" height="32" style="fill:#cc4949;"/>
+			<text class="chunk-whitetext" x="581.88147" y="619.3764" xml:space="preserve"><tspan>WARC-Type: metadata</tspan></text>
+		</g>
+		<g transform="translate(539 28)" style="fill:#fff">
+			<rect class="chunk-outlines" x="174" y="403" width="176" height="32"/>
+			<rect x="174" y="403" width="176" height="32" style="fill:#2e7cab;"/>
+			<text class="chunk-whitetext" x="179.15665" y="422.11209" xml:space="preserve"><tspan>WARC-Type: warcinfo</tspan></text>
+		</g>
+		<path class="dashedlines" d="m1097 803h-30"/>
+	</g>
+	<metadata>
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+				<dc:title>WARC Record Types &amp; Chunk Boundaries</dc:title>
+				<dc:description>A visualization of 7 different WARC record types and their chunk boundaries based on the data they contain.  "warcinfo", "metadata", "request", and "revisit" records are all chunked as one object.  "response", "resource", and "conversion" records are split into three chunks containing the WARC information, the record's payload, and two newline entries at the end of the record to divide it in the file.</dc:description>
+			</cc:Work>
+			<cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+			</cc:License>
+		</rdf:RDF>
+	</metadata>
+</svg>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 980 400" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<title>Directory to Composite Zip File</title>
+	<defs>
+		<marker id="TriangleStart" style="overflow:visible" markerHeight="3.4679999" markerWidth="2.99982" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 5.3244081 6.1553851">
+			<path transform="scale(.5)" d="m5.77 0-8.65 5v-10z" style="fill-rule:evenodd;fill:context-stroke;stroke-width:1pt;stroke:context-stroke"/>
+		</marker>
+		<marker id="TriangleStart-6" style="overflow:visible" markerHeight="3.4679999" markerWidth="2.99982" orient="auto-start-reverse" preserveAspectRatio="xMidYMid" viewBox="0 0 5.3244081 6.1553851">
+			<path transform="scale(.5)" d="m5.77 0-8.65 5v-10z" style="fill-rule:evenodd;fill:context-stroke;stroke-width:1pt;stroke:context-stroke"/>
+		</marker>
+		<style><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CRSV,MONO@300..800,0,0..1&display=swap');
+.small-arrows {
+  fill:none;
+  fill-opacity:1;
+  font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;
+  marker-end:url(#TriangleStart);
+  stroke:#000;
+  stroke-miterlimit:2;
+  stroke-opacity:1;
+  stroke-width:3;
+}
+.large-arrow {
+  fill:none;
+  fill-opacity:1;
+  font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;
+  marker-end:url(#TriangleStart-6);
+  stroke:#000;
+  stroke-dasharray:none;
+  stroke-miterlimit:2;
+  stroke-opacity:1;
+  stroke-width:6;
+}
+.bg-text {
+  display:inline;
+  fill:#000;
+  fill-opacity:1;
+  font-family:Recursive, monospace;
+  font-size:12px;
+  font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 600;
+  font-weight:normal;
+  line-height:1.3;
+  text-align:center;
+  text-anchor:middle;
+}
+.cid-labels {
+  fill-opacity:1;
+  font-family:Recursive, monospace;
+  font-size:12px;
+  font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;
+  font-weight:normal;
+  line-height:1.3;
+  text-align:center;
+  text-anchor:middle;
+}
+.cid-backgrounds {
+  font-variation-settings:'CRSV' 0, 'MONO' 1, 'wght' 500;
+  stroke:#000;
+  stroke-miterlimit:2;
+  stroke-width:3;
+}
+]]></style>
+	</defs>
+	<g>
+		<g transform="translate(6,2)">
+			<g>
+				<path d="m860 70.6 0.174 282" style="fill:none;font-variation-settings:'CRSV' 0, 'MONO' 0.51, 'wght' 500;stop-color:#000;stroke-dasharray:3;stroke-dashoffset:6;stroke-miterlimit:2;stroke-width:3;stroke:#000"/>
+				<g transform="translate(290,180)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#9a6700"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#fff" xml:space="preserve"><tspan x="570.17401" y="154.62">Central Directory Record</tspan></text>
+				</g>
+				<g transform="translate(290 126)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file3.ext</tspan></text>
+				</g>
+				<rect class="cid-backgrounds" x="771" y="233" width="177" height="13.1" rx="2.82" ry="2.82" style="fill:#e4a435"/>
+				<g transform="translate(290 54)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file2.ext</tspan></text>
+				</g>
+				<rect class="cid-backgrounds" x="771" y="161" width="177" height="13.1" rx="2.82" ry="2.82" style="fill:#e4a435"/>
+				<g transform="translate(290,-18)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file1.ext</tspan></text>
+				</g>
+				
+				
+				<g transform="translate(290,-102)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">ZIP File CID</tspan></text>
+				</g>
+				<g transform="translate(290,-50)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="24" rx="2.82" ry="2.82" style="fill:#e4a435"/>
+					<text class="cid-labels" x="570.17401" y="143" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="143">ZIP Local File Header</tspan></text>
+				</g>
+			</g>
+			<g>
+				<path class="small-arrows" d="m648 70.6 0.126 205h89.9"/>
+				<path class="small-arrows" d="m648 204h89.9"/>
+				<path class="small-arrows" d="m648 132h89.9"/>
+				<g transform="translate(78,-102)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">Directory CID</tspan></text>
+				</g>
+			</g>
+		</g>
+		<path class="large-arrow" d="m479 184h89.9"/>
+		<g transform="translate(-534,2)">
+			<g>
+				<g transform="translate(290 126)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file3.ext</tspan></text>
+				</g>
+				<g transform="translate(290 54)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file2.ext</tspan></text>
+				</g>
+				<g transform="translate(290,-18)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">file1.ext</tspan></text>
+				</g>
+			</g>
+			<g>
+				<path class="small-arrows" d="m648 70.6 0.126 205h89.9"/>
+				<path class="small-arrows" d="m648 204h89.9"/>
+				<path class="small-arrows" d="m648 132h89.9"/>
+				<g transform="translate(78,-102)">
+					<rect class="cid-backgrounds" x="481" y="127" width="177" height="45.1" rx="2.82" ry="2.82" style="fill:#d9d9d9"/>
+					<text class="cid-labels" x="570.17401" y="154.62" style="fill:#000" xml:space="preserve"><tspan x="570.17401" y="154.62">Directory CID</tspan></text>
+				</g>
+			</g>
+		</g>
+		<text class="bg-text" x="530.20758" y="225" xml:space="preserve"><tspan x="530.20758" y="225">Convert to ZIP</tspan></text>
+	</g>
+	<metadata>
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<dc:title>Directory to Composite Zip File</dc:title>
+				<cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+				<dc:description>A diagram showcasing how a directory of three files with a CID can be concatinated into a single ZIP file while maintaining the CIDs assigned previously.  After the directory and its files are converted to a zip file, the three files retain the same CIDs and can be accessed in the ZIP file like any other file would be.</dc:description>
+			</cc:Work>
+			<cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+				<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+			</cc:License>
+		</rdf:RDF>
+	</metadata>
+</svg>
