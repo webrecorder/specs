@@ -1,4 +1,4 @@
-# IPFS Custom File Chunking for WARC and WACZ Formats
+# IPFS Custom File Chunking for WARC and WACZ Formats Proposal (Draft)
 
 ## Abstract
 
@@ -44,21 +44,21 @@ WACZ files use the ZIP format which contains a specialized file and directory la
 One of the many challenges of web archiving is the vast amount of data that can be obtained when crawling the web. A lot of web content is ripe for deduplication where identical JavaScript files, fonts, images, and videos might be embedded within different pages. Ideally each resource loaded from the web while archiving would not need to be stored multiple times. Both the WARC and WACZ format can store duplicate data, but deduplication must be done via manual booking of duplicate content by digest.
 
 
-### Content-Addressable Storage
+### IPFS
 
-IPFS provides [Content-Addressable Storage]() which can automatically handle duplicate data — if the same data is added multiple times, it will be stored only once on each IPFS node.
+One of the properties of IPFS is that it provides [content-addressable storage](https://docs.ipfs.tech/concepts/lifecycle/#_1-content-addressable-representation) where all data is split into small chunks, represented by
+deterministic [Content Identifier (CID)](https://docs.ipfs.tech/concepts/content-addressing/#cids-are-not-file-hashes).
 
-### UnixFS File Chunking
-
-To take advantage of deduplication in IPFS, data needs to be exactly identical when compared to an existing file that has already been assigned a content identifier. When adding large datasets, IPFS splits files into smaller chunks, using equal sized chunks by default.
+What this means is that given the same data, IPFS can store it the same way, so the same file added multiple times
+in different places can result in the same CID and data.
 
 The [UnixFS specification](https://github.com/ipfs/specs/blob/main/UNIXFS.md) allows for individual files to be "chunked" by separating continuous segments of the file's data into individual nodes in a Merkle DAG. These intermediate nodes are themselves encoded as UnixFS files.
 
 ### Custom Chunking
 
-This per-file chunking approach is not ideal for composite files, which may contain the same data at different positions.
+However, this default per-file chunking approach is not ideal for composite files, which may contain the same data at different positions.
 
-For example, two WARC files may contain the same HTTP payload, but stored at different offsets. Using the 'naive' IPFS chunking strategy this data will most likely be added multiple times and not deduplicated.
+For example, two WARC files may contain the same HTTP payload, but stored at different offsets. Using the 'naive' IPFS UnixFS chunking strategy this data will most likely be added multiple times and not deduplicated.
 
 The strategy outlined here is to add the _contents_ of the WARC and WACZ files as individual IPFS (UnixFS) files, then concatenate them together to a form a larger file.
 
@@ -68,9 +68,11 @@ On a regular disk, running `cat A.warc B.warc > C.warc` will copy the data in `A
 
 #### IPFS Cat
 
-Using UnixFS primitives in IPFS, we can introduce a new operation, `ipfs.cat` which can produce the equivalent of concatenated file without copying or duplicating the storage. If file `A.warc` and `B.warc` are both added to IPFS via standard `ipfs.add` operation, creating the equivalent of `C.warc` involve creating a new UnixFS intermediate DAG node.
+Using UnixFS primitives in IPFS, we can define a new operation, `ipfs.cat` which can produce the equivalent of concatenated file without copying or duplicating the storage. If file `A.warc` and `B.warc` are both added to IPFS via standard `ipfs.add` operation, creating the equivalent of `C.warc` involve creating a new UnixFS intermediate DAG node.
 
-Readers of UnixFS files will automatically detect process UnixFS DAG, and a way to read the data as one continuous stream (which can be randomly accessed by offset).
+This can be represented as `CID C = ipfs.cat(CID A, CID B)` where CID A and CID B are IPFS UnixFS files, and CID C is a new file, created as a new DAG root with CID A and CID B as children.
+
+Reading the data associated with CID C will then yield the contents of both children as one continuous stream (which can be randomly accessed by offset).
 
 This enables us to stitch together files while preserving their individual DAGs and enables deduplication of content in the same way as if those files were uploaded on their own.
 
@@ -84,7 +86,7 @@ The process involves:
 
 The [WACZ file format](https://specs.webrecorder.net/wacz/latest/) is an uncompressed [ZIP file](https://en.wikipedia.org/wiki/ZIP_(file_format)) with a particular directory structure, including WARC file for archival data, alongside extra files necessary for web archives.
 
-#### ZIP and Non-ZIP Directory
+### ZIP and Non-ZIP Directory
 
 Since an uncompressed ZIP contains the byte-for-byte representation of all the files, it is possible to add
 the files in a ZIP to IPFS as if they were a regular directory and file structure.
@@ -101,22 +103,49 @@ to gain additional deduplication benefits when possible.
 
 ## WARC File Chunking
 
-### Splitting WARC Files Into Component Parts
+### Splitting WARC Files into Component Parts
 
-WARC files are composed of concatenated series of WARC "records" — the basic components of the file format. 
-The intent of the chunking is to split the WARC file along each records, and if possible, to split the
-HTTP payload into separate chunk to maximize deduplication.
+WARC files are composed of concatenated series of WARC "records" — the basic components of the WARC format. 
 
-### GZIP Records
+The intent of our custom chunking strategy is first to split the WARC file at WARC record boundaries.
+This will give each WARC record its own CID, which can be referred to and loaded independently in IPFS.
+If there are duplicate WARC records found in a dataset, they will automatically only be added once.
 
-WARC files are often individually gzip-ed when stored on disk. To take advantage of this deduplication strategy, the WARC records must be un-gzipped, relying on the compression at the IPFS storage level instead.
+### Uncompressed vs GZIP Records
 
-This approaches changes the byte-for-byte representation in exchange for better deduplication.
+WARC records are often individually gzip-ed when stored to reduce disk usage.
+Unfortunately, this limits the amount of deduplication that is possible, as gzipped data is not easily lend itself to deduplication. 
 
-Gzipped records can still be chunked at the WARC record boundary, but not within the records
-(TODO add examples)
+Gzipped records can only be split at the WARC record boundaries.
 
-### WARC Record Type Chunking (Ungzipped Only)
+However, if a record is stored uncompressed, additional split points are possible, before and after the record (usually HTTP) payload:
+
+![gzipped-or-not](../../assets/images/diagrams/warc-record-deduplication.svg)
+
+In the above example, CID A represents the possible split of an uncompressed record response-request record pair, while CID B represents two compressed records.
+
+### Splitting Uncompressed WARC Records
+
+If a WARC record is uncompressed (or is uncompressed at type of ingest into IPFS), we can insert additional
+split points before and after the payload. This results in the WARC + HTTP headers, as well as the two newlines,
+being stored in separate IPFS blocks (and having distinct CIDs as well)
+
+The following example is a response record for `http://example.com`. The WARC record data and HTTP header are located in the first chunk, followed by the response payload, and the two newlines that signify the end of the record. 
+
+![response-record](../../assets/images/diagrams/response-record.svg)
+
+If two different WARC `response` records created at different times, contain the same payload,
+they can be automatically deduplicated across the IPFS network, as shown below:
+
+![two-response-records](../../assets/images/diagrams/warc-record-deduplication.svg)
+
+Here, CID A and CID C point to the roots of two different IPFS dags, which represent each record. The records
+contain a different headers (CID H1 and CID H2) but the same payload (CID P)
+
+If the response for example.com is added later, even separate from any WARC, it too can be deduplicated against
+previously added data.
+
+### WARC Record Type Chunking
 
 The WARC specification defines [eight different types of records](https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/#warc-record-types): 
 1. warcinfo
@@ -130,40 +159,31 @@ The WARC specification defines [eight different types of records](https://iipc.g
 
 _Note: continuation records are rarely used and are not yet considered as part of this spec._
 
-This diagram represents the seven different types of records with specific chunking instructions. Each colored box represents a WARC record type, lines within these boxes represent the chunk boundaries.
+Similar to response / request, other WARC record types can be chunked in a similar way, with
+the payload split into its own chunk if possible. Gzipped records should either be decompressed
+or can only be split at record boundaries, as discussed above.
+
+This diagram represents the seven different types of records with possible chunking approaches:
+
+(Each colored box represents a WARC record type, lines within these boxes represent the ideal chunk boundaries.
 ![WARC Record Types & Chunk Boundaries](../../assets/images/diagrams/warc-records.svg)
 
-<!-- ^ Should be a figcaption ^ -->
 
-The following example is a response record for example.com. The WARC record data and HTTP header are located in the first chunk, followed by the response payload, and the two newlines that signify the end of the record. Resource and conversion records MUST also follow this format.
+### Final WARC Chunking DAG
 
-![response-record](../../assets/images/diagrams/response-record.svg)
-
-### WARC Chunking and the DAG
-
-WARC records are split in two places:
-  - at the WARC record pair or single record boundaries
-  - at HTTP payload boundaries (ungzipped records only)
-
-Splitting the WARC records at the record boundary (and creating an IPFS DAG for each record pair) effectively means
-that WARC records (or pairs, in case of response-request pairs, etc...) can be recombined to form new WARCs,
-simply by concatenating the IFPS DAG roots using the same `ipfs.cat` operation.
-
-Additionally, splitting the WARC record at HTTP payload boundaries allows for deduplication of the HTTP
-payload (or other payload content) across the IPFS network. In this way, two WARC `response` records
-in two different WARCs can store the same data but would be added to the IPFS network only once, automatically.
-
+A WARC DAG for multiple records may appear as follows, with each response-request or other record pair
+grouped together into its own sub-DAG and those CIDs concatenated together:
 
 ![Chunked WARC Records in an Example DAG](../../assets/images/diagrams/ipfs-chunking-dag.svg)
 
-In this diagram each colored box represents a WARC record type, lines within these boxes represent the chunk boundaries.  CIDs are assigned to pairs of related records or individual records depending on the record type.
+With this approach, individual record pairs can be re-combined to for new WARCs directly in IPFS, without
+copying or moving any data. For example, selecting a subset of WARC record CIDs and concatenating
+them together via the the same `ipfs.cat` operation will yield a new WARC with a subset of data.
 
-Gzipped Records, if not ungzipped, can still be chunked at the WARC record boundaries, but not at the HTTP payload boundaries.
-<!-- ^ Should be a figcaption ^ -->
 
-## WACZ Chunking Diagram
+## WACZ Chunking (ZIP + WARC chunking)
 
-The final WACZ chunking, along ZIP file boundaries, and along WARC record and payload boundaries, ends up looking as something like the following:
+The full chunking of the WACZ file thus involves the split of the file along ZIP file boundaries, splitting of each WARC in the WACZ along WARC record (and possibly payload boundaries), and may look something like the following:
 
 <img src="../../assets/images/diagrams/wacz-file-dag.svg" width=500>
 
