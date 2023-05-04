@@ -80,7 +80,7 @@ The process involves:
 - Splitting WACZ files, and WARC files inside of them by setting chunk boundaries according to their content, and adding each segment via `ipfs.add`.
 - Concatenating WARC files at appropriate boundaries via `ipfs.cat`.
 - Ensuring the ZIP file contains all files necessary for WACZ conformance, including WARC files.
-- Concatenating ZIP files from at appropriate boundaries to form the final ZIP file.
+- Concatenating individual files from at appropriate boundaries to form the containing ZIP file.
 
 ## WACZ and ZIP File Chunking
 
@@ -169,9 +169,9 @@ This diagram represents the seven different types of records with possible chunk
 ![WARC Record Types & Chunk Boundaries](../../assets/images/diagrams/warc-records.svg)
 
 
-### Final WARC Chunking DAG
+### WARC File DAG
 
-A WARC DAG for multiple records may appear as follows, with each response-request or other record pair
+A WARC File DAG for multiple WARC records may appear as follows, with each response-request or other record pair
 grouped together into its own sub-DAG and those CIDs concatenated together:
 
 ![Chunked WARC Records in an Example DAG](../../assets/images/diagrams/ipfs-chunking-dag.svg)
