@@ -11,6 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Run respec_action
-        uses: edsu/respec-action@v0.2.0
+        uses: webrecorder/respec-action@v0.3.0
         with:
           ignore: README.md
