@@ -1,0 +1,99 @@
+{
+  "specStatus": "DRAFT",
+  "respec_js": "../../assets/js/respec-webrecorder.js",
+  "license": "cc-by",
+  "thisVersion": "https://specs.webrecorder.net/wacz/1.2.0/",
+  "latestVersion": "https://specs.webrecorder.net/wacz/latest/",
+  "shortName": "wacz",
+  "lint": {
+    "privsec-section": false,
+    "no-http-props": false,
+    "no-headingless-sections": false
+  },
+  "includePermalinks": true,
+  "authors": [],
+  "editors": [
+    {
+      "name": "Ilya Kreymer",
+      "url": "https://www.linkedin.com/in/ilya-kreymer-55110093/",
+      "company": "Webrecorder",
+      "companyURL": "https://webrecorder.net/"
+    },
+    {
+      "name": "Ed Summers",
+      "url": "https://www.linkedin.com/in/esummers/",
+      "company": "Stanford University",
+      "companyURL": "https://stanford.edu"
+    }
+  ],
+  "group": {
+    "name": "WACZ Editors",
+    "url": "https://webrecorder.net"
+  },
+  "wgPublicList": "",
+  "otherLinks": [
+    {
+      "key": "Additional Documents",
+      "data": [
+        {
+          "value": "Use Cases for Decentralized Web Archives",
+          "href": "https://specs.webrecorder.net/use-cases/latest/"
+        }
+      ]
+    },
+    {
+      "key": "Previous version",
+      "data": [
+        {
+          "value": "1.1.1",
+          "href": "https://specs.webrecorder.net/wacz/1.1.1/"
+        }
+      ]
+    },
+    {
+      "key": "Repository",
+      "data": [
+        {
+          "value": "Github",
+          "href": "https://github.com/webrecorder/specs"
+        },
+        {
+          "value": "Issues",
+          "href": "https://github.com/webrecorder/specs/issues"
+        },
+        {
+          "value": "Commits",
+          "href": "https://github.com/webrecorder/specs/commits"
+        }
+      ]
+    }
+  ],
+  "maxTocLevel": 3,
+  "logos": [
+    {
+      "src": "../../assets/images/webrecorder.svg",
+      "alt": "Webrecorder Logo",
+      "height": 100
+    }
+  ],
+  "localBiblio": {
+    "WEBRECORDER-CDX": {
+      "title": "Webrecorder CDX Index Format",
+      "publisher": "Webrecorder",
+      "href": "https://github.com/webrecorder/pywb/wiki/CDX-Index-Format",
+      "rawDate": "2015-03-25"
+    },
+    "CDXJ": {
+      "title": "Crawl Index JSON (CDXJ)",
+      "publisher": "Webrecorder",
+      "href": "https://specs.webrecorder.net/cdxj/latest/",
+      "rawDate": "2022-06-05"
+    },
+    "WACZ-SIGNING": {
+      "title": "WACZ Signing/Verification Specification",
+      "publisher": "Webrecorder",
+      "href": "https://specs.webrecorder.net/wacz-auth/latest/",
+      "rawDate": "2022-01-25"
+    }
+  }
+}

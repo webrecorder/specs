@@ -1,0 +1,92 @@
+{
+  "specStatus": "REC",
+  "respec_js": "../../assets/js/respec-webrecorder.js",
+  "publishDate": "2021-06-03",
+  "license": "cc-by",
+  "thisVersion": "https://specs.webrecorder.net/wacz/1.1.1/",
+  "latestVersion": "https://specs.webrecorder.net/wacz/latest/",
+  "shortName": "wacz",
+  "group": "WACZ",
+  "lint": {
+    "privsec-section": false,
+    "no-http-props": false,
+    "no-headingless-sections": false
+  },
+  "includePermalinks": true,
+  "authors": [],
+  "editors": [
+    {
+      "name": "Ilya Kreymer",
+      "url": "https://www.linkedin.com/in/ilya-kreymer-55110093/",
+      "company": "Webrecorder",
+      "companyURL": "https://webrecorder.net/"
+    },
+    {
+      "name": "Ed Summers",
+      "url": "https://www.linkedin.com/in/esummers/",
+      "company": "Stanford University",
+      "companyURL": "https://stanford.edu"
+    }
+  ],
+  "group": {
+    "name": "WACZ Editors",
+    "url": "https://webrecorder.net"
+  },
+  "otherLinks": [
+    {
+      "key": "Additional Documents",
+      "data": [
+        {
+          "value": "Use Cases for Decentralized Web Archives",
+          "href": "https://specs.webrecorder.net/use-cases/latest/"
+        }
+      ]
+    },
+    {
+      "key": "Previous versions",
+      "data": [
+          {
+              "value": "1.1.0",
+              "href": "https://github.com/webrecorder/specs/blob/2ec8e3e8ec8a491c8c2236fdb44a513cfbb2cb17/README.md"
+          },
+
+          {
+              "value": "1.0.0",
+              "href": "https://github.com/webrecorder/specs/blob/1f511c67b1312ec9215cb8443387340d39c8783b/README.md"
+          }
+      ]
+    },
+    {
+      "key": "Repository",
+      "data": [
+        {
+          "value": "Github",
+          "href": "https://github.com/webrecorder/specs"
+        },
+        {
+          "value": "Issues",
+          "href": "https://github.com/webrecorder/specs/issues"
+        },
+        {
+          "value": "Commits",
+          "href": "https://github.com/webrecorder/specs/commits"
+        }
+      ]
+    }
+  ],
+  "maxTocLevel": 3,
+  "logos": [
+    {
+      "src": "../../assets/images/webrecorder.svg",
+      "alt": "Webrecorder Logo",
+      "height": 100
+    }
+  ],
+  "localBiblio": {
+    "PYWB-CDXJ": {
+      "title": "pywb Indexing: CDXJ Format",
+      "publisher": "Webrecorder",
+      "href": "https://pywb.readthedocs.io/en/latest/manual/indexing.html#cdxj-index"
+    }
+  }
+}

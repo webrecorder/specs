@@ -1,232 +1,83 @@
-<html>
-  <head>
-  <meta charset="utf8">
-  <title>Web Archive Collection Zipped (WACZ)</title>
-  <script src="../../assets/js/respec-webrecorder.js" class="remove" defer ></script>
-  <script class="remove">
-    var respecConfig = {
-      specStatus: "DRAFT",
-      license: "cc-by",
-      thisVersion: "https://specs.webrecorder.net/wacz/1.2.0/",
-      latestVersion: "https://specs.webrecorder.net/wacz/latest/",
-      shortName: "wacz",
-      lint: {
-	// turn off w3c-specific linting
-	"privsec-section": false,
-	"no-http-props": false,
-	"no-headingless-sections": false
-      },
-      includePermalinks: true,
-      authors: [],
-      editors: [
-	{
-	  name: "Ilya Kreymer",
-	  url: "https://www.linkedin.com/in/ilya-kreymer-55110093/",
-	  company: "Webrecorder",
-	  companyURL: "https://webrecorder.net/"
-	},
-        {
-          name: "Ed Summers",
-          url: "https://www.linkedin.com/in/esummers/",
-          company: "Stanford University",
-          companyURL: "https://stanford.edu"
-        }
-      ],
-      group: {
-        name: "WACZ Editors",
-        url: "https://webrecorder.net"
-      },
-      wgPublicList: "",
-      otherLinks: [
-	{
-	  key: "Additional Documents",
-	  data: [
-	    {
-	      value: "Use Cases for Decentralized Web Archives",
-	      href: "https://specs.webrecorder.net/use-cases/latest/",
-	    }
-	  ]
-	},
-	{
-	  key: "Previous version",
-	  data: [
-	      {
-		  value: "1.1.1",
-		  href: "https://specs.webrecorder.net/wacz/1.1.1/"
-	      }
-	  ]
-      	},
-	{
-	  key: "Repository",
-	  data: [
-	    {
-	      value: "Github",
-	      href: "https://github.com/webrecorder/specs"
-	    },
-	    {
-	      value: "Issues",
-	      href: "https://github.com/webrecorder/specs/issues"
-	    },
-	    {
-	      value: "Commits",
-	      href: "https://github.com/webrecorder/specs/commits"
-	    }
-	  ]
-      	}
-      ],
-      maxTocLevel: 3,
-      logos: [
-	{
-	  src: "../../assets/images/webrecorder.svg",
-	  alt: "Webrecorder Logo",
-          height: 100
-      	}
-      ],
-      localBiblio: {
-        "WEBRECORDER-CDX": {
-          title: "Webrecorder CDX Index Format",
-          publisher: "Webrecorder",
-          href: "https://github.com/webrecorder/pywb/wiki/CDX-Index-Format",
-          rawDate: "2015-03-25"
-        },
-        "CDXJ": {
-          title: "Crawl Index JSON (CDXJ)",
-          publisher: "Webrecorder",
-          href: "https://specs.webrecorder.net/cdxj/latest/",
-          rawDate: "2022-06-05"
-        },
-        "WACZ-SIGNING": {
-          title: "WACZ Signing/Verification Specification",
-          publisher: "Webrecorder",
-          href: "https://specs.webrecorder.net/wacz-auth/latest/",
-          rawDate: "2022-01-25"
-        }
-      }
-    };
-  </script>
-  </head>
+# Web Archive Collection Zipped (WACZ) 
 
-  <body>
+## Status of This Document
 
-    <section id="sotd" class="introductory">
-      <h2>Status of this Document</h2>
-      <p>
-        This document is a draft of a potential specification. It has no official
-        standing of any kind and does not represent the support or consensus of
-        any standards organization.
-      </p>
-      <p>
-        Feedback on this proposal is strongly encouraged. Please open 
-        <a href="https://github.com/webrecorder/specs/issues/">GitHub issues</a>
-        with any questions or to suggest use cases.
-      </p>
-    </section>
+This document is a draft of a potential specification. It has no official
+standing of any kind and does not represent the support or consensus of
+any standards organization.
 
-    <section id="abstract">
-      WACZ is a <a>media type</a> that allows web archive <a>collections</a> to be
-      <a>packaged</a> and shared on the web as a discrete file. A WACZ file includes
-      all the data that is needed for the rendering archived content as well as
-      <a>contextual information</a> required for users to interpret it. Rendering
-      software can obtain this data on demand using HTTP Range requests,
-      without requiring the entire file to be fully retrieved, or for it to be
-      otherwise mediated by specialized server side software.
-    </section>
+Feedback on this proposal is strongly encouraged. Please open 
+<a href="https://github.com/webrecorder/specs/issues/">GitHub issues</a>
+with any questions or to suggest use cases.
 
-    <section id="conformance"></section>
+## Abstract
 
-    <section id="terminology">
+WACZ is a <a>media type</a> that allows web archive <a>collections</a> to be
+<a>packaged</a> and shared on the web as a discrete file. A WACZ file includes
+all the data that is needed for the rendering archived content as well as
+<a>contextual information</a> required for users to interpret it. Rendering
+software can obtain this data on demand using HTTP Range requests,
+without requiring the entire file to be fully retrieved, or for it to be
+otherwise mediated by specialized server side software.
 
-      <h2>Terminology</h2>
+## Terminology
       
-      <div>
-        <p>
-          This section defines the terms used in this specification and
-          throughout web archives infrastructure. A link to these terms
-          is included whenever they appear in this specification.
-        </p>
-        <dl class="termlist">
+This section defines the terms used in this specification and
+throughout web archives infrastructure. A link to these terms
+is included whenever they appear in this specification.
 
-          <dt><dfn id="dfn-cdx">CDX</dfn></dt>
-          <dd>A file format specification for representing an index to archived
-          web content. It is used by web replay tools to lookup if and when a
-          given URL has been archived in a set of <a>WARC</a> files.</dd>
+<dl class="termlist">
 
-          <dt><dfn id="dfn-cdxj">CDXJ</dfn></dt>
-          <dd>A <a>CDX</a> file encoded using [[JSON]]. See the 
-            <a href="#cdxj">CDXJ section</a> below.</dd>
+<dt><dfn id="dfn-cdx">CDX</dfn></dt>
+<dd>A file format specification for representing an index to archived web content. It is used by web replay tools to lookup if and when a given URL has been archived in a set of <a>WARC</a> files.</dd>
 
-          <dt><dfn id="dfn-collection">Collection</dfn></dt>
-          <dd>An arbitrary set of related archived web pages and metadata based on some
-            topic, website domain(s), time period, or other conceptual grouping.</dd>
+<dt><dfn id="dfn-cdxj">CDXJ</dfn></dt>
+<dd>A <a>CDX</a> file encoded using [[JSON]]. See the <a href="#cdxj">CDXJ section</a> below.</dd>
 
-          <dt><dfn id="dfn-context" data-lt="contextual information">Context</dfn></dt>
-          <dd>Descriptive information about a web archive that helps a person
-            using that web archive understand and interpret what the archive
-            contains. This information can include why the content was selected
-            for the archive, when it was created, who created it, and what tools 
-            or applications were used to create it.</dd>
+<dt><dfn id="dfn-collection">Collection</dfn></dt>
+<dd>An arbitrary set of related archived web pages and metadata based on some topic, website domain(s), time period, or other conceptual grouping.</dd>
 
-          <dt><dfn id="dfn-iipc">IIPC</dfn></dt>
-          <dd>The International Internet Preservation Consortium. An
-            organization of libraries, archives and other organizations
-            established in 2003 to coordinate efforts to preserve web content.
-          </dd>
+<dt><dfn id="dfn-context" data-lt="contextual information">Context</dfn></dt>
+<dd>Descriptive information about a web archive that helps a person using that web archive understand and interpret what the archive contains. This information can include why the content was selected for the archive, when it was created, who created it, and what tools or applications were used to create it.</dd>
 
-          <dt><dfn id="dfn-mediatype">Media Type</dfn></dt>
-          <dd>A two-part identifier  for file formats that are transferred on the
-            World Wide Web and the underlying Internet. [[IANA-MEDIA-TYPES]].
-          </dd>
+<dt><dfn id="dfn-iipc">IIPC</dfn></dt>
+<dd>The International Internet Preservation Consortium. An organization of libraries, archives and other organizations established in 2003 to coordinate efforts to preserve web content.</dd>
 
-          <dt><dfn id="dfn-package" data-lt="packaging|packaged">Package</dfn></dt>
-          <dd>A file format that allows distinct files or bitstreams to be
-            represented within it. Popular examples of packaging formats
-            include ZIP, PDF, MP4, tar and Open Office XML.</dd>
+<dt><dfn id="dfn-mediatype">Media Type</dfn></dt>
+<dd>A two-part identifier for file formats that are transferred on the World Wide Web and the underlying Internet. [[IANA-MEDIA-TYPES]].</dd>
 
-          <dt><dfn id="dfn-webpage" data-lt="pages">Page</dfn></dt>
-          <dd>A web document as viewed in a web browser that is viewing a
-            specific URL. Sometimes referred to as a <em>web page</em>.</dd>
+<dt><dfn id="dfn-package" data-lt="packaging|packaged">Package</dfn></dt>
+<dd>A file format that allows distinct files or bitstreams to be represented within it. Popular examples of packaging formats include ZIP, PDF, MP4, tar and Open Office XML.</dd>
 
-          <dt><dfn id="dfn-wacz" data-lt="web archive collection">WACZ</dfn></dt>
-          <dd>Web Archive Collection Zipped. A file that conforms to this specification 
-            which is used to package up <a>WARC</a> data and metadata into a
-            <a>ZIP</a> file for distribution and replay on the web</dd>
+<dt><dfn id="dfn-webpage" data-lt="pages">Page</dfn></dt>
+<dd>A web document as viewed in a web browser that is viewing a
+  specific URL. Sometimes referred to as a <em>web page</em>.</dd>
 
-          <dt><dfn id="dfn-warc">WARC</dfn></dt>
-          <dd>A file containing concatenated representations of web resources conforming 
-            to the [[WARC]] specification.</dd>
+<dt><dfn id="dfn-wacz" data-lt="web archive collection">WACZ</dfn></dt>
+<dd>Web Archive Collection Zipped. A file that conforms to this specification which is used to package up <a>WARC</a> data and metadata into a <a>ZIP</a> file for distribution and replay on the web</dd>
 
-          <dt><dfn id="dfn-wayback">Wayback Machine</dfn></dt>
-          <dd>A well known web application for replaying archived web pages that
-            was initially developed at the Internet Archive and has been forked
-            as an open soruce application by the <a>IIPC</a>.</dd>
+<dt><dfn id="dfn-warc">WARC</dfn></dt>
+<dd>A file containing concatenated representations of web resources conforming to the [[WARC]] specification.</dd>
 
-          <dt><dfn id="dfn-web-archive">Web Archive</dfn></dt>
-          <dd>A collection of files that preserve representations of web
-            resources in the WARC format. A web archive may also include
-            derivative files such as CDX indexes for accessing records within
-            the archive.</dd>
+<dt><dfn id="dfn-wayback">Wayback Machine</dfn></dt>
+<dd>A well known web application for replaying archived web pages that was initially developed at the Internet Archive and has been forked as an open soruce application by the <a>IIPC</a>.</dd>
 
-          <dt><dfn id="dfn-zip-file" data-lt="zip">ZIP file</dfn></dt>
-          <dd>A file conforming to the [[ZIP]] specification which is used to 
-            aggregate, compress, and encrypt files into a single interoperable 
-            container. WACZ allows for both ZIP and ZIP64 encodings for larger
-            archives.</dd>
+<dt><dfn id="dfn-web-archive">Web Archive</dfn></dt>
+<dd>A collection of files that preserve representations of web resources in the WARC format. A web archive may also include derivative files such as CDX indexes for accessing records within the archive.</dd>
 
-        </dl>
-      </div>
+<dt><dfn id="dfn-zip-file" data-lt="zip">ZIP file</dfn></dt>
+<dd>A file conforming to the [[ZIP]] specification which is used to aggregate, compress, and encrypt files into a single interoperable container. WACZ allows for both ZIP and ZIP64 encodings for larger archives.</dd>
 
-    </section>
+</dl>
 
-    <section data-format="markdown">
-
-# Introduction
+## Introduction
 
 This specification defines a directory structure and <a>ZIP</a> format
 specification for sharing and distributing <a>web archives</a>. <a>ZIP</a> files
 using this format can be referred to as <a>WACZ</a> (Web Archive Collection
 Zipped).
 
-## Motivation
+### Motivation
 
 The goal of this specification is to provide a portable format for 
 <a>web archives</a> in order to achieve two broad goals for web archives:
@@ -265,7 +116,7 @@ WACZ is not designed to replace other web archiving formats. Rather it
 establishes a file <a>packaging</a> convention for all the data needed by a browser for
 efficient rendering of a web archive collection, and its contextualization.
 
-## Existing Tools 
+### Existing Tools 
 
 The [py-wacz](https://github.com/webrecorder/py-wacz) repository contains a
 reference implementation for creating WACZ files from existing WARC files, and
@@ -273,11 +124,7 @@ validating them. Parts of the specification are also implemented and in use by
 [wabac.js](https://github.com/webrecorder/wabac.js) and
 [ReplayWeb.page](https://replayweb.page).
 
-    </section>
-
-    <section data-format="markdown">
-
-# WACZ Object
+## WACZ Object
 
 A WACZ object consists of the following:
 
@@ -288,7 +135,7 @@ A WACZ object consists of the following:
 
 3. A method for bundling the directory layout in a <a>ZIP</a> file.
 
-## Directory Layout
+### Directory Layout
 
 A <a>WACZ</a> contains a directory structure, that contains web archive
 collection data which MUST conform to the [[FRICTIONLESS-DATA-PACKAGE]]
@@ -305,9 +152,9 @@ specification. This directory structure looks like:
     └── pages.jsonl
 </pre>
 
-## Directories and Files
+### Directories and Files
 
-### archive
+#### archive
 
 The `archive` directory MUST contain one or more files in the [[WARC]] format. 
 The files SHOULD use the `.warc` file extension unless they are GZIP encoded in 
@@ -318,7 +165,7 @@ archive
 └── data.warc
 </pre>
 
-### indexes
+#### indexes
 
 The `indexes` directory MUST include one or more indexes for the WARC data stored
 in `archive`. These index files allow clients to efficiently look up a URL to
@@ -330,7 +177,7 @@ indexes
 └── index.cdx
 </pre>
 
-### pages.jsonl
+#### pages.jsonl
 
 The `pages/pages.jsonl` MUST be present and include a list of 'Page' objects as
 [[JSON-Lines]] where each line MUST contain at least the following properties:
@@ -360,7 +207,7 @@ directory. A common use case is to include only the main pages in the
 `pages.jsonl`, while including additional pages, such as those discovered
 automatically via a crawl in an another file e.g. `extraPages.jsonl`.
 
-### datapackage.json
+#### datapackage.json
 
 The `datapackage.json` file MUST be present at the root of the WACZ which
 serves as the manifest for the web archive and is compliant with the
@@ -416,7 +263,7 @@ Other properties from the [[FRICTIONLESS-DATA-PACKAGE]] specification such as
 Custom properties that do not interfere with pre-existing properties MAY also 
 be used.
 
-### datapackage-digest.json
+#### datapackage-digest.json
 
 A `datapackage-digest.json` file SHOULD be included in the root of the WACZ to
 verify the `datapackage.json` manifest with a hash and thus for the entire
@@ -432,7 +279,7 @@ contents of the WACZ. If present the following properties MUST be included:
 }
 </pre>
 
-## CDXJ
+### CDXJ
 
 CDXJ is a file based data format for representing an index to WARC data. One or
 more CDXJ files are stored in a WACZ's `indexes` directory, and can be used to
@@ -440,7 +287,7 @@ quickly look up a given URL to see if HTTP representations of that URL are
 available in the WARC content found in the `archives` directory. The format for
 CDXJ files is specified in the [[?CDXJ]] specification.
 
-## Signing and Verification
+### Signing and Verification
 
 While a WACZ is not required to be signed it MAY include additional files to
 support the cryptographic signing of archived web content. An example of this is
@@ -449,17 +296,17 @@ the [[?WACZ-SIGNING]] extension that adds a signature information to the
 the WACZ specification does not currently specify or require a particular trust
 model for archived web content.
 
-## Other files and directories
+### Other files and directories
 
 Other files and directories MAY be present in a WACZ as long as they do 
 not interfere with specified files and directories that are used by WACZ.
 Specifically, custom files and directories MUST NOT be added to the existing WACZ directories, `archive`, `indexes` and `pages`. Additional files MUST be listed in the resources section of `datapackage.json` to ensure conformance with [[FRICTIONLESS-DATA-PACKAGE]]
 
-## Zip Format
+### Zip Format
 
 The entire directory structure MUST be stored in a standard [[ZIP]] file.
 
-### Zip Compression
+#### Zip Compression
 
 Already compressed files MUST NOT be compressed again to allow for random access.
 
@@ -468,17 +315,13 @@ Already compressed files MUST NOT be compressed again to allow for random access
 - All files (`*.jsonl`, `*.json`, `*.idx`, `*.cdx`, `*.cdxj`) can be stored in 
   the ZIP with either 'DEFLATE' or 'STORE' mode.
 
-### Zip Format File Extension
+#### Zip Format File Extension
 
 A ZIP file that follows this Web Archive Collection format spec MUST use the extension `.wacz`.
 
 Such a file can be referred to as a WACZ file or a WACZ.
 
-    </section>
-
-    <section data-format="markdown">
-
-# Processing Model
+## Processing Model
 
 The [[ZIP]] file format provides efficient random access, which means archived
 web pages can be retrieved efficiently even from large web archive collections
@@ -501,11 +344,7 @@ To lookup a given URL the client needs to:
 
 This approach is being used by [ReplayWeb.page](https://replayweb.page)
 
-    </section>
-
-    <section data-format="markdown">
-
-# Publishing
+## Publishing
 
 Because they are ZIP files WACZ can be hosted on the web as static files. This
 allows web archives to be easily maintained over time without relying on complex
@@ -516,13 +355,13 @@ content deliver networks that geographically position web-archives closer to
 their users. However there are certain considerations to make when publishing
 WACZ files.
 
-## Content-Length
+### Content-Length
 
 WACZ clients need to know how large an entire WACZ file is in order to
 download it prior to rendering, or to read it dynamically. To support this HTTP
 responses for WACZ files MUST use the `Content-Length` HTTP header.
 
-## Partial Requests
+### Partial Requests
 
 Clients that render WACZ files typically need to be able to fetch content from
 the WACZ file on demand. For example when displaying archived content for a
@@ -535,7 +374,7 @@ that publish WACZ files MUST support HTTP range requests [[RFC7233]]. HTTP
 responses for WACZ HTTP requests SHOULD server WACZ files using the
 `Accept-Ranges` HTTP header.
 
-## CORS
+### CORS
 
 WACZ files and the their clients MAY be served from the same host name. However
 it can be useful to view the web archive from a host name that is distinct from
@@ -550,12 +389,12 @@ different domain than the websites that is trying to load them. In order to
 support loading from different domains WACZ files SHOULD be made available using
 the `access-control-allow-origin` [[CORS]] HTTP header.
 
-## Media Type
+### Media Type
 
 WACZ HTTP responses for WACZ files SHOULD be published with the
 `application/wacz` media type.
 
-## Example Response
+### Example Response
 
 Given these requirements a minimal HTTP response for a WACZ could look
 like:
@@ -568,11 +407,7 @@ Accept-Ranges: bytes
 Access-Control-Allow-Origin: *
 </pre>
 
-    </section>
-
-    <section data-format="markdown">
-
-# Changes
+## Changes
 
 The following changes were made in v1.2.0 with respect to v1.1.1:
 
@@ -581,9 +416,3 @@ The following changes were made in v1.2.0 with respect to v1.1.1:
 * Removed `mainPageUrl` and `mainPageDate` from `datapackage.json`.
 * Added `home` to `datapackage.json`.
 * Added CDXJ section to specify the contents of index files.
-
-    </section>
-
-  </body>
-
-</html>
