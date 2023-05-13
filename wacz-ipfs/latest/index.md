@@ -127,7 +127,7 @@ In the above example, CID A represents the possible split of an uncompressed rec
 ### Splitting Uncompressed WARC Records
 
 If a WARC record is uncompressed (or is uncompressed at type of ingest into IPFS), we can insert additional
-split points before and after the payload. This results in the WARC + HTTP headers, as well as the two newlines,
+split points before and after the payload. This results in the WARC + HTTP headers, as well as the two `\r\n` newlines,
 being stored in separate IPFS blocks (and having distinct CIDs as well)
 
 The following example is a response record for `http://example.com`. The WARC record data and HTTP header are located in the first chunk, followed by the response payload, and the two newlines that signify the end of the record. 
