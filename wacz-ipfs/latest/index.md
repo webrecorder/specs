@@ -120,7 +120,7 @@ Gzipped records can only be split at the WARC record boundaries.
 
 However, if a record is stored uncompressed, additional split points are possible, before and after the record (usually HTTP) payload:
 
-![gzipped-or-not](../../assets/images/diagrams/warc-record-deduplication.svg)
+![gzipped-or-not](../../assets/images/diagrams/warc-compressed-vs-uncompressed.svg)
 
 In the above example, CID A represents the possible split of an uncompressed record response-request record pair, while CID B represents two compressed records.
 

@@ -11,6 +11,10 @@
   "authors": [],
   "editors": [
     {
+      "name": "Ilya Kreymer",
+      "url": "https://github.com/ikreymer"
+    },
+    {
       "name": "Mauve Signweaver",
       "url": "https://ranger.mauve.moe/"
     },
