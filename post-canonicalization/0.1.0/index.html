@@ -114,21 +114,18 @@
 # Introduction
 
 POST canonicalization provides a standardized way of representing a non-GET
-HTTP request as a GET request for playback in web archives. The original HTTP
-request type is appended to the GET URL via a `__wb_method` parameter. For
-example, a POST request will have `__wb_method=POST` in the canonicalized URL.
+HTTP request as a GET request for indexing and playback in web archives. The
+original HTTP request type is appended to the original URL via a `__wb_method`
+parameter. For example, a POST request will have `__wb_method=POST` in the
+canonicalized URL.
 
+Request JSON data are parsed and primitive json values are added to the query
+string. Duplicate json values are also added with a special suffix, eg.
+`{"a", "b", "c": {"a": "b"}}` will be converted to query string `a=b&a.2_=b`.
 
-POST application/json requests are parsed and primitive json values are added
-to the query string. Duplicate json values are also added with a special suffix,
-eg. `{"a", "b", "c": {"a": "b"}}` will be converted to query string `a=b&a.2_=b`
-(the suffix is hopefully one that is not commonly used).
-
-POST, PUT, PATCH, and DELETE text/plain data is attempted to be parsed as json,
-then as binary. URL-encoded form data is converted to query parameters if
-possible. An attempt is made to decode application/x-www-form-urlencoded or
-multipart/* data as utf-8. Data that cannot be decoded is appended to
-`__wb_post_data` as a block encoded in base64.
+Encoded form data is converted to UTF-8 and appended as query parameters if
+possible. Data that cannot be decoded is treated as binary and appended to
+`__wb_post_data` as a base64-encoded string.
 
 
 ## Motivation
