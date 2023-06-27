@@ -7,6 +7,7 @@ Originally CDX files were only used to index web archives containing GET request
 ## Conformance
 
 As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative. Everything else in this specification is normative.
+
 The key words MAY and MUST in this document are to be interpreted as described in BCP 14 [RFC2119][1] [RFC8174][2] when, and only when, they appear in all capitals, as shown here.
 
 ## Terminology
@@ -25,7 +26,6 @@ Web archiving data is often stored in specialized formats, which include a full 
 This specification is designed to describe how to store two key file formats used for web archives:
 
 1. WARC — A widely accepted [ISO standard](1) used by many institutions around the world for storing web archive data.
-
 2. WACZ — A new format [developed by Webrecorder](2) for packaging WARCs with other web archive data which supports random-access reads.
 
 Both formats are 'composite' formats, containing smaller amounts of data interspersed with metadata. In the case of WARC, the format consists of concatenated records which are appended one after the other, eg. `cat A.warc B.warc > C.warc`. The WARCs may or may not be gzipped, in which case the result is a multi-member gzip.
