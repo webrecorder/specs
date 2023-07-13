@@ -181,7 +181,7 @@ The body MUST be decoded as form data per [RFC 2388][9] and then percent plus en
 >
 > Encoded URL:
 >
->     http://example.org/?__wb_method=POST&__wb_post_data=Content-Type%3A%20multipart%2Fform-data%3B%20boundary%3DAaB03x%0A%0A--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22submit-name%22%0A%0AExample%0A--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22files%22%0AContent-Type%3A%20multipart%2Fmixed%3B%20boundary%3DBbC04y%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file1.txt%22%0AContent-Type%3A%20text%2Fplain%0A%0AContent%20of%20file1.txt.%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file2.html%22%0AContent-Type%3A%20text%2Fhtml%0A%0A%3C%21DOCTYPE%20html%3E%3Ctitle%3EContent%20of%20file2.html.%3C%2Ftitle%3E%0A%0A--BbC04y--%0A--AaB03x--%0A
+>     http://example.org/?__wb_method=POST&__wb_post_data=--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22submit-name%22%0A%0AExample%0A--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22files%22%0AContent-Type%3A%20multipart%2Fmixed%3B%20boundary%3DBbC04y%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file1.txt%22%0AContent-Type%3A%20text%2Fplain%0A%0AContent%20of%20file1.txt.%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file2.html%22%0AContent-Type%3A%20text%2Fhtml%0A%0A%3C%21DOCTYPE%20html%3E%3Ctitle%3EContent%20of%20file2.html.%3C%2Ftitle%3E%0A%0A--BbC04y--%0A--AaB03x--%0A
 
 #### Encoding a JSON request body
 
