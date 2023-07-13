@@ -25,8 +25,8 @@ Web archiving data is often stored in specialized formats, which include a full 
 
 This specification is designed to describe how to store two key file formats used for web archives:
 
-1. WARC — A widely accepted [ISO standard](1) used by many institutions around the world for storing web archive data.
-2. WACZ — A new format [developed by Webrecorder](2) for packaging WARCs with other web archive data which supports random-access reads.
+1. WARC — A widely accepted [ISO standard][3] used by many institutions around the world for storing web archive data.
+2. WACZ — A new format [developed by Webrecorder][4] for packaging WARCs with other web archive data which supports random-access reads.
 
 Both formats are 'composite' formats, containing smaller amounts of data interspersed with metadata. In the case of WARC, the format consists of concatenated records which are appended one after the other, eg. `cat A.warc B.warc > C.warc`. The WARCs may or may not be gzipped, in which case the result is a multi-member gzip.
 
@@ -38,11 +38,11 @@ Web archive search and retrieval is frequently intermediated by index files of W
 
 ### CDX
 
-"A CDX file consists of individual lines of text, each of which summarizes a single web document. The first line in the file is a legend for interpreting the data, and the following lines contain the data for referencing the corresponding pages within the host. The first character of the file is the field delimiter used in the rest of the file. This is followed by the literal 'CDX' and then individual field markers as defined in the [[CDX specification](3)]."
+"A CDX file consists of individual lines of text, each of which summarizes a single web document. The first line in the file is a legend for interpreting the data, and the following lines contain the data for referencing the corresponding pages within the host. The first character of the file is the field delimiter used in the rest of the file. This is followed by the literal 'CDX' and then individual field markers as defined in the [[CDX specification][5]."
 
 ### Crawl Index JSON (CDXJ)
 
-Crawl Index JSON or [CDXJ](4) provides a standardized way of representing an index to one or more WARC files. It allows applications to quickly locate a given page in a set of archived web content, as well as metadata associated with that page. Each CDXJ entry can be looked up by URL, and contains a JSON payload that can be used for representing information about that URL. It is used in the [WACZ specification](2).
+Crawl Index JSON or [CDXJ](4) provides a standardized way of representing an index to one or more WARC files. It allows applications to quickly locate a given page in a set of archived web content, as well as metadata associated with that page. Each CDXJ entry can be looked up by URL, and contains a JSON payload that can be used for representing information about that URL. It is used in the [WACZ specification][4].
 
 A CDXJ file is a sorted, line oriented plain-text file (optionally GZIP compressed) where each line represents information about a single capture in a web archive collection.
 
@@ -54,7 +54,7 @@ Each line MUST have three components that are separated by single spaces (0x20):
 
 The Searchable URL is a normalized form of the archived URL that allows a CDXJ file to be sorted and efficiently scanned using a binary search algorithm. The Searchable URL is sometimes referred to as Sort-friendly URI Reordering Transform (SURT).
 
-The JSON Block contains a serialized [JSON](5) object with newlines escaped so that it fits completely on one line. The object MUST contain the following properties:
+The JSON Block contains a serialized [JSON][7] object with newlines escaped so that it fits completely on one line. The object MUST contain the following properties:
 
 * url: The URL that was archived
 * digest: A cryptographic hash for the HTTP response payload
@@ -105,7 +105,7 @@ Encoding the request body depends on the content-type.
 
 #### Binary request body encoding
 
-The request body is encoded as Base64 ([RFC 4648](6)) and appended to the query string as the `__wb_post_data` parameter.
+The request body is encoded as Base64 ([RFC 4648][7]) and appended to the query string as the `__wb_post_data` parameter.
 
 > **Example**
 > 
@@ -127,17 +127,65 @@ Decode the body to a string using UTF-8, percent decoded the string, **percent p
 
 If a UTF-8 decoding error occurs then the binary encoding method MUST be used instead.
 
-[TODO: example]
+> **Example**
+> 
+> Original request:
+> 
+>     POST / HTTP/1.0
+>     Host: example.org
+>     Content-Type: application/x-www-form-urlencoded
+>     Content-Length: 13
+>
+>     say=Hi&to=Mom
+>
+> Encoded URL:
+>
+>     http://example.org/?__wb_method=POST&__wb_post_data=say%3DHi%26to%3DMom
 
 #### Encoding a multipart form request body
 
-The body MUST be decoded as form data per [RFC 2388](7) and then percent plus encoded. If the body is not a valid multipart/form-data message then the binary encoding method MUST be used instead.
+The body MUST be decoded as form data per [RFC 2388][9] and then percent plus encoded. If the body is not a valid multipart/form-data message then the binary encoding method MUST be used instead.
 
-[TODO: example]
+> **Example**
+> 
+> Original request:
+> 
+>     POST / HTTP/1.1
+>     Host: example.org
+>     Content-Type: multipart/form-data; boundary=AaB03x
+>     Content-Length: Content-Length: 437
+> 
+>     --AaB03x
+>     Content-Disposition: form-data; name="submit-value"
+>
+>     Example
+>     --AaB03x
+>     Content-Disposition: form-data; name="files"
+>     Content-Type: multipart/mixed; boundary=BbC04y
+>
+>     --BbC04y
+>     Content-Disposition: file; filename="file1.txt"
+>     Content-Type: text/plain
+>
+>     Content of file1.txt.
+>
+>     --BbC04y
+>     Content-Disposition: file; filename="file2.html"
+>     Content-Type: text/html
+>
+>     <!DOCTYPE html><title>Content of file2.html.</title>
+>
+>     --BbC04y--
+>     --AaB03x--
+>
+>
+> Encoded URL:
+>
+>     http://example.org/?__wb_method=POST&__wb_post_data=Content-Type%3A%20multipart%2Fform-data%3B%20boundary%3DAaB03x%0A%0A--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22submit-name%22%0A%0AExample%0A--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22files%22%0AContent-Type%3A%20multipart%2Fmixed%3B%20boundary%3DBbC04y%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file1.txt%22%0AContent-Type%3A%20text%2Fplain%0A%0AContent%20of%20file1.txt.%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file2.html%22%0AContent-Type%3A%20text%2Fhtml%0A%0A%3C%21DOCTYPE%20html%3E%3Ctitle%3EContent%20of%20file2.html.%3C%2Ftitle%3E%0A%0A--BbC04y--%0A--AaB03x--%0A
 
 #### Encoding a JSON request body
 
-The request MUST be parsed as JSON ([RFC 8259](8)) and then apply the following algorithm with an empty string as the initial value of *name*.
+The request MUST be parsed as JSON ([RFC 8259][10]) and then apply the following algorithm with an empty string as the initial value of *name*.
 
 To **encode a JSON *value***, given a *name* and an initially-empty map *nameCounts* of strings to integers:
 
@@ -207,11 +255,13 @@ To **percent plus encode a byte sequence**, for each byte in the input sequence:
 > Prior to Python 3.7 the character "~" was percent encoded.
 
 
-[1]: https://iipc.github.io/warc-specifications/
-[2]: https://specs.webrecorder.net/wacz/latest/
-[3]: https://iipc.github.io/warc-specifications/specifications/cdx-format/cdx-2015/
-[4]: https://specs.webrecorder.net/cdxj/0.1.0/
-[5]: https://www.rfc-editor.org/rfc/rfc8259
-[6]: https://tools.ietf.org/html/rfc4648
-[7]: https://datatracker.ietf.org/doc/html/rfc2388
-[8]: https://datatracker.ietf.org/doc/html/rfc8259
+[1]: https://www.rfc-editor.org/rfc/rfc2119
+[2]: https://www.rfc-editor.org/rfc/rfc8174
+[3]: https://iipc.github.io/warc-specifications/
+[4]: https://specs.webrecorder.net/wacz/latest/
+[5]: https://iipc.github.io/warc-specifications/specifications/cdx-format/cdx-2015/
+[6]: https://specs.webrecorder.net/cdxj/0.1.0/
+[7]: https://www.rfc-editor.org/rfc/rfc8259
+[8]: https://tools.ietf.org/html/rfc4648
+[9]: https://datatracker.ietf.org/doc/html/rfc2388
+[10]: https://datatracker.ietf.org/doc/html/rfc8259
