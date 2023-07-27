@@ -180,12 +180,12 @@ navigating a web archive collection:
 - `title` - a string describing the resource
 - `id` - an arbitrary identifier for the resource
 - `text` - text extracted from the snapshot
-- `size` - an integer that representes the number of bytes for the page and all its resources
+- `size` - an integer that represents the number of bytes for the page and all its resources
 
 <pre class="example">
 {"format": "json-pages-1.0", "id": "pages", "title": "All Pages"}
-{"id": "1db0ef709a", "url": "https://www.example.com/page", "ts": "2020-10-07T21:22:36Z", "title": "Example Domain"}
-{"id": "12304e6ba9", "url": "https://www.example.com/another", "ts": "2020-10-07T21:23:36Z", "title": "Another Page"}
+{"id": "1db0ef709a", "url": "https://www.example.com/page", "size": 1256, "ts": "2020-10-07T21:22:36Z", "title": "Example Domain", "text": "Example Domain This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information..."}
+{"id": "12304e6ba9", "url": "https://www.example.com/another", "size": 1256, "ts": "2020-10-07T21:23:36Z", "title": "Another Page", "text": "Example Domain This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information..."}
 </pre>
 
 Each entry in the [[JSONL]] file MAY contain additional properties as long as
