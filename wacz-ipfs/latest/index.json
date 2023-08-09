@@ -1,7 +1,9 @@
 {
-  "specStatus": "DRAFT",
+  "specStatus": "WD",
   "respec_js": "../../assets/js/respec-webrecorder.js",
-  "publishDate": "2023-05-03",
+  "publishDate": "2023-05-26",
+  "previousPublishDate": "2023-05-03",
+  "previousMaturity": "WD",
   "license": "cc-by",
   "thisVersion": "https://specs.webrecorder.net/wacz-ipfs/latest/",
   "latestVersion": "https://specs.webrecorder.net/wacz-ipfs/latest/",
