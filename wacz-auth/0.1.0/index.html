@@ -205,8 +205,8 @@ The SignatureData object MUST not contain any property that is not listed in eit
 }
 </pre>
 
-With this approach, the WACZ contains just enough to validate that they
-signature with the `publicKey`.
+With this approach, the WACZ contains just enough to validate the signature with
+the `publicKey`.
   
 To validate authorship of the WACZ, external key management is required, and
 this signature is otherwise anonymous.
@@ -243,8 +243,8 @@ key as is used to create a TLS certificate for a particular domain.
 The creator of the WACZ file is the same as the owner of a particular TLS
 certificate, which can be explored via Certificate Transparency logs.
 
-This approach also includes an RFC 3161 timestamp server `timeSignature` of the
-first `signature`.
+This approach also includes an [[RFC3161]] timestamp server `timeSignature` of
+the first `signature`.
 
 The `timeSignature` includes the timestamped and is designed to further
 guarantee that the signature was created close to the specified creation time.
@@ -291,7 +291,7 @@ second cross-signed certificate as backup.
 5. Sign the hash using its private key to generate the first signature
 (signature)
 
-6. Use an RFC 3161 timestamp server to sign the previous signature
+6. Use an [[RFC3161]] timestamp server to sign the previous signature
 (timeSignature)
 
 This approach is based on a 'trusted-third party' which securely creates and
@@ -340,7 +340,7 @@ certificate.
 certificate.
 
 6. Read the first certificate of `timestampCert` certificate chain and validate
-that the `timeSignature` is a valid RFC 3161 timestamp signature of `signature`
+that the `timeSignature` is a valid [[RFC3161]] timestamp signature of `signature`
 
 7. Validate that the `created` date is within 10 minutes of the signed timestamp
 in `timeSignature`
@@ -382,7 +382,7 @@ HTTP-based API for creating and validating a WACZ `signedData` for the
 domain-name identity + timestamp approach. This  library uses the LetsEncrypt
 service to generate a domain certificate on-demand, and the
 [FreeTSA](https://freetsa.org/index_en.php) timestamping service to generate an
-RFC 3161 timestamp.
+[[RFC3161]] timestamp.
 
 * The [py-wacz](https://github.com/webrecorder/py-wacz) CLI tool can be used to
 generate and validate WACZ file with domain-name identity + timestamp, by either
