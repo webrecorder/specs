@@ -1,4 +1,4 @@
-# POST Canonicalization
+# Request Body Canonicalization
 
 ## Abstract
 
