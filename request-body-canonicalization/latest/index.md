@@ -261,7 +261,7 @@ To **percent plus encode a byte sequence**, for each byte in the input sequence:
 >
 > Prior to Python 3.7 the character "~" was percent encoded.
 >
-> Older versions of ([pywb][12]) and ([warcio.js][]13) had slight discrepencies in the query strings they output for the same request data. For instance, pywb wrote Pythonic values for some values (`True`, `False`, `None`) rather than native JSON values (`true`, `false`, `null`), and warcio.js handled nested JSON differently than pywb. As of the publication of this specification, all current versions of Webrecorder software should behave identically.
+> Older versions of ([pywb][12]) and ([warcio.js][13]) had slight discrepencies in the query strings they output for the same request data. For instance, pywb wrote Pythonic values for some values (`True`, `False`, `None`) rather than native JSON values (`true`, `false`, `null`), and warcio.js handled nested JSON differently than pywb. As of the publication of this specification, all current versions of Webrecorder software should behave identically.
 
 
 [1]: https://www.rfc-editor.org/rfc/rfc2119
