@@ -101,13 +101,15 @@ Encoding the request body depends on the content-type.
 | text/plain                        | JSON             | binary            |
 | *                                 | binary           |                   |
 
-#### AMF request body encoding
+#### AMF (Action Message Format) request body encoding
 
-[TODO: To be written]
+AMF request body encoding is considered experimental and is only supported in pywb. It is possible this feature will be deprecated in the future.
+
+The current ([pywb implementation of AMF request body encoding][7]) and ([associated tests][8]) are available in the pywb repository.
 
 #### Binary request body encoding
 
-The request body is encoded as Base64 ([RFC 4648][7]) and appended to the query string as the `__wb_post_data` parameter.
+The request body is encoded as Base64 ([RFC 4648][9]) and appended to the query string as the `__wb_post_data` parameter.
 
 > **Example**
 > 
@@ -146,7 +148,7 @@ If a UTF-8 decoding error occurs then the binary encoding method MUST be used in
 
 #### Encoding a multipart form request body
 
-The body MUST be decoded as form data per [RFC 2388][9] and then percent plus encoded. If the body is not a valid multipart/form-data message then the binary encoding method MUST be used instead.
+The body MUST be decoded as form data per [RFC 2388][10] and then percent plus encoded. If the body is not a valid multipart/form-data message then the binary encoding method MUST be used instead.
 
 > **Example**
 > 
@@ -187,7 +189,7 @@ The body MUST be decoded as form data per [RFC 2388][9] and then percent plus en
 
 #### Encoding a JSON request body
 
-The request MUST be parsed as JSON ([RFC 8259][10]) and then apply the following algorithm with an empty string as the initial value of *name*.
+The request MUST be parsed as JSON ([RFC 8259][11]) and then apply the following algorithm with an empty string as the initial value of *name*.
 
 To **encode a JSON *value***, given a *name* and an initially-empty map *nameCounts* of strings to integers:
 
@@ -210,6 +212,8 @@ To **encode a JSON *value***, given a *name* and an initially-empty map *nameCou
    3. Otherwise, if *nameCounts* does not contain *name*:
       1. Store the integer 1 in *nameCounts* for *name*.
       2. Append the string "&*name*=*encodedValue*" to the output.
+
+The resulting query string will contain encoded key/value pairs of each leaf node of the JSON body.
 
 > **Example**
 > 
@@ -256,6 +260,8 @@ To **percent plus encode a byte sequence**, for each byte in the input sequence:
 > **Compatibility Note**
 >
 > Prior to Python 3.7 the character "~" was percent encoded.
+>
+> Older versions of ([pywb][12]) and ([warcio.js][]13) had slight discrepencies in the query strings they output for the same request data. For instance, pywb wrote Pythonic values for some values (`True`, `False`, `None`) rather than native JSON values (`true`, `false`, `null`), and warcio handled nested JSON differently than pywb. As of the publication of this specification, all current versions of Webrecorder software should behave identically.
 
 
 [1]: https://www.rfc-editor.org/rfc/rfc2119
@@ -264,7 +270,10 @@ To **percent plus encode a byte sequence**, for each byte in the input sequence:
 [4]: https://specs.webrecorder.net/wacz/latest/
 [5]: https://iipc.github.io/warc-specifications/specifications/cdx-format/cdx-2015/
 [6]: https://specs.webrecorder.net/cdxj/0.1.0/
-[7]: https://www.rfc-editor.org/rfc/rfc8259
-[8]: https://tools.ietf.org/html/rfc4648
-[9]: https://datatracker.ietf.org/doc/html/rfc2388
-[10]: https://datatracker.ietf.org/doc/html/rfc8259
+[7]: https://github.com/webrecorder/pywb/blob/main/pywb/warcserver/amf.py
+[8]: https://github.com/webrecorder/pywb/blob/main/pywb/warcserver/test/test_amf.py
+[9]: https://tools.ietf.org/html/rfc4648
+[10]: https://datatracker.ietf.org/doc/html/rfc2388
+[11]: https://www.rfc-editor.org/rfc/rfc8259
+[12]: https://github.com/webrecorder/pywb
+[13]: https://github.com/webrecorder/warcio.js
