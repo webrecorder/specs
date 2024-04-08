@@ -46,7 +46,7 @@ CDX was the precursor to the CDXJ index format.
 
 Crawl Index JSON or [CDXJ](4) provides a standardized way of representing an index to one or more WARC files. It allows applications to quickly locate a given page in a set of archived web content, as well as metadata associated with that page. Each CDXJ entry can be looked up by URL, and contains a JSON payload that can be used for representing information about that URL. It is used in the [WACZ specification][4].
 
-A CDXJ file is a sorted, line oriented plain-text file (optionally GZIP compressed) where each line represents information about a single capture in a web archive collection.
+A CDXJ file is a sorted, line oriented plain-text file (optionally GZIP compressed) where each line represents information about a single captured URL in a web archive collection.
 
 Each line MUST have three components that are separated by single spaces (0x20):
 
