@@ -26,15 +26,15 @@ Web archiving data is often stored in specialized formats, which include a full 
 Web archiving data is often stored in two key file formats:
 
 1. WARC — A widely accepted [ISO standard][3] used by many institutions around the world for storing web archive data.
-2. WACZ — A new format [developed by Webrecorder][4] for packaging WARCs with other web archive data which supports random-access reads.
+2. WACZ — A new format [developed by Webrecorder][4] for packaging WARCs with other web archive data enabling efficient random-access reads.
 
-Both formats are 'composite' formats, containing smaller amounts of data interspersed with metadata. In the case of WARC, the format consists of concatenated records which are appended one after the other, eg. `cat A.warc B.warc > C.warc`. The WARCs may or may not be gzipped, in which case the result is a multi-member gzip.
+Both formats are 'composite' formats, containing smaller amounts of data interspersed with metadata. In the case of WARC, the format consists of concatenated records which are appended one after the other, eg. `cat A.warc B.warc > C.warc`. The WARCs MAY be gzipped, in which case the result is a multi-member gzip.
 
 WACZ files use the ZIP format, which contains a specialized file and directory layout. ZIP is also a composite format, containing the raw (sometimes compressed) data as well as header data which contains the location files and directories within the ZIP file.
 
 ## Web Archive Index Formats (CDX and CDXJ)
 
-Web archive search and retrieval is frequently intermediated by index files of WARC data in the CDX or CDXJ formats. WACZ files contain CDXJ indices, which may or may not be gzipped, within the ZIP file that comprises the WACZ.
+Web archive search and retrieval is frequently intermediated by index files of WARC data in the CDX or CDXJ formats. WACZ files contain CDXJ indices, which MAY be gzipped, within the ZIP file that comprises the WACZ.
 
 ### CDX
 
