@@ -1,0 +1,69 @@
+{
+  "specStatus": "DRAFT",
+  "respec_js": "../../assets/js/respec-webrecorder.js",
+  "publishDate": "2024-04-08",
+  "license": "cc-by",
+  "thisVersion": "https://specs.webrecorder.net/request-body-canonicalization/latest/",
+  "latestVersion": "https://specs.webrecorder.net/request-body-canonicalization/latest/",
+  "shortName": "request-body-canonicalization",
+  "group": "CDX",
+  "includePermalinks": true,
+  "authors": [],
+  "editors": [
+    {
+      "name": "Alex Osborne",
+      "url": "https://github.com/ato"
+    },
+    {
+      "name": "Tessa Walsh",
+      "url": "https://bitarchivist.net"
+    },
+    {
+      "name": "Ilya Kreymer",
+      "url": "https://github.com/ikreymer"
+    }
+  ],
+  "group": {
+    "name": "WACZ Editors",
+    "url": "https://webrecorder.net"
+  },
+  "otherLinks": [
+    {
+      "key": "Repository",
+      "data": [
+        {
+          "value": "Github",
+          "href": "https://github.com/webrecorder/specs"
+        },
+        {
+          "value": "Issues",
+          "href": "https://github.com/webrecorder/specs/issues"
+        },
+        {
+          "value": "Commits",
+          "href": "https://github.com/webrecorder/specs/commits"
+        }
+      ]
+    }
+  ],
+  "maxTocLevel": 3,
+  "logos": [
+    {
+      "src": "../../assets/images/webrecorder.svg",
+      "alt": "Webrecorder Logo",
+      "height": 100
+    }
+  ],
+  "localBiblio": {
+    "PYWB-CDXJ": {
+      "title": "pywb Indexing: CDXJ Format",
+      "publisher": "Webrecorder",
+      "href": "https://pywb.readthedocs.io/en/latest/manual/indexing.html#cdxj-index"
+    }
+  },
+  "lint": {
+    "privsec-section": false,
+    "no-http-props": false,
+    "no-headingless-sections": false
+  }
+}
