@@ -114,7 +114,7 @@ If there are duplicate WARC records found in a dataset, they will automatically 
 ### Uncompressed vs GZIP Records
 
 WARC records are often individually gzip-ed when stored to reduce disk usage.
-Unfortunately, this limits the amount of deduplication that is possible, as gzipped data is not easily lend itself to deduplication. 
+Unfortunately, this limits the amount of deduplication that is possible, as gzipped data does not easily lend itself to deduplication. 
 
 Gzipped records can only be split at the WARC record boundaries.
 
