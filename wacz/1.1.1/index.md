@@ -241,7 +241,7 @@ web archive:
 - `software`: A description of what software was used to create the WACZ file
 - `mainPageUrl`: An optional URL of the main or starting page in the collection
   to be used for initial replay
-- `mainPageDate`: An optional ISO-formatted date of the main or startng page in 
+- `mainPageDate`: An optional ISO-formatted date of the main or starting page in 
   the collection to be used for initial replay
 
 Other properties from the [[FRICTIONLESS-DATA-PACKAGE]] specification such as
