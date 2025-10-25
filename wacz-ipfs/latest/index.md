@@ -126,7 +126,7 @@ In the above example, CID A represents the possible split of an uncompressed rec
 
 ### Splitting Uncompressed WARC Records
 
-If a WARC record is uncompressed (or is uncompressed at type of ingest into IPFS), we can insert additional
+If a WARC record is uncompressed (or is uncompressed at time of ingest into IPFS), we can insert additional
 split points before and after the payload. This results in the WARC + HTTP headers, as well as the two `\r\n` newlines,
 being stored in separate IPFS blocks (and having distinct CIDs as well)
 
