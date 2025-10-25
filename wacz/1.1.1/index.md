@@ -323,7 +323,7 @@ Because they are ZIP files WACZ can be hosted on the web as static files. This
 allows web archives to be easily maintained over time without relying on complex
 server side software, apart from widely available, open source, and well tested
 web server applications. If desirable WACZ files can be managed and made
-accessibile using HTTP object stores available from cloud hosting providers, and
+accessible using HTTP object stores available from cloud hosting providers, and
 content delivery networks that geographically position web-archives closer to
 their users. However there are certain considerations to make when publishing
 WACZ files.
