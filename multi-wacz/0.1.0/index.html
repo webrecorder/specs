@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf8">
+  <title>MultiWACZ</title>
+  <script src="../../assets/js/respec-webrecorder.js" class="remove" defer ></script>
+  <script class="remove">
+    var respecConfig = {
+      specStatus: "DRAFT",
+      publishDate: "2023-01-25",
+      license: "cc-by",
+      thisVersion: "https://specs.webrecorder.net/multi-wacz/0.1.0/",
+      latestVersion: "https://specs.webrecorder.net/multi-wacz/latest/",
+      shortName: "multi-wacz",
+      group: "WACZ",
+      lint: {
+	// turn off w3c-specific linting
+	"privsec-section": false,
+	"no-http-props": false,
+	"no-headingless-sections": false
+      },
+      includePermalinks: true,
+      authors: [],
+      editors: [
+	{
+	  name: "Ilya Kreymer",
+	  url: "https://github.com/ikreymer",
+	  company: "Webrecorder",
+	  companyURL: "https://webrecorder.net/"
+	},
+        {
+          name: "Ed Summers",
+          url: "https://www.linkedin.com/in/esummers/",
+          company: "Stanford University",
+          companyURL: "https://stanford.edu"
+        }
+      ],
+      group: {
+        name: "WACZ Editors",
+        url: "https://webrecorder.net"
+      },
+      otherLinks: [
+	{
+	  key: "Additional Documents",
+	  data: [
+	    {
+	      value: "Use Cases for Decentralized Web Archives",
+	      href: "https://specs.webrecorder.net/use-cases/latest/",
+	    }
+	  ]
+	},
+	{
+	  key: "Repository",
+	  data: [
+	    {
+	      value: "Github",
+	      href: "https://github.com/webrecorder/specs"
+	    },
+	    {
+	      value: "Issues",
+	      href: "https://github.com/webrecorder/specs/issues"
+	    },
+	    {
+	      value: "Commits",
+	      href: "https://github.com/webrecorder/specs/commits"
+	    }
+	  ]
+      	}
+      ],
+      maxTocLevel: 3,
+      logos: [
+	{
+	  src: "../../assets/images/webrecorder.svg",
+	  alt: "Webrecorder Logo",
+          height: 100
+      	}
+      ],
+      localBiblio: {
+        "PYWB-CDXJ": {
+          title: "pywb Indexing: CDXJ Format",
+          publisher: "Webrecorder",
+          href: "https://pywb.readthedocs.io/en/latest/manual/indexing.html#cdxj-index",
+        }
+      },
+    };
+  </script>
+  </head>
+
+  <body>
+
+    <section id="sotd" class="introductory">
+    </section>
+
+    <section id="abstract">
+      MultiWACZ provides a standard way of collecting [[WACZ]] files into a
+      conceptual unit. The aggregation is represented as a [[JSON]] manifest.
+    </section>
+
+    <section id="conformance">
+    </section>
+
+    <section data-format="markdown">
+
+# Introduction
+
+MultiWACZ provides a standard [[JSON]] representation for
+*aggregations* of [[WACZ]] files. An aggregation of WACZ files might seem
+redundant at first, since WACZ is already an aggregation of [[WARC]] files,
+which represent a collection of archived web content. However there are 
+situations where aggregating WACZ files can be helpful, such as: 
+
+1. A website is archived multiple times on a schedule, which results in a number
+of distinct WACZ files that need to be viewed together as a single archive.
+3. The size of a website combined with storage constraints require an archive be
+split or chunked into multiple WACZ files, which then need to be viewed together
+as a whole.
+3. A set of separately collected WACZ files needs to be grouped together for
+viewing separately as part of a thematic collection.
+
+A MultiWACZ is a JSON object that lets you group WACZ files in these different
+ways so that replay tools can perform them. The MultiWACZ may be represented as
+a simple file that aggregates remote WACZ files, or it may be packaged up as a
+ZIP file.
+    </section>
+    <section data-format="markdown">
+
+# Manifest
+
+Similar to WACZ, MultiWACZ has a JSON *manifest* which groups together the
+individual WACZ files as a [[FRICTIONLESS-DATA-PACKAGE]]. Each resource in the
+the `resources` list MUST be a fully qualified [[URL]] or a POSIX file path 
+relative to the manifest file.
+
+The manifest SHOULD contain metadata as defined in [[WACZ]] which describes the
+aggregation as a whole, such as `title`, `description`, `created`. This
+metadata is useful for viewing applications to control how the aggregation will
+appear. Additional metadata properties MAY be included as long as they do not
+override existing property names in [[WACZ]] or [[FRICTIONLESS-DATA-PACKAGE]].
+
+## Minimal Example of a MultiWACZ Manifest
+
+This is an example of a minimal MultiWACZ manifest that aggregates two WACZ
+files that are available on the Web.
+
+<pre class="example">
+{
+  "profile": "multi-wacz",
+  "title": "My WACZ Aggregation",
+  "description": "This web archive contains example data for the MultiWACZ specification",
+  "created": "2023-01-25T12:00:00.48Z",
+  "resources": [
+     {
+       "name": "Archive 1",
+       "path": "https://example.com/archive/archive1.wacz"
+     },
+     {
+       "name": "Archive 2",
+       "path": "https://example.com/archive/archive2.wacz"
+     }
+  ]
+}
+</pre>
+
+    </section>
+
+    <section data-format="markdown">
+
+# Display
+
+By default MultiWACZ objects are assumed to be `joined` in that the WACZ contents
+are viewed as a single archive. This is useful in use cases described above when
+multiple snapshots of a single website are taken over time, or broken up to
+assist in storage.
+
+However it is sometimes desirable for the aggregated WACZ files to be viewed
+individually, as is often the case in thematic collections that collect together
+archives of related web sites. The manifest's `display` property can be set to
+`separate`, which instructs the viewing application to present the aggregated
+WACZ resources individually.
+
+## Example of Separate Display 
+
+<pre class="example">
+{
+  "profile": "multi-wacz",
+  "display": "separate",
+  "title": "My Thematic WACZ Aggregation",
+  "description": "This web archive contains websites related to the history of the Web",
+  "created": "2023-01-25T12:00:00.48Z",
+  "resources": [
+     {
+       "name": "The Birth of the Web (CERN)",
+       "path": "https://example.com/archive/archive1.wacz"
+     },
+     {
+       "name": "A short history of the Web (CERN)",
+       "path": "https://example.com/archive/archive2.wacz"
+     },
+     {
+       "name": "www-talk@w3.org Mail Archives",
+       "path": "https://example.com/archive/archive2.wacz"
+     }
+  ]
+}
+</pre>
+
+    </section>
+
+    <section data-format="markdown">
+
+# ZIP Packaging
+
+In cases where it is desirable to package up the MultiWACZ and associated WACZ
+files into a single file they can be combined into a [[ZIP]] file. Similar to
+[[WACZ]] files the `.wacz` file extension SHOULD be used, and they should be
+made available on the Web using the `application/wacz` media type.
+
+<p class="ednote">
+Include information here about compression. Should it be similar to WACZ?
+</p>
+
+    </section>
+
+  </body>
+
+</html>

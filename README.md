@@ -6,6 +6,7 @@ This repository contains technical specifications used by the [Webrecorder] proj
 * [Web Archive Collection Zipped (WACZ)]: a packaging standard for web archives on the web
 * [WACZ Signing and Verification]: the mechanics for signing and verifying WACZ files for proof of authenticity
 * [Crawl Index JSON (CDXJ)]: an extensible format for WARC index files
+* [MultiWACZ]: logically aggregate WACZ files for integrated browsing and distribution
 
 Please help us adapt and implement these community standards to help ensure that web archives are easier to use, trust, and share on the web.
 
@@ -16,3 +17,4 @@ We are using [Git and GitHub](https://github.com/webrecorder/specs/) to manage t
 [Use Cases for Decentralized Web Archives]: https://specs.webrecorder.net/use-cases/latest/
 [WACZ Signing and Verification]: https://specs.webrecorder.net/wacz-auth/latest/
 [Crawl Index JSON (CDXJ)]: https://specs.webrecorder.net/cdxj/latest/
+[MultiWACZ]: https://specs.webrecorder.net/multi-wacz/latest/
