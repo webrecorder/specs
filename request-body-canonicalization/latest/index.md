@@ -78,15 +78,21 @@ If the request method is not `GET` it MUST be appended as the value of query par
 
 If the URL does not have a query string a `?` MUST be added:
 
-    http://example.org/         => http://example.org/?__wb_method=POST
+```
+http://example.org/         => http://example.org/?__wb_method=POST
+```
 
 If the URL already has a query string the `__wb_method` parameter MUST be added at the end after a `&` separator:
 
-    http://example.org/?page=1  => http://example.org/?page=1&__wb_method=POST
+```
+http://example.org/?page=1  => http://example.org/?page=1&__wb_method=POST
+```
 
 Even if the query string already ends in `&` another separator MUST still be added:
 
-    http://example.org/?foo&    => http://example.org/?foo&&__wb_method=POST
+```
+http://example.org/?foo&    => http://example.org/?foo&&__wb_method=POST
+```
 
 ### Encoding the request body
 
@@ -114,16 +120,18 @@ The request body is encoded as Base64 ([RFC 4648][9]) and appended to the query 
 > **Example**
 > 
 > Original request:
-> 
->     POST /chat HTTP/1.0
->     Host: example.org
->     Content-Length: 5
+> ```
+> POST /chat HTTP/1.0
+> Host: example.org
+> Content-Length: 5
 >
->     hello
+> hello
+> ```
 >
 > Encoded URL:
->
->     http://example.org/chat?__wb_method=POST&__wb_post_data=aGVsbG8=
+> ```
+> http://example.org/chat?__wb_method=POST&__wb_post_data=aGVsbG8=
+> ```
 
 #### Encoding a urlencoded form request body
 
@@ -134,17 +142,19 @@ If a UTF-8 decoding error occurs then the binary encoding method MUST be used in
 > **Example**
 > 
 > Original request:
-> 
->     POST / HTTP/1.0
->     Host: example.org
->     Content-Type: application/x-www-form-urlencoded
->     Content-Length: 13
+> ```
+> POST / HTTP/1.0
+> Host: example.org
+> Content-Type: application/x-www-form-urlencoded
+> Content-Length: 13
 >
->     say=Hi&to=Mom
+> say=Hi&to=Mom
+> ```
 >
 > Encoded URL:
->
->     http://example.org/?__wb_method=POST&__wb_post_data=say%3DHi%26to%3DMom
+> ```
+> http://example.org/?__wb_method=POST&__wb_post_data=say%3DHi%26to%3DMom
+> ```
 
 #### Encoding a multipart form request body
 
@@ -153,39 +163,40 @@ The body MUST be decoded as form data per [RFC 2388][10] and then percent plus e
 > **Example**
 > 
 > Original request:
+> ```
+> POST / HTTP/1.1
+> Host: example.org
+> Content-Type: multipart/form-data; boundary=AaB03x
+> Content-Length: Content-Length: 437
 > 
->     POST / HTTP/1.1
->     Host: example.org
->     Content-Type: multipart/form-data; boundary=AaB03x
->     Content-Length: Content-Length: 437
-> 
->     --AaB03x
->     Content-Disposition: form-data; name="submit-value"
+> --AaB03x
+> Content-Disposition: form-data; name="submit-value"
 >
->     Example
->     --AaB03x
->     Content-Disposition: form-data; name="files"
->     Content-Type: multipart/mixed; boundary=BbC04y
+> Example
+> --AaB03x
+> Content-Disposition: form-data; name="files"
+> Content-Type: multipart/mixed; boundary=BbC04y
 >
->     --BbC04y
->     Content-Disposition: file; filename="file1.txt"
->     Content-Type: text/plain
+> --BbC04y
+> Content-Disposition: file; filename="file1.txt"
+> Content-Type: text/plain
 >
->     Content of file1.txt.
+> Content of file1.txt.
 >
->     --BbC04y
->     Content-Disposition: file; filename="file2.html"
->     Content-Type: text/html
+> --BbC04y
+> Content-Disposition: file; filename="file2.html"
+> Content-Type: text/html
 >
->     <!DOCTYPE html><title>Content of file2.html.</title>
+> <!DOCTYPE html><title>Content of file2.html.</title>
 >
->     --BbC04y--
->     --AaB03x--
->
+> --BbC04y--
+> --AaB03x--
+> ```
 >
 > Encoded URL:
->
->     http://example.org/?__wb_method=POST&__wb_post_data=--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22submit-name%22%0A%0AExample%0A--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22files%22%0AContent-Type%3A%20multipart%2Fmixed%3B%20boundary%3DBbC04y%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file1.txt%22%0AContent-Type%3A%20text%2Fplain%0A%0AContent%20of%20file1.txt.%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file2.html%22%0AContent-Type%3A%20text%2Fhtml%0A%0A%3C%21DOCTYPE%20html%3E%3Ctitle%3EContent%20of%20file2.html.%3C%2Ftitle%3E%0A%0A--BbC04y--%0A--AaB03x--%0A
+> ```
+> http://example.org/?__wb_method=POST&__wb_post_data=--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22submit-name%22%0A%0AExample%0A--AaB03x%0AContent-Disposition%3A%20form-data%3B%20name%3D%22files%22%0AContent-Type%3A%20multipart%2Fmixed%3B%20boundary%3DBbC04y%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file1.txt%22%0AContent-Type%3A%20text%2Fplain%0A%0AContent%20of%20file1.txt.%0A%0A--BbC04y%0AContent-Disposition%3A%20file%3B%20filename%3D%22file2.html%22%0AContent-Type%3A%20text%2Fhtml%0A%0A%3C%21DOCTYPE%20html%3E%3Ctitle%3EContent%20of%20file2.html.%3C%2Ftitle%3E%0A%0A--BbC04y--%0A--AaB03x--%0A
+> ```
 
 #### Encoding a JSON request body
 
@@ -218,28 +229,30 @@ The resulting query string will contain encoded key/value pairs of each leaf nod
 > **Example**
 > 
 > Original request:
+> ```
+> POST /events HTTP/1.0
+> Host: example.org
+> Content-Type: application/json
 > 
->     POST /events HTTP/1.0
->     Host: example.org
->     Content-Type: application/json
-> 
->     {
->        "type": "event",
->        "id": 44.0,
->        "float": 35.7
->        "values": [true, false, null],
->        "source": {
->           "type": "component",
->           "id": "a+b&c= d",
->           "values": [3, 4]
->        }
->     }
+> {
+>    "type": "event",
+>    "id": 44.0,
+>    "float": 35.7
+>    "values": [true, false, null],
+>    "source": {
+>       "type": "component",
+>       "id": "a+b&c= d",
+>       "values": [3, 4]
+>    }
+> }
+> ```
 > 
 > Encoded URL:
-> 
->     http://example.org/events?__wb_method=POST&type=event&id=44&float=35.7&values=true
->     &values.2_=false&values.3_=null&type.2_=component&id.2_=a%2Bb%26c%3D+d
->     &values.4_=3&values.5_=4
+> ```
+> http://example.org/events?__wb_method=POST&type=event&id=44&float=35.7&values=true
+> &values.2_=false&values.3_=null&type.2_=component&id.2_=a%2Bb%26c%3D+d
+> &values.4_=3&values.5_=4
+> ```
 
 ## Appendix
 
